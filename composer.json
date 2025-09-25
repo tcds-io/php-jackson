@@ -1,0 +1,47 @@
+{
+  "name": "tcds-io/serializer",
+  "description": "",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "ext-json": "*",
+    "tcds-io/php-better-generics": "dev-main",
+    "phpdocumentor/type-resolver": "^1.10"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.0",
+    "slevomat/coding-standard": "^7.0",
+    "phpstan/phpstan": "^1.12",
+    "phpunit/phpunit": "^12.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tcds\\Io\\Serializer\\": "src/"
+    },
+    "files": [
+      "fn/functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tcds\\Io\\Serializer\\": "tests/"
+    }
+  },
+  "scripts": {
+    "cs:check": "vendor/bin/phpcs --colors -ps",
+    "cs:fix": "vendor/bin/phpcbf --colors -ps",
+    "test:stan": "vendor/bin/phpstan analyse src --level=max --ansi",
+    "test:unit": "vendor/bin/phpunit --testdox --color=always",
+    "tests": [
+      "@cs:check",
+      "@test:stan",
+      "@test:unit"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": false
+    }
+  }
+}
