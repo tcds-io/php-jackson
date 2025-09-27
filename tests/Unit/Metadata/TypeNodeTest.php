@@ -33,10 +33,10 @@ class TypeNodeTest extends SerializerTestCase
 
     #[Test] public function when_generics_are_missing_for_templates_then_throw_exception(): void
     {
-        $missingKeyGeneric = $this->expectThrows(fn() => TypeNode::from(Pair::class));
+        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(Pair::class));
         $this->assertEquals(new SerializerException('No generic defined for template `K`'), $missingKeyGeneric);
 
-        $missingKeyGeneric = $this->expectThrows(fn() => TypeNode::from(Pair::class, ['string']));
+        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(Pair::class, ['string']));
         $this->assertEquals(new SerializerException('No generic defined for template `V`'), $missingKeyGeneric);
     }
 
@@ -203,7 +203,7 @@ class TypeNodeTest extends SerializerTestCase
                 params: [
                     'data' => new ParamNode(
                         type: new TypeNode(
-                            type: 'array',
+                            type: shape('array', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
                             params: [
                                 'user' => new ParamNode(User::node()),
                                 'address' => new ParamNode(Address::node()),
@@ -213,7 +213,7 @@ class TypeNodeTest extends SerializerTestCase
                     ),
                     'payload' => new ParamNode(
                         type: new TypeNode(
-                            type: 'object',
+                            type: shape('object', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
                             params: [
                                 'user' => new ParamNode(User::node()),
                                 'address' => new ParamNode(Address::node()),

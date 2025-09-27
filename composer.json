@@ -1,6 +1,6 @@
 {
-  "name": "tcds-io/serializer",
-  "description": "",
+  "name": "tcds-io/php-jackson",
+  "description": "A lightweight, flexible object serializer for PHP, inspired by FasterXML/jackson",
   "type": "library",
   "license": "MIT",
   "require": {

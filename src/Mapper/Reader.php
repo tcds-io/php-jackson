@@ -2,7 +2,7 @@
 
 namespace Tcds\Io\Serializer\Mapper;
 
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Serializer\ArrayObjectMapper;
 
 interface Reader
 {
@@ -11,5 +11,5 @@ interface Reader
      * @param list<string> $trace
      * @return T
      */
-    public function __invoke(mixed $data, ObjectMapper $mapper, string $type, array $trace);
+    public function __invoke(mixed $data, ArrayObjectMapper $mapper, string $type, array $trace);
 }

@@ -2,20 +2,33 @@
 
 namespace Tcds\Io\Serializer;
 
-readonly class ArrayObjectMapper extends ObjectMapper
+use Override;
+use Tcds\Io\Serializer\Mapper\Reader;
+use Tcds\Io\Serializer\Runtime\RuntimeReader;
+
+/**
+ * @phpstan-import-type TypeMapper from ObjectMapper
+ */
+readonly class ArrayObjectMapper implements ObjectMapper
 {
     /**
-     * @template T
-     * @param class-string<T> $type
-     * @param array<string, mixed> $value
-     * @param array<string, mixed> $with
-     * @return T
+     * @param TypeMapper $typeMappers
      */
-    public function readValueWith(string $type, mixed $value, array $with = [])
+    public function __construct(
+        private Reader $defaultTypeReader = new RuntimeReader(),
+        private array $typeMappers = [],
+    ) {
+    }
+
+    #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
     {
-        return $this->readValue($type, [
-            ...$value,
-            ...$with,
-        ]);
+        return $this->readValue($type, [...$value, ...$with]);
+    }
+
+    #[Override] public function readValue(string $type, mixed $value, array $trace = [])
+    {
+        $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
+
+        return $reader($value, $this, $type, $trace);
     }
 }

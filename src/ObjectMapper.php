@@ -5,37 +5,24 @@ namespace Tcds\Io\Serializer;
 use Tcds\Io\Serializer\Mapper\Reader;
 
 /**
- * @phpstan-type MapperType string|class-string<mixed>
+ * @phpstan-type Type string|class-string<mixed>
  * @phpstan-type ReaderFn Reader::__invoke
+ * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn }>
  */
-abstract readonly class ObjectMapper
+interface ObjectMapper
 {
     /**
      * @template T
-     * @param array<MapperType, array{
-     *     reader: Reader|ReaderFn,
-     * }> $typeMappers
+     * @param class-string<T> $type
+     * @param array<string, mixed> $with
+     * @return T
      */
-    public function __construct(
-        private Reader $defaultTypeReader,
-        private array $typeMappers = [],
-    ) {
-    }
+    public function readValueWith(string $type, mixed $value, array $with = []);
 
     /**
      * @template T
+     * @param class-string<T> $type
      * @return T
      */
-    abstract public function readValueWith(string $type, string $value, array $with = []);
-
-    /**
-     * @template T
-     * @return T
-     */
-    final public function readValue(string $type, mixed $data, array $trace = [])
-    {
-        $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
-
-        return $reader($data, $this, $type, $trace);
-    }
+    public function readValue(string $type, mixed $value, array $trace = []);
 }
