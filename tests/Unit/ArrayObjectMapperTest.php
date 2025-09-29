@@ -40,7 +40,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $mapper = new ArrayObjectMapper(
             typeMappers: [
                 LatLng::class => [
-                    'reader' => fn(string $value) => new LatLng(...explode(',', $value)),
+                    'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
                 ],
             ],
         );
@@ -86,7 +86,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
 
         $exception = $this->expectThrows(
             UnableToParseValue::class,
-            fn() => $this->mapper->readValue(AccountHolder::class, $data),
+            fn () => $this->mapper->readValue(AccountHolder::class, $data),
         );
 
         $this->assertEquals(

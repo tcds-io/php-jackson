@@ -15,6 +15,6 @@ readonly class ParamNode
 
     public static function from(string $type): self
     {
-        return lazyOf(self::class, fn() => new self(TypeNode::from($type)));
+        return lazyOf(self::class, fn () => new self(TypeNode::from($type)));
     }
 }

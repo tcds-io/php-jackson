@@ -33,10 +33,10 @@ class TypeNodeTest extends SerializerTestCase
 
     #[Test] public function when_generics_are_missing_for_templates_then_throw_exception(): void
     {
-        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(Pair::class));
+        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn () => TypeNode::from(Pair::class));
         $this->assertEquals(new SerializerException('No generic defined for template `K`'), $missingKeyGeneric);
 
-        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(generic(Pair::class, ['string'])));
+        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn () => TypeNode::from(generic(Pair::class, ['string'])));
         $this->assertEquals(new SerializerException('No generic defined for template `V`'), $missingKeyGeneric);
     }
 

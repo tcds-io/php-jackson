@@ -20,8 +20,8 @@ class ClassParams
         return new ArrayList(Reflection::of($reflection, $class)
             ->getConstructor()
             ->getParameters())
-            ->indexedBy(fn(ReflectionParameter $param) => $param->name)
-            ->mapValues(fn(ReflectionParameter $param) => ParamType::of($param))
+            ->indexedBy(fn (ReflectionParameter $param) => $param->name)
+            ->mapValues(fn (ReflectionParameter $param) => ParamType::of($param))
             ->entries();
     }
 }

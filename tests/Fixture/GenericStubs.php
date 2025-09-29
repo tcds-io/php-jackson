@@ -30,7 +30,8 @@ readonly class GenericStubs
 
     public static function fingerprint(): string
     {
-        return sprintf('%s[%s, %s, %s, %s]',
+        return sprintf(
+            '%s[%s, %s, %s, %s]',
             self::class,
             sprintf('%s[%s[%s]]', ArrayList::class, 'list', Address::fingerprint()),
             sprintf('%s[%s]', Traversable::class, User::fingerprint()),

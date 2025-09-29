@@ -20,7 +20,7 @@ class ErrorHandlingTest extends SerializerTestCase
         }
         JSON;
 
-        $exception = $this->expectThrows(UnableToParseValue::class, fn() => $mapper->readValue(Place::class, $json));
+        $exception = $this->expectThrows(UnableToParseValue::class, fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value at .', $exception->getMessage());
         $this->assertEquals([], $exception->trace);
@@ -52,7 +52,7 @@ class ErrorHandlingTest extends SerializerTestCase
         }
         JSON;
 
-        $exception = $this->expectThrows(UnableToParseValue::class, fn() => $mapper->readValue(Place::class, $json));
+        $exception = $this->expectThrows(UnableToParseValue::class, fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value at .position', $exception->getMessage());
         $this->assertEquals(['position'], $exception->trace);

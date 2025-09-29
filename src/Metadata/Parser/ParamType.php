@@ -41,7 +41,7 @@ class ParamType
         $simpleNodeTypes = ['int', 'float', 'string', 'bool', 'boolean', 'mixed'];
         $types = explode('|', str_replace('&', '|', $type));
 
-        $notScalar = array_filter($types, fn($t) => !in_array($t, $simpleNodeTypes, true));
+        $notScalar = array_filter($types, fn ($t) => !in_array($t, $simpleNodeTypes, true));
 
         if (count($types) > 1 && !empty($notScalar)) {
             return false;

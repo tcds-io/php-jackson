@@ -52,7 +52,7 @@ final class TypeNode
 
                 return new TypeNode(
                     type: shape($type, $params),
-                    params: array_map(fn(string $param) => ParamNode::from($param), $params),
+                    params: array_map(fn (string $param) => ParamNode::from($param), $params),
                 );
             }),
             ParamType::isArray($type) => run(function () use ($type, $generics): TypeNode {
@@ -62,7 +62,7 @@ final class TypeNode
                 return new TypeNode(
                     type: generic('map', [$key, $value]),
                     params: array_map(
-                        callback: fn(string $generic) => ParamNode::from($generic),
+                        callback: fn (string $generic) => ParamNode::from($generic),
                         array: ['key' => $key, 'value' => $value],
                     ),
                 );
@@ -145,9 +145,9 @@ final class TypeNode
     {
         return match (true) {
             $this->isScalar() => $this->type,
-            $this->isEnum() => array_map(fn(BackedEnum $enum) => $enum->value, $this->type::cases()),
+            $this->isEnum() => array_map(fn (BackedEnum $enum) => $enum->value, $this->type::cases()),
             $this->isList() => generic('list', $this->params['value']->node->specification()),
-            $this->isClass() => array_map(fn(ParamNode $node) => $node->node->specification(), $this->params),
+            $this->isClass() => array_map(fn (ParamNode $node) => $node->node->specification(), $this->params),
             default => throw new SerializerException(sprintf('Unable to load specification of type `%s`', $this->type)),
         };
     }

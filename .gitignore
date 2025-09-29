@@ -3,4 +3,5 @@ vendor/
 var/
 out/
 .phpunit.result.cache
+.php-cs-fixer.cache
 package.xml

@@ -81,7 +81,7 @@ readonly class RuntimeReader implements Reader
         $param = $node->params['value']->node->type;
 
         return array_map(
-            callback: fn($item) => $mapper->readValue(
+            callback: fn ($item) => $mapper->readValue(
                 type: $param,
                 value: $item,
                 trace: $trace,

@@ -13,7 +13,8 @@
     "symfony/var-dumper": "^6.0",
     "slevomat/coding-standard": "^7.0",
     "phpstan/phpstan": "^1.12",
-    "phpunit/phpunit": "^12.1"
+    "phpunit/phpunit": "^12.1",
+    "php-cs-fixer/shim": "^3.88"
   },
   "autoload": {
     "psr-4": {
@@ -29,8 +30,8 @@
     }
   },
   "scripts": {
-    "cs:check": "vendor/bin/phpcs --colors -ps",
-    "cs:fix": "vendor/bin/phpcbf --colors -ps",
+    "cs:check": "vendor/bin/php-cs-fixer check -v ./",
+    "cs:fix": "vendor/bin/php-cs-fixer fix ./",
     "test:stan": "vendor/bin/phpstan analyse src --level=max --ansi",
     "test:unit": "vendor/bin/phpunit --testdox --color=always",
     "tests": [
