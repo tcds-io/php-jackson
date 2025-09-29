@@ -24,7 +24,7 @@ readonly class JsonObjectMapper implements ObjectMapper
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
     {
         return $this->mapper->readValue($type, [
-            ...json_decode($value, true),
+            ...json_decode($value, true, 512, JSON_THROW_ON_ERROR),
             ...$with,
         ]);
     }

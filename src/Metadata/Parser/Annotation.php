@@ -42,17 +42,13 @@ class Annotation
 
     public static function generic(ReflectionClass $reflection, string $type): string
     {
+        $runtimeTypes = ClassAnnotation::runtimeTypes($reflection);
         [$type, $generics] = self::extractGenerics($type);
-        $main = self::fqnOf($reflection, $type);
-
-        // not generic
-        if (empty($generics)) {
-            return $main;
-        }
 
         return generic(
-            type: $main,
+            type: self::fqnOf($reflection, ($runtimeTypes[$type] ?? $type)),
             generics: new ArrayList($generics)
+                ->map(fn(string $generic) => $runtimeTypes[$generic] ?? $generic)
                 ->map(fn(string $generic) => self::fqnOf($reflection, $generic))
                 ->items(),
         );

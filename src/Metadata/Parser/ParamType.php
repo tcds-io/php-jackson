@@ -12,7 +12,6 @@ class ParamType
     public static function of(ReflectionParameter $param): string
     {
         $class = $param->getDeclaringClass() ?: throw new SerializerException('Not a class! Serializer can parse only class params');
-        $runtimeTypes = ClassAnnotation::runtimeTypes($class);
         $templates = ClassAnnotation::templates($class);
 
         $type = Annotation::param(
@@ -34,10 +33,6 @@ class ParamType
             return sprintf('%s{ %s }', $type, join(', ', $params));
         }
 
-        if (array_key_exists($type, $runtimeTypes)) {
-            $type = $runtimeTypes[$type];
-        }
-
         return Annotation::generic($class, $type);
     }
 
@@ -49,7 +44,7 @@ class ParamType
         $notScalar = array_filter($types, fn($t) => !in_array($t, $simpleNodeTypes, true));
 
         if (count($types) > 1 && !empty($notScalar)) {
-            throw new SerializerException('Non-scalar union types are not allowed');
+            return false;
         }
 
         return empty($notScalar);

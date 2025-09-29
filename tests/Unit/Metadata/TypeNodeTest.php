@@ -36,7 +36,7 @@ class TypeNodeTest extends SerializerTestCase
         $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(Pair::class));
         $this->assertEquals(new SerializerException('No generic defined for template `K`'), $missingKeyGeneric);
 
-        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(Pair::class, ['string']));
+        $missingKeyGeneric = $this->expectThrows(SerializerException::class, fn() => TypeNode::from(generic(Pair::class, ['string'])));
         $this->assertEquals(new SerializerException('No generic defined for template `V`'), $missingKeyGeneric);
     }
 
@@ -45,6 +45,7 @@ class TypeNodeTest extends SerializerTestCase
         $type = Address::class;
 
         $node = TypeNode::from($type);
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
@@ -65,16 +66,17 @@ class TypeNodeTest extends SerializerTestCase
         $type = generic(ArrayList::class, [Address::class]);
 
         $node = TypeNode::from($type);
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
                 type: $type,
                 params: [
                     'items' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: generic('list', [Address::class]),
                             params: [
-                                'value' => new ParamNode(type: Address::node()),
+                                'value' => new ParamNode(node: Address::node()),
                             ],
                         ),
                     ),
@@ -89,6 +91,7 @@ class TypeNodeTest extends SerializerTestCase
         $type = GenericStubs::class;
 
         $node = TypeNode::from($type);
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
@@ -99,10 +102,10 @@ class TypeNodeTest extends SerializerTestCase
                             type: generic(ArrayList::class, [Address::class]),
                             params: [
                                 'items' => new ParamNode(
-                                    type: new TypeNode(
+                                    node: new TypeNode(
                                         type: generic('list', [Address::class]),
                                         params: [
-                                            'value' => new ParamNode(type: Address::node()),
+                                            'value' => new ParamNode(node: Address::node()),
                                         ],
                                     ),
                                 ),
@@ -113,20 +116,20 @@ class TypeNodeTest extends SerializerTestCase
                         new TypeNode(
                             type: generic(Traversable::class, [User::class]),
                             params: [
-                                'value' => new ParamNode(type: User::node()),
+                                'value' => new ParamNode(node: User::node()),
                             ],
                         ),
                     ),
                     'positions' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: generic(Map::class, ['string', LatLng::class]),
                             params: [
                                 'entries' => new ParamNode(
-                                    type: new TypeNode(
+                                    node: new TypeNode(
                                         type: generic('map', ['string', LatLng::class]),
                                         params: [
-                                            'key' => new ParamNode(type: new TypeNode('string')),
-                                            'value' => new ParamNode(type: LatLng::node()),
+                                            'key' => new ParamNode(node: new TypeNode('string')),
+                                            'value' => new ParamNode(node: LatLng::node()),
                                         ],
                                     ),
                                 ),
@@ -134,11 +137,11 @@ class TypeNodeTest extends SerializerTestCase
                         ),
                     ),
                     'accounts' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: generic(Pair::class, [AccountType::class, BankAccount::class]),
                             params: [
-                                'key' => new ParamNode(type: new TypeNode(type: AccountType::class)),
-                                'value' => new ParamNode(type: BankAccount::node()),
+                                'key' => new ParamNode(node: new TypeNode(type: AccountType::class)),
+                                'value' => new ParamNode(node: BankAccount::node()),
                             ],
                         ),
                     ),
@@ -152,14 +155,15 @@ class TypeNodeTest extends SerializerTestCase
     {
         $type = ArrayList::class;
 
-        $node = TypeNode::from($type, ['string']);
+        $node = TypeNode::from(generic($type, ['string']));
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
                 type: generic(ArrayList::class, ['string']),
                 params: [
                     'items' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: 'list<string>',
                             params: [
                                 'value' => new ParamNode(new TypeNode('string')),
@@ -175,9 +179,8 @@ class TypeNodeTest extends SerializerTestCase
     #[Test] public function parse_type_with_generics(): void
     {
         $type = Pair::class;
-        $generics = ['string', Address::class];
-
-        $node = TypeNode::from($type, $generics);
+        $node = TypeNode::from(generic($type, ['string', Address::class]));
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
@@ -196,13 +199,14 @@ class TypeNodeTest extends SerializerTestCase
         $type = WithShape::class;
 
         $node = TypeNode::from($type);
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
                 type: WithShape::class,
                 params: [
                     'data' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: shape('array', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
                             params: [
                                 'user' => new ParamNode(User::node()),
@@ -212,7 +216,7 @@ class TypeNodeTest extends SerializerTestCase
                         ),
                     ),
                     'payload' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: shape('object', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
                             params: [
                                 'user' => new ParamNode(User::node()),
@@ -232,13 +236,14 @@ class TypeNodeTest extends SerializerTestCase
         $type = Response::class;
 
         $node = TypeNode::from($type);
+        $this->initializeLazyParams($node);
 
         $this->assertEquals(
             new TypeNode(
                 type: Response::class,
                 params: [
                     '_meta' => new ParamNode(
-                        type: new TypeNode(
+                        node: new TypeNode(
                             type: 'map<string, mixed>',
                             params: [
                                 'key' => new ParamNode(new TypeNode('string')),

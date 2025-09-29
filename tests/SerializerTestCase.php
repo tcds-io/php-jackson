@@ -5,9 +5,10 @@ namespace Tcds\Io\Serializer;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use Tcds\Io\Serializer\Metadata\TypeNode;
 use Throwable;
 
-class SerializerTestCase extends TestCase
+abstract class SerializerTestCase extends TestCase
 {
     /**
      * @template E of Throwable
@@ -28,5 +29,19 @@ class SerializerTestCase extends TestCase
         }
 
         throw new AssertionFailedError('Failed asserting that an exception was thrown');
+    }
+
+    protected function initializeLazyParams(TypeNode $node, int $depth = 10): void
+    {
+        if ($depth < 1) {
+            return;
+        }
+
+        $depth = $depth - 1;
+
+        foreach ($node->params as $param) {
+            initializeLazyObject($param);
+            $this->initializeLazyParams($param->node, $depth);
+        }
     }
 }

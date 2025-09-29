@@ -13,9 +13,6 @@ use Tcds\Io\Serializer\Metadata\TypeNodeRepository;
 use Throwable;
 use TypeError;
 
-/**
- * @template T
- */
 readonly class RuntimeReader implements Reader
 {
     public function __construct(
@@ -44,7 +41,7 @@ readonly class RuntimeReader implements Reader
         return array_map(
             callback: function (mixed $item) use ($mapper, $node, $trace) {
                 return $mapper->readValue(
-                    type: $node->params['value']->type->type,
+                    type: $node->params['value']->node->type,
                     value: $item,
                     trace: $trace,
                 );
@@ -81,7 +78,7 @@ readonly class RuntimeReader implements Reader
 
     private function readArrayMap(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
-        $param = $node->params['value']->type->type;
+        $param = $node->params['value']->node->type;
 
         return array_map(
             callback: fn($item) => $mapper->readValue(
@@ -111,9 +108,9 @@ readonly class RuntimeReader implements Reader
             $innerTrace = [...$trace, $name];
 
             try {
-                $values[$name] = $mapper->readValue($param->type->type, $value, $innerTrace);
+                $values[$name] = $mapper->readValue($param->node->type, $value, $innerTrace);
             } catch (TypeError) {
-                throw new UnableToParseValue($innerTrace, $param->type->specification(), $value);
+                throw new UnableToParseValue($innerTrace, $param->node->specification(), $value);
             }
         }
 

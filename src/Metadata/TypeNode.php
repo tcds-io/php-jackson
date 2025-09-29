@@ -16,6 +16,9 @@ use Tcds\Io\Serializer\Metadata\Parser\ParamType;
  */
 final class TypeNode
 {
+    /** @var array<string, self> */
+    public static array $nodes = [];
+
     /**
      * @param string $type
      * @param array<ParamName, ParamNode> $params
@@ -26,16 +29,12 @@ final class TypeNode
     ) {
     }
 
-    /**
-     * @param list<string> $generics
-     */
-    public static function from(string $type, array $generics = []): self
+    public static function from(string $type): self
     {
-        if (empty($generics)) {
-            [$type, $generics] = Annotation::extractGenerics($type);
-        }
+        [$type, $generics] = Annotation::extractGenerics($type);
+        $key = generic($type, $generics);
 
-        return match (true) {
+        return self::$nodes[$key] ??= match (true) {
             ParamType::isScalar($type),
             ParamType::isEnum($type) => run(function () use ($type): TypeNode {
                 return new TypeNode($type);
@@ -44,7 +43,7 @@ final class TypeNode
                 return new self(
                     type: generic($type, $generics),
                     params: [
-                        'value' => new ParamNode(type: TypeNode::from($generics[0])),
+                        'value' => new ParamNode(node: TypeNode::from($generics[0])),
                     ],
                 );
             }),
@@ -100,7 +99,7 @@ final class TypeNode
                     $paramGenerics[$index] = $templates[$index] ?? $templates[$paramGeneric] ?? $paramGeneric;
                 }
 
-                return ParamNode::from($paramType, $paramGenerics);
+                return ParamNode::from(generic($paramType, $paramGenerics));
             }, $params),
         );
     }
@@ -147,8 +146,8 @@ final class TypeNode
         return match (true) {
             $this->isScalar() => $this->type,
             $this->isEnum() => array_map(fn(BackedEnum $enum) => $enum->value, $this->type::cases()),
-            $this->isList() => generic('list', $this->params['value']->type->specification()),
-            $this->isClass() => array_map(fn(ParamNode $node) => $node->type->specification(), $this->params),
+            $this->isList() => generic('list', $this->params['value']->node->specification()),
+            $this->isClass() => array_map(fn(ParamNode $node) => $node->node->specification(), $this->params),
             default => throw new SerializerException(sprintf('Unable to load specification of type `%s`', $this->type)),
         };
     }
