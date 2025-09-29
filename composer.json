@@ -6,14 +6,12 @@
   "require": {
     "php": ">=8.4",
     "ext-json": "*",
-    "tcds-io/php-better-generics": "dev-main",
-    "phpdocumentor/type-resolver": "^1.10"
+    "tcds-io/php-better-generics": "dev-main"
   },
   "require-dev": {
     "symfony/var-dumper": "^6.0",
-    "slevomat/coding-standard": "^7.0",
-    "phpstan/phpstan": "^1.12",
-    "phpunit/phpunit": "^12.1",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^12.3",
     "php-cs-fixer/shim": "^3.88"
   },
   "autoload": {
