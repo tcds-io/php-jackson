@@ -21,9 +21,9 @@ readonly class Place
         return new TypeNode(
             type: Place::class,
             params: [
-                'city' => new ParamNode(new TypeNode('string')),
-                'country' => new ParamNode(new TypeNode('string')),
-                'position' => new ParamNode(LatLng::node()),
+                'city' => new ParamNode('city', new TypeNode('string')),
+                'country' => new ParamNode('country', new TypeNode('string')),
+                'position' => new ParamNode('position', LatLng::node()),
             ],
         );
     }

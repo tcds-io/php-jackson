@@ -18,6 +18,8 @@ final class TypeNode
 {
     /** @var array<string, self> */
     public static array $nodes = [];
+    /** @var array<string, mixed> */
+    public static array $specifications = [];
 
     /**
      * @param string $type
@@ -43,7 +45,7 @@ final class TypeNode
                 return new self(
                     type: generic($type, $generics),
                     params: [
-                        'value' => new ParamNode(node: TypeNode::from($generics[0])),
+                        'value' => new ParamNode('value', node: TypeNode::from($generics[0])),
                     ],
                 );
             }),
@@ -52,7 +54,12 @@ final class TypeNode
 
                 return new TypeNode(
                     type: shape($type, $params),
-                    params: array_map(fn (string $param) => ParamNode::from($param), $params),
+                    params: mapOf($params)
+                        ->map(fn(string $paramName, string $paramType) => [
+                            $paramName,
+                            ParamNode::from($paramName, $paramType),
+                        ])
+                        ->entries(),
                 );
             }),
             ParamType::isArray($type) => run(function () use ($type, $generics): TypeNode {
@@ -61,10 +68,10 @@ final class TypeNode
 
                 return new TypeNode(
                     type: generic('map', [$key, $value]),
-                    params: array_map(
-                        callback: fn (string $generic) => ParamNode::from($generic),
-                        array: ['key' => $key, 'value' => $value],
-                    ),
+                    params: [
+                        'key' => ParamNode::from('key', $key),
+                        'value' => ParamNode::from('value', $value),
+                    ],
                 );
             }),
             ParamType::isClass($type) => run(function () use ($type, $generics): TypeNode {
@@ -91,17 +98,29 @@ final class TypeNode
 
         return new self(
             type: generic($type, $templates),
-            params: array_map(function ($paramType) use ($templates) {
-                $paramType = $templates[$paramType] ?? $paramType;
-                [$paramType, $paramGenerics] = Annotation::extractGenerics($paramType);
+            params: mapOf($params)
+                ->map(function (string $paramName, string $paramType) use ($templates) {
+                    $paramType = $templates[$paramType] ?? $paramType;
+                    [$paramType, $paramGenerics] = Annotation::extractGenerics($paramType);
 
-                foreach ($paramGenerics as $index => $paramGeneric) {
-                    $paramGenerics[$index] = $templates[$index] ?? $templates[$paramGeneric] ?? $paramGeneric;
-                }
+                    foreach ($paramGenerics as $index => $paramGeneric) {
+                        $paramGenerics[$index] = $templates[$index] ?? $templates[$paramGeneric] ?? $paramGeneric;
+                    }
 
-                return ParamNode::from(generic($paramType, $paramGenerics));
-            }, $params),
+                    return [
+                        $paramName,
+                        ParamNode::from($paramName, generic($paramType, $paramGenerics)),
+                    ];
+                })
+                ->entries(),
         );
+    }
+
+    public function mainType(): string
+    {
+        [$main] = Annotation::extractGenerics($this->type);
+
+        return $main;
     }
 
     public function isBoolean(): bool
@@ -112,27 +131,27 @@ final class TypeNode
 
     public function isScalar(): bool
     {
-        return ParamType::isScalar($this->type);
+        return ParamType::isScalar($this->mainType());
     }
 
     public function isEnum(): bool
     {
-        return ParamType::isEnum($this->type);
+        return ParamType::isEnum($this->mainType());
     }
 
     public function isClass(): bool
     {
-        return ParamType::isResolvedType($this->type);
+        return ParamType::isResolvedType($this->mainType());
     }
 
     public function isList(): bool
     {
-        return str_starts_with($this->type, 'list<');
+        return $this->mainType() === 'list';
     }
 
     public function isArrayMap(): bool
     {
-        return str_starts_with($this->type, 'map<');
+        return $this->mainType() === 'map';
     }
 
     public function isShapeValue(): bool
@@ -143,11 +162,22 @@ final class TypeNode
 
     public function specification(): array|string
     {
+        if (array_key_exists($this->type, self::$specifications)) {
+            return [];
+        }
+
         return match (true) {
             $this->isScalar() => $this->type,
-            $this->isEnum() => array_map(fn (BackedEnum $enum) => $enum->value, $this->type::cases()),
+            $this->isEnum() => array_map(fn(BackedEnum $enum) => $enum->value, $this->type::cases()),
             $this->isList() => generic('list', $this->params['value']->node->specification()),
-            $this->isClass() => array_map(fn (ParamNode $node) => $node->node->specification(), $this->params),
+            $this->isClass() => run(function () {
+                self::$specifications[$this->type] = true;
+
+                return array_map(fn(ParamNode $node) => $node->node->specification(), $this->params);
+            }),
+            $this->isArrayMap() => [
+                $this->params['key']->node->type => $this->params['value']->node->specification(),
+            ],
             default => throw new SerializerException(sprintf('Unable to load specification of type `%s`', $this->type)),
         };
     }

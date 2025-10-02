@@ -20,8 +20,8 @@ readonly class LatLng
         return new TypeNode(
             type: LatLng::class,
             params: [
-                'lat' => new ParamNode(new TypeNode('float')),
-                'lng' => new ParamNode(new TypeNode('float')),
+                'lat' => new ParamNode('lat', new TypeNode('float')),
+                'lng' => new ParamNode('lng', new TypeNode('float')),
             ],
         );
     }

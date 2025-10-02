@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Mapper;
+namespace Tcds\Io\Serializer\Metadata;
 
 use Tcds\Io\Serializer\ArrayObjectMapper;
 

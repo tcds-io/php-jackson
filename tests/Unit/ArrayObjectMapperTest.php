@@ -40,7 +40,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $mapper = new ArrayObjectMapper(
             typeMappers: [
                 LatLng::class => [
-                    'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
+                    'reader' => fn(string $value) => new LatLng(...explode(',', $value)),
                 ],
             ],
         );
@@ -86,20 +86,12 @@ class ArrayObjectMapperTest extends SerializerTestCase
 
         $exception = $this->expectThrows(
             UnableToParseValue::class,
-            fn () => $this->mapper->readValue(AccountHolder::class, $data),
+            fn() => $this->mapper->readValue(AccountHolder::class, $data),
         );
 
-        $this->assertEquals(
-            new UnableToParseValue(
-                ['address', 'place', 'position'],
-                [
-                    'lat' => 'float',
-                    'lng' => 'float',
-                ],
-                '-26.9013, -48.6655',
-            ),
-            $exception,
-        );
+        $this->assertEquals(['address', 'place', 'position'], $exception->trace);
+        $this->assertEquals(['lat' => 'float', 'lng' => 'float'], $exception->expected);
+        $this->assertEquals('string', $exception->given);
     }
 
     #[Test] public function given_an_object_with_map_param_then_handle_value(): void

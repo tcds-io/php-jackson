@@ -2,13 +2,15 @@
 
 namespace Tcds\Io\Serializer\Exception;
 
+use Throwable;
+
 class UnableToParseValue extends SerializerException
 {
     public mixed $given;
 
-    public function __construct(public array $trace, public mixed $expected, mixed $given)
+    public function __construct(public array $trace, public mixed $expected, mixed $given, private ?Throwable $previous = null)
     {
-        parent::__construct(sprintf('Unable to parse value at .%s', join('.', $trace)));
+        parent::__construct(sprintf('Unable to parse value at .%s', join('.', $trace)), $previous);
 
         $this->given = $this->toType($given);
     }
@@ -30,8 +32,8 @@ class UnableToParseValue extends SerializerException
                 is_numeric($value) => 'float',
                 default => 'string',
             },
-            is_array($value) => array_map(fn ($inner) => $this->toType($inner), $value),
-            is_object($value) => array_map(fn ($inner) => $this->toType($inner), get_object_vars($value)),
+            is_array($value) => array_map(fn($inner) => $this->toType($inner), $value),
+            is_object($value) => array_map(fn($inner) => $this->toType($inner), get_object_vars($value)),
             default => get_debug_type($value),
         };
     }

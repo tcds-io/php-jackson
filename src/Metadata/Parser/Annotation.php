@@ -34,10 +34,14 @@ class Annotation
             return [$type, []];
         }
 
-        return [
-            $matches[1],
-            array_map('trim', explode(',', $matches[2])),
-        ];
+        $type = trim($matches[1]);
+        $generics = array_map('trim', explode(',', $matches[2]));
+
+        if ($type === 'array' && count($generics) === 1) {
+            $type = 'list';
+        }
+
+        return [$type, $generics];
     }
 
     public static function generic(ReflectionClass $reflection, string $type): string
@@ -48,8 +52,8 @@ class Annotation
         return generic(
             type: self::fqnOf($reflection, ($runtimeTypes[$type] ?? $type)),
             generics: new ArrayList($generics)
-                ->map(fn (string $generic) => $runtimeTypes[$generic] ?? $generic)
-                ->map(fn (string $generic) => self::fqnOf($reflection, $generic))
+                ->map(fn(string $generic) => $runtimeTypes[$generic] ?? $generic)
+                ->map(fn(string $generic) => self::fqnOf($reflection, $generic))
                 ->items(),
         );
     }
@@ -59,7 +63,7 @@ class Annotation
         $docblock = trim($docblock ?: '');
         $docblock = preg_replace('/\/\*\*|\*\/|\*/', '', $docblock);
         $docblock = preg_replace('/\s*\n\s*/', ' ', $docblock);
-        $docblock = join(PHP_EOL, array_map(fn (string $line) => "@$line", explode('@', $docblock)));
+        $docblock = join(PHP_EOL, array_map(fn(string $line) => "@$line", explode('@', $docblock)));
         preg_match($pattern, $docblock, $matches);
 
         return $matches[1] ?? null;

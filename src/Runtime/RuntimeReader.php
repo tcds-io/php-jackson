@@ -4,12 +4,13 @@ namespace Tcds\Io\Serializer\Runtime;
 
 use BackedEnum;
 use Override;
-use Tcds\Io\Serializer\ArrayObjectMapper;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Mapper\Reader;
+use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\Reader;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Tcds\Io\Serializer\Metadata\TypeNodeRepository;
+use Tcds\Io\Serializer\ObjectMapper;
 use Throwable;
 use TypeError;
 
@@ -20,7 +21,7 @@ readonly class RuntimeReader implements Reader
     ) {
     }
 
-    #[Override] public function __invoke(mixed $data, ArrayObjectMapper $mapper, string $type, array $trace)
+    #[Override] public function __invoke(mixed $data, ObjectMapper $mapper, string $type, array $trace)
     {
         $node = $this->node->of($type);
 
@@ -36,7 +37,7 @@ readonly class RuntimeReader implements Reader
         };
     }
 
-    private function readList(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
+    private function readList(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         return array_map(
             callback: function (mixed $item) use ($mapper, $node, $trace) {
@@ -64,24 +65,24 @@ readonly class RuntimeReader implements Reader
      * @template C
      * @return C
      */
-    private function readClass(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
         $values = $this->readValues($mapper, $node, $data, $trace);
-        $class = $node->type;
+        $class = $node->mainType();
 
         try {
             return new $class(...$values);
-        } catch (Throwable) {
-            throw new UnableToParseValue($trace, $node->specification(), $data);
+        } catch (Throwable $e) {
+            throw new UnableToParseValue($trace, $node->specification(), $data, $e);
         }
     }
 
-    private function readArrayMap(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
         $param = $node->params['value']->node->type;
 
         return array_map(
-            callback: fn ($item) => $mapper->readValue(
+            callback: fn($item) => $mapper->readValue(
                 type: $param,
                 value: $item,
                 trace: $trace,
@@ -90,7 +91,7 @@ readonly class RuntimeReader implements Reader
         );
     }
 
-    private function readShape(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readShape(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
         $values = $this->readValues($mapper, $node, $data, $trace);
 
@@ -99,9 +100,24 @@ readonly class RuntimeReader implements Reader
             : (object) $values;
     }
 
-    private function readValues(ArrayObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
+    private function readValueObject(ObjectMapper $mapper, ParamNode $param, mixed $data, array $trace): array
+    {
+        $data = $data[$param->name] ?? $data;
+
+        return [
+            $param->name => $mapper->readValue($param->node->type, $data, $trace),
+        ];
+    }
+
+    private function readValues(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         $values = [];
+
+        if (count($node->params) === 1) {
+            $param = array_values($node->params)[0];
+
+            return $this->readValueObject($mapper, $param, $data, $trace);
+        }
 
         foreach ($node->params as $name => $param) {
             $value = $data[$name] ?? null;
@@ -109,8 +125,8 @@ readonly class RuntimeReader implements Reader
 
             try {
                 $values[$name] = $mapper->readValue($param->node->type, $value, $innerTrace);
-            } catch (TypeError) {
-                throw new UnableToParseValue($innerTrace, $param->node->specification(), $value);
+            } catch (TypeError $e) {
+                throw new UnableToParseValue($innerTrace, $param->node->specification(), $value, $e);
             }
         }
 

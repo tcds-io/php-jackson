@@ -22,10 +22,10 @@ readonly class User
         return new TypeNode(
             type: User::class,
             params: [
-                'name' => new ParamNode(new TypeNode('string')),
-                'age' => new ParamNode(new TypeNode('int')),
-                'height' => new ParamNode(new TypeNode('float')),
-                'address' => new ParamNode(Address::node()),
+                'name' => new ParamNode('name', new TypeNode('string')),
+                'age' => new ParamNode('age', new TypeNode('int')),
+                'height' => new ParamNode('height', new TypeNode('float')),
+                'address' => new ParamNode('address', Address::node()),
             ],
         );
     }

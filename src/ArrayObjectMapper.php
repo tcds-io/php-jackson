@@ -3,7 +3,7 @@
 namespace Tcds\Io\Serializer;
 
 use Override;
-use Tcds\Io\Serializer\Mapper\Reader;
+use Tcds\Io\Serializer\Metadata\Reader;
 use Tcds\Io\Serializer\Runtime\RuntimeReader;
 
 /**
@@ -11,13 +11,18 @@ use Tcds\Io\Serializer\Runtime\RuntimeReader;
  */
 readonly class ArrayObjectMapper implements ObjectMapper
 {
+    private array $typeMappers;
+
     /**
      * @param TypeMapper $typeMappers
      */
     public function __construct(
         private Reader $defaultTypeReader = new RuntimeReader(),
-        private array $typeMappers = [],
+        array $typeMappers = [],
     ) {
+        $this->typeMappers = [
+            ...$typeMappers,
+        ];
     }
 
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])

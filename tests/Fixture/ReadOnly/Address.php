@@ -96,10 +96,10 @@ readonly class Address
         return new TypeNode(
             type: Address::class,
             params: [
-                'street' => new ParamNode(new TypeNode(type: 'string')),
-                'number' => new ParamNode(new TypeNode(type: 'int')),
-                'main' => new ParamNode(new TypeNode(type: 'bool')),
-                'place' => new ParamNode(Place::node()),
+                'street' => new ParamNode('street', new TypeNode(type: 'string')),
+                'number' => new ParamNode('number', new TypeNode(type: 'int')),
+                'main' => new ParamNode('main', new TypeNode(type: 'bool')),
+                'place' => new ParamNode('place', Place::node()),
             ],
         );
     }

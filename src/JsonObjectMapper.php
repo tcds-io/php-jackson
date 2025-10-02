@@ -3,7 +3,7 @@
 namespace Tcds\Io\Serializer;
 
 use Override;
-use Tcds\Io\Serializer\Mapper\Reader;
+use Tcds\Io\Serializer\Metadata\Reader;
 use Tcds\Io\Serializer\Runtime\RuntimeReader;
 
 /**

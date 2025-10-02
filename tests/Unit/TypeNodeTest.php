@@ -16,61 +16,72 @@ class TypeNodeTest extends SerializerTestCase
       "type": "Tcds\\\\Io\\\\Generic\\\\ArrayList<Tcds\\\\Io\\\\Serializer\\\\Fixture\\\\ReadOnly\\\\Address>",
       "params": {
         "items": {
+          "name": "items",
           "node": {
             "type": "list<Tcds\\\\Io\\\\Serializer\\\\Fixture\\\\ReadOnly\\\\Address>",
             "params": {
               "value": {
+                "name": "value",
                 "node": {
                   "type": "Tcds\\\\Io\\\\Serializer\\\\Fixture\\\\ReadOnly\\\\Address",
                   "params": {
                     "street": {
+                      "name": "street",
                       "node": {
                         "type": "string",
-                        "params": {}
+                        "params": []
                       }
                     },
                     "number": {
+                      "name": "number",
                       "node": {
                         "type": "int",
-                        "params": {}
+                        "params": []
                       }
                     },
                     "main": {
+                      "name": "main",
                       "node": {
                         "type": "bool",
-                        "params": {}
+                        "params": []
                       }
                     },
                     "place": {
+                      "name": "place",
                       "node": {
                         "type": "Tcds\\\\Io\\\\Serializer\\\\Fixture\\\\ReadOnly\\\\Place",
                         "params": {
                           "city": {
+                            "name": "city",
                             "node": {
                               "type": "string",
-                              "params": {}
+                              "params": []
                             }
                           },
                           "country": {
+                            "name": "country",
                             "node": {
                               "type": "string",
-                              "params": {}
+                              "params": []
                             }
                           },
                           "position": {
+                            "name": "position",
                             "node": {
                               "type": "Tcds\\\\Io\\\\Serializer\\\\Fixture\\\\ReadOnly\\\\LatLng",
                               "params": {
                                 "lat": {
+                                  "name": "lat",
                                   "node": {
                                     "type": "float",
-                                    "params": {}
+                                    "params": []
                                   }
                                 },
                                 "lng": {
+                                  "name": "lng",
                                   "node": {
                                     "type": "float",
-                                    "params": {}
+                                    "params": []
                                   }
                                 }
                               }

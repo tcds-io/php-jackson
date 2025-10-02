@@ -40,8 +40,8 @@ readonly class BankAccount
         return new TypeNode(
             type: BankAccount::class,
             params: [
-                'number' => new ParamNode(new TypeNode('string')),
-                'type' => new ParamNode(new TypeNode(AccountType::class)),
+                'number' => new ParamNode('number', new TypeNode('string')),
+                'type' => new ParamNode('type', new TypeNode(AccountType::class)),
             ],
         );
     }

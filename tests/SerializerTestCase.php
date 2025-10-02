@@ -10,6 +10,12 @@ use Throwable;
 
 abstract class SerializerTestCase extends TestCase
 {
+    protected function setUp(): void
+    {
+        TypeNode::$nodes = [];
+        TypeNode::$specifications = [];
+    }
+
     /**
      * @template E of Throwable
      * @param class-string<E> $expected

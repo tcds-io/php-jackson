@@ -2,7 +2,7 @@
 
 namespace Tcds\Io\Serializer;
 
-use Tcds\Io\Serializer\Mapper\Reader;
+use Tcds\Io\Serializer\Metadata\Reader;
 
 /**
  * @phpstan-type Type string|class-string<mixed>
