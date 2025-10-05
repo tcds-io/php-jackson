@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class LatLng
@@ -19,9 +19,9 @@ readonly class LatLng
     {
         return new TypeNode(
             type: LatLng::class,
-            params: [
-                'lat' => new ParamNode('lat', new TypeNode('float')),
-                'lng' => new ParamNode('lng', new TypeNode('float')),
+            inputs: [
+                'lat' => new InputNode('lat', new TypeNode('float')),
+                'lng' => new InputNode('lng', new TypeNode('float')),
             ],
         );
     }

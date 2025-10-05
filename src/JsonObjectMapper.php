@@ -4,7 +4,9 @@ namespace Tcds\Io\Serializer;
 
 use Override;
 use Tcds\Io\Serializer\Metadata\Reader;
+use Tcds\Io\Serializer\Metadata\Writer;
 use Tcds\Io\Serializer\Runtime\RuntimeReader;
+use Tcds\Io\Serializer\Runtime\RuntimeWriter;
 
 /**
  * @phpstan-import-type TypeMapper from ObjectMapper
@@ -16,9 +18,12 @@ readonly class JsonObjectMapper implements ObjectMapper
     /**
      * @param TypeMapper $typeMappers
      */
-    public function __construct(Reader $defaultTypeReader = new RuntimeReader(), array $typeMappers = [])
-    {
-        $this->mapper = new ArrayObjectMapper($defaultTypeReader, $typeMappers);
+    public function __construct(
+        Reader $defaultTypeReader = new RuntimeReader(),
+        Writer $defaultTypeWriter = new RuntimeWriter(),
+        array $typeMappers = [],
+    ) {
+        $this->mapper = new ArrayObjectMapper($defaultTypeReader, $defaultTypeWriter, $typeMappers);
     }
 
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
@@ -32,5 +37,10 @@ readonly class JsonObjectMapper implements ObjectMapper
     #[Override] public function readValue(string $type, mixed $value, array $trace = [])
     {
         return $this->readValueWith($type, $value);
+    }
+
+    public function writeValue(mixed $value): string
+    {
+        return json_encode($this->mapper->writeValue($value));
     }
 }

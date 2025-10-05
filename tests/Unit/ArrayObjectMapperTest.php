@@ -108,14 +108,14 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $type = generic('map', ['string', Address::class]);
 
         $response = $this->mapper->readValue($type, [
-            'main' => Address::mainAddressData(),
-            'other' => Address::otherAddressData(),
+            'main' => Address::mainData(),
+            'other' => Address::otherData(),
         ]);
 
         $this->assertEquals(
             [
-                'main' => Address::mainAddress(),
-                'other' => Address::otherAddress(),
+                'main' => Address::main(),
+                'other' => Address::other(),
             ],
             $response,
         );

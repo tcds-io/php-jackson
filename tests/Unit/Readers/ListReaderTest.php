@@ -19,27 +19,27 @@ class ListReaderTest extends SerializerTestCase
 
     #[Test] public function read_array_value(): void
     {
-        $json = json_encode([Address::mainAddressData(), Address::otherAddressData()]);
+        $json = json_encode([Address::mainData(), Address::otherData()]);
         $type = generic('array', [Address::class]);
 
         $addresses = $this->mapper->readValue($type, $json);
 
         $this->assertEquals(
-            [Address::mainAddress(), Address::otherAddress()],
+            [Address::main(), Address::other()],
             $addresses,
         );
     }
 
     #[Test] public function read_array_list_value(): void
     {
-        $json = json_encode([Address::mainAddressData(), Address::otherAddressData()]);
+        $json = json_encode([Address::mainData(), Address::otherData()]);
         $type = generic(ArrayList::class, [Address::class]);
 
         /** @var ArrayList $addresses */
         $addresses = $this->mapper->readValue($type, $json);
 
         $this->assertEquals(
-            [Address::mainAddress(), Address::otherAddress()],
+            [Address::main(), Address::other()],
             $addresses->items(),
         );
     }
