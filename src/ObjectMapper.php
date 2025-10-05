@@ -3,11 +3,13 @@
 namespace Tcds\Io\Serializer;
 
 use Tcds\Io\Serializer\Metadata\Reader;
+use Tcds\Io\Serializer\Metadata\Writer;
 
 /**
  * @phpstan-type Type string|class-string<mixed>
  * @phpstan-type ReaderFn Reader::__invoke
- * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn }>
+ * @phpstan-type WriterFn Writer::__invoke
+ * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn, writer: Writer|WriterFn }>
  */
 interface ObjectMapper
 {
@@ -25,4 +27,6 @@ interface ObjectMapper
      * @return T
      */
     public function readValue(string $type, mixed $value, array $trace = []);
+
+    public function writeValue(mixed $value): mixed;
 }

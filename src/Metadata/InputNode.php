@@ -2,7 +2,7 @@
 
 namespace Tcds\Io\Serializer\Metadata;
 
-readonly class ParamNode
+readonly class InputNode
 {
     public function __construct(
         public string $name,

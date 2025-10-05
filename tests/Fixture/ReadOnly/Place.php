@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class Place
@@ -20,10 +20,10 @@ readonly class Place
     {
         return new TypeNode(
             type: Place::class,
-            params: [
-                'city' => new ParamNode('city', new TypeNode('string')),
-                'country' => new ParamNode('country', new TypeNode('string')),
-                'position' => new ParamNode('position', LatLng::node()),
+            inputs: [
+                'city' => new InputNode('city', new TypeNode('string')),
+                'country' => new InputNode('country', new TypeNode('string')),
+                'position' => new InputNode('position', LatLng::node()),
             ],
         );
     }

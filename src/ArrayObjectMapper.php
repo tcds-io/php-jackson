@@ -3,8 +3,11 @@
 namespace Tcds\Io\Serializer;
 
 use Override;
+use Tcds\Io\Serializer\Metadata\Parser\Type;
 use Tcds\Io\Serializer\Metadata\Reader;
+use Tcds\Io\Serializer\Metadata\Writer;
 use Tcds\Io\Serializer\Runtime\RuntimeReader;
+use Tcds\Io\Serializer\Runtime\RuntimeWriter;
 
 /**
  * @phpstan-import-type TypeMapper from ObjectMapper
@@ -18,6 +21,7 @@ readonly class ArrayObjectMapper implements ObjectMapper
      */
     public function __construct(
         private Reader $defaultTypeReader = new RuntimeReader(),
+        private Writer $defaultTypeWriter = new RuntimeWriter(),
         array $typeMappers = [],
     ) {
         $this->typeMappers = [
@@ -35,5 +39,13 @@ readonly class ArrayObjectMapper implements ObjectMapper
         $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
 
         return $reader($value, $this, $type, $trace);
+    }
+
+    #[Override] public function writeValue(mixed $value): mixed
+    {
+        $type = Type::ofValue($value);
+        $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
+
+        return $writer($value);
     }
 }

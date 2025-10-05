@@ -15,7 +15,7 @@ use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Response;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
 use Tcds\Io\Serializer\Fixture\WithShape;
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Tcds\Io\Serializer\SerializerTestCase;
 use Traversable;
@@ -59,13 +59,13 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: $type,
-                params: [
-                    'items' => new ParamNode(
+                inputs: [
+                    'items' => new InputNode(
                         name: 'items',
                         node: new TypeNode(
                             type: generic('list', [Address::class]),
-                            params: [
-                                'value' => new ParamNode('value', Address::node()),
+                            inputs: [
+                                'value' => new InputNode('value', Address::node()),
                             ],
                         ),
                     ),
@@ -85,58 +85,58 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: GenericStubs::class,
-                params: [
-                    'addresses' => new ParamNode(
+                inputs: [
+                    'addresses' => new InputNode(
                         'addresses',
                         new TypeNode(
                             type: generic(ArrayList::class, [Address::class]),
-                            params: [
-                                'items' => new ParamNode(
+                            inputs: [
+                                'items' => new InputNode(
                                     'items',
                                     node: new TypeNode(
                                         type: generic('list', [Address::class]),
-                                        params: [
-                                            'value' => new ParamNode('value', Address::node()),
+                                        inputs: [
+                                            'value' => new InputNode('value', Address::node()),
                                         ],
                                     ),
                                 ),
                             ],
                         ),
                     ),
-                    'users' => new ParamNode(
+                    'users' => new InputNode(
                         'users',
                         new TypeNode(
                             type: generic(Traversable::class, [User::class]),
-                            params: [
-                                'value' => new ParamNode('value', User::node()),
+                            inputs: [
+                                'value' => new InputNode('value', User::node()),
                             ],
                         ),
                     ),
-                    'positions' => new ParamNode(
+                    'positions' => new InputNode(
                         name: 'positions',
                         node: new TypeNode(
                             type: generic(Map::class, ['string', LatLng::class]),
-                            params: [
-                                'entries' => new ParamNode(
+                            inputs: [
+                                'entries' => new InputNode(
                                     name: 'entries',
                                     node: new TypeNode(
                                         type: generic('map', ['string', LatLng::class]),
-                                        params: [
-                                            'key' => new ParamNode('key', new TypeNode('string')),
-                                            'value' => new ParamNode('value', LatLng::node()),
+                                        inputs: [
+                                            'key' => new InputNode('key', new TypeNode('string')),
+                                            'value' => new InputNode('value', LatLng::node()),
                                         ],
                                     ),
                                 ),
                             ],
                         ),
                     ),
-                    'accounts' => new ParamNode(
+                    'accounts' => new InputNode(
                         name: 'accounts',
                         node: new TypeNode(
                             type: generic(Pair::class, [AccountType::class, BankAccount::class]),
-                            params: [
-                                'key' => new ParamNode('key', new TypeNode(type: AccountType::class)),
-                                'value' => new ParamNode('value', BankAccount::node()),
+                            inputs: [
+                                'key' => new InputNode('key', new TypeNode(type: AccountType::class)),
+                                'value' => new InputNode('value', BankAccount::node()),
                             ],
                         ),
                     ),
@@ -156,13 +156,13 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: generic(ArrayList::class, ['string']),
-                params: [
-                    'items' => new ParamNode(
+                inputs: [
+                    'items' => new InputNode(
                         name: 'items',
                         node: new TypeNode(
                             type: 'list<string>',
-                            params: [
-                                'value' => new ParamNode('value', new TypeNode('string')),
+                            inputs: [
+                                'value' => new InputNode('value', new TypeNode('string')),
                             ],
                         ),
                     ),
@@ -181,9 +181,9 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: generic(Pair::class, ['string', Address::class]),
-                params: [
-                    'key' => new ParamNode('key', new TypeNode(type: 'string')),
-                    'value' => new ParamNode('value', Address::node()),
+                inputs: [
+                    'key' => new InputNode('key', new TypeNode(type: 'string')),
+                    'value' => new InputNode('value', Address::node()),
                 ],
             ),
             $node,
@@ -200,26 +200,26 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: WithShape::class,
-                params: [
-                    'data' => new ParamNode(
+                inputs: [
+                    'data' => new InputNode(
                         name: 'data',
                         node: new TypeNode(
                             type: shape('array', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
-                            params: [
-                                'user' => new ParamNode('user', User::node()),
-                                'address' => new ParamNode('address', Address::node()),
-                                'description' => new ParamNode('description', new TypeNode('string')),
+                            inputs: [
+                                'user' => new InputNode('user', User::node()),
+                                'address' => new InputNode('address', Address::node()),
+                                'description' => new InputNode('description', new TypeNode('string')),
                             ],
                         ),
                     ),
-                    'payload' => new ParamNode(
+                    'payload' => new InputNode(
                         name: 'payload',
                         node: new TypeNode(
                             type: shape('object', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
-                            params: [
-                                'user' => new ParamNode('user', User::node()),
-                                'address' => new ParamNode('address', Address::node()),
-                                'description' => new ParamNode('description', new TypeNode('string')),
+                            inputs: [
+                                'user' => new InputNode('user', User::node()),
+                                'address' => new InputNode('address', Address::node()),
+                                'description' => new InputNode('description', new TypeNode('string')),
                             ],
                         ),
                     ),
@@ -239,14 +239,14 @@ class TypeNodeTest extends SerializerTestCase
         $this->assertEquals(
             new TypeNode(
                 type: Response::class,
-                params: [
-                    '_meta' => new ParamNode(
+                inputs: [
+                    '_meta' => new InputNode(
                         name: '_meta',
                         node: new TypeNode(
                             type: 'map<string, mixed>',
-                            params: [
-                                'key' => new ParamNode('key', new TypeNode('string')),
-                                'value' => new ParamNode('value', new TypeNode('mixed')),
+                            inputs: [
+                                'key' => new InputNode('key', new TypeNode('string')),
+                                'value' => new InputNode('value', new TypeNode('mixed')),
                             ],
                         ),
                     ),

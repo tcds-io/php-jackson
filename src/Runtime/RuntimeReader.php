@@ -6,7 +6,7 @@ use BackedEnum;
 use Override;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\Reader;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Tcds\Io\Serializer\Metadata\TypeNodeRepository;
@@ -42,7 +42,7 @@ readonly class RuntimeReader implements Reader
         return array_map(
             callback: function (mixed $item) use ($mapper, $node, $trace) {
                 return $mapper->readValue(
-                    type: $node->params['value']->node->type,
+                    type: $node->inputs['value']->node->type,
                     value: $item,
                     trace: $trace,
                 );
@@ -79,7 +79,7 @@ readonly class RuntimeReader implements Reader
 
     private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
-        $param = $node->params['value']->node->type;
+        $param = $node->inputs['value']->node->type;
 
         return array_map(
             callback: fn($item) => $mapper->readValue(
@@ -100,7 +100,7 @@ readonly class RuntimeReader implements Reader
             : (object) $values;
     }
 
-    private function readValueObject(ObjectMapper $mapper, ParamNode $param, mixed $data, array $trace): array
+    private function readValueObject(ObjectMapper $mapper, InputNode $param, mixed $data, array $trace): array
     {
         $data = $data[$param->name] ?? $data;
 
@@ -113,13 +113,13 @@ readonly class RuntimeReader implements Reader
     {
         $values = [];
 
-        if (count($node->params) === 1) {
-            $param = array_values($node->params)[0];
+        if (count($node->inputs) === 1) {
+            $param = array_values($node->inputs)[0];
 
             return $this->readValueObject($mapper, $param, $data, $trace);
         }
 
-        foreach ($node->params as $name => $param) {
+        foreach ($node->inputs as $name => $param) {
             $value = $data[$name] ?? null;
             $innerTrace = [...$trace, $name];
 

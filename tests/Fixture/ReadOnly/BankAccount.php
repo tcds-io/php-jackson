@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
 use Tcds\Io\Serializer\Fixture\AccountType;
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class BankAccount
@@ -39,9 +39,9 @@ readonly class BankAccount
     {
         return new TypeNode(
             type: BankAccount::class,
-            params: [
-                'number' => new ParamNode('number', new TypeNode('string')),
-                'type' => new ParamNode('type', new TypeNode(AccountType::class)),
+            inputs: [
+                'number' => new InputNode('number', new TypeNode('string')),
+                'type' => new InputNode('type', new TypeNode(AccountType::class)),
             ],
         );
     }

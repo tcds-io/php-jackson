@@ -7,9 +7,26 @@ use ReflectionParameter;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Traversable;
 
-class ParamType
+class Type
 {
-    public static function of(ReflectionParameter $param): string
+    public static function ofValue(mixed $data): string
+    {
+        return match ($type = gettype($data)) {
+            'object' => $data::class,
+            'double' => 'float',
+            'array' => run(function () use ($data) {
+                $value = Type::ofValue(reset($data));
+                $key = Type::ofValue(array_key_first($data));
+
+                return array_is_list($data)
+                    ? sprintf('list<%s>', $value)
+                    : sprintf('map<%s, %s>', $key, $value);
+            }),
+            default => $type,
+        };
+    }
+
+    public static function ofParam(ReflectionParameter $param): string
     {
         $class = $param->getDeclaringClass() ?: throw new SerializerException('Not a class! Serializer can parse only class params');
         $templates = ClassAnnotation::templates($class);
@@ -41,7 +58,7 @@ class ParamType
         $simpleNodeTypes = ['int', 'float', 'string', 'bool', 'boolean', 'mixed'];
         $types = explode('|', str_replace('&', '|', $type));
 
-        $notScalar = array_filter($types, fn ($t) => !in_array($t, $simpleNodeTypes, true));
+        $notScalar = array_filter($types, fn($t) => !in_array($t, $simpleNodeTypes, true));
 
         if (count($types) > 1 && !empty($notScalar)) {
             return false;

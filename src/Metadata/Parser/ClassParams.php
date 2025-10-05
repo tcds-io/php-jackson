@@ -21,7 +21,7 @@ class ClassParams
             ->getConstructor()
             ->getParameters())
             ->indexedBy(fn (ReflectionParameter $param) => $param->name)
-            ->mapValues(fn (ReflectionParameter $param) => ParamType::of($param))
+            ->mapValues(fn (ReflectionParameter $param) => Type::ofParam($param))
             ->entries();
     }
 }

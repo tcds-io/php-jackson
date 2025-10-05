@@ -10,10 +10,14 @@ use Throwable;
 
 abstract class SerializerTestCase extends TestCase
 {
+    protected JsonObjectMapper $jsonMapper;
+
     protected function setUp(): void
     {
         TypeNode::$nodes = [];
         TypeNode::$specifications = [];
+
+        $this->jsonMapper = new JsonObjectMapper();
     }
 
     /**
@@ -45,7 +49,7 @@ abstract class SerializerTestCase extends TestCase
 
         $depth = $depth - 1;
 
-        foreach ($node->params as $param) {
+        foreach ($node->inputs as $param) {
             initializeLazyObject($param);
             $this->initializeLazyParams($param->node, $depth);
         }

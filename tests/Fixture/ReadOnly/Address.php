@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\ParamNode;
+use Tcds\Io\Serializer\Metadata\InputNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class Address
@@ -17,7 +17,7 @@ readonly class Address
     ) {
     }
 
-    public static function mainAddress(): self
+    public static function main(): self
     {
         return new self(
             street: 'main street',
@@ -34,7 +34,7 @@ readonly class Address
         );
     }
 
-    public static function otherAddress(): self
+    public static function other(): self
     {
         return new self(
             street: 'street street',
@@ -54,7 +54,7 @@ readonly class Address
     /**
      * @return array<string, mixed>
      */
-    public static function mainAddressData(): array
+    public static function mainData(): array
     {
         return [
             'street' => 'main street',
@@ -74,7 +74,7 @@ readonly class Address
     /**
      * @return array<string, mixed>
      */
-    public static function otherAddressData(): array
+    public static function otherData(): array
     {
         return [
             'street' => 'street street',
@@ -95,11 +95,11 @@ readonly class Address
     {
         return new TypeNode(
             type: Address::class,
-            params: [
-                'street' => new ParamNode('street', new TypeNode(type: 'string')),
-                'number' => new ParamNode('number', new TypeNode(type: 'int')),
-                'main' => new ParamNode('main', new TypeNode(type: 'bool')),
-                'place' => new ParamNode('place', Place::node()),
+            inputs: [
+                'street' => new InputNode('street', new TypeNode(type: 'string')),
+                'number' => new InputNode('number', new TypeNode(type: 'int')),
+                'main' => new InputNode('main', new TypeNode(type: 'bool')),
+                'place' => new InputNode('place', Place::node()),
             ],
         );
     }
