@@ -1,0 +1,46 @@
+{
+  "name": "tcds-io/php-jackson",
+  "description": "A lightweight, flexible object serializer for PHP, inspired by FasterXML/jackson",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "ext-json": "*",
+    "tcds-io/php-better-generics": "dev-main"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.0",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^12.3",
+    "php-cs-fixer/shim": "^3.88"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tcds\\Io\\Serializer\\": "src/"
+    },
+    "files": [
+      "fn/functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tcds\\Io\\Serializer\\": "tests/"
+    }
+  },
+  "scripts": {
+    "cs:check": "vendor/bin/php-cs-fixer check -v ./",
+    "cs:fix": "vendor/bin/php-cs-fixer fix ./",
+    "test:stan": "vendor/bin/phpstan analyse src --level=max --ansi",
+    "test:unit": "vendor/bin/phpunit --testdox --color=always",
+    "tests": [
+      "@cs:check",
+      "@test:stan",
+      "@test:unit"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": false
+    }
+  }
+}
