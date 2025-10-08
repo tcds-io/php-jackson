@@ -8,7 +8,7 @@ use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Metadata\Parser\Annotation;
 use Tcds\Io\Serializer\Metadata\Parser\ClassAnnotation;
 use Tcds\Io\Serializer\Metadata\Parser\ClassParams;
-use Tcds\Io\Serializer\Metadata\Parser\ParamType;
+use Tcds\Io\Serializer\Metadata\Parser\Type;
 
 /**
  * @phpstan-type ParamName string|int
@@ -23,11 +23,13 @@ final class TypeNode
 
     /**
      * @param string $type
-     * @param array<ParamName, ParamNode> $params
+     * @param array<ParamName, InputNode> $inputs
+     * @param list<ParamName, OutputNode> $outputs
      */
     public function __construct(
         public string $type,
-        public array $params = [],
+        public array $inputs = [],
+        public array $outputs = [],
     ) {
     }
 
@@ -37,49 +39,45 @@ final class TypeNode
         $key = generic($type, $generics);
 
         return self::$nodes[$key] ??= match (true) {
-            ParamType::isScalar($type),
-            ParamType::isEnum($type) => run(function () use ($type): TypeNode {
-                return new TypeNode($type);
-            }),
-            ParamType::isList($type, $generics) => run(function () use ($type, $generics): TypeNode {
-                return new self(
-                    type: generic($type, $generics),
-                    params: [
-                        'value' => new ParamNode('value', node: TypeNode::from($generics[0])),
-                    ],
-                );
-            }),
-            ParamType::isShapeType($type) => run(function () use ($type) {
+            Type::isScalar($type),
+            Type::isEnum($type) => new self($type),
+            Type::isList($type, $generics) => new self(
+                type: generic($type, $generics),
+                inputs: ['value' => new InputNode('value', node: TypeNode::from($generics[0]))],
+            ),
+            Type::isShapeType($type) => run(function () use ($type) {
                 [$type, $params] = Annotation::shaped($type);
 
-                return new TypeNode(
+                return new self(
                     type: shape($type, $params),
-                    params: mapOf($params)
-                        ->map(fn(string $paramName, string $paramType) => [
-                            $paramName,
-                            ParamNode::from($paramName, $paramType),
+                    inputs: mapOf($params)
+                        ->map(fn(string $name, string $type) => [
+                            $name,
+                            InputNode::from($name, $type),
+                        ])
+                        ->entries(),
+                    outputs: mapOf($params)
+                        ->map(fn(string $name, string $type) => [
+                            $name,
+                            OutputNode::from($name, $type),
                         ])
                         ->entries(),
                 );
             }),
-            ParamType::isArray($type) => run(function () use ($type, $generics): TypeNode {
+            Type::isArray($type) => run(function () use ($type, $generics): TypeNode {
                 $key = $generics[0] ?? 'mixed';
                 $value = $generics[1] ?? 'mixed';
 
-                return new TypeNode(
+                return new self(
                     type: generic('map', [$key, $value]),
-                    params: [
-                        'key' => ParamNode::from('key', $key),
-                        'value' => ParamNode::from('value', $value),
+                    inputs: [
+                        'key' => InputNode::from('key', $key),
+                        'value' => InputNode::from('value', $value),
                     ],
                 );
             }),
-            ParamType::isClass($type) => run(function () use ($type, $generics): TypeNode {
-                return self::fromClass($type, $generics);
-            }),
-            default => run(function () use ($type) {
-                throw new SerializerException("Cannot handle type `$type`");
-            }),
+            Type::isClass($type) => self::fromClass($type, $generics),
+            default => throw new SerializerException("Cannot handle type `$type`"),
         };
     }
 
@@ -98,7 +96,7 @@ final class TypeNode
 
         return new self(
             type: generic($type, $templates),
-            params: mapOf($params)
+            inputs: mapOf($params)
                 ->map(function (string $paramName, string $paramType) use ($templates) {
                     $paramType = $templates[$paramType] ?? $paramType;
                     [$paramType, $paramGenerics] = Annotation::extractGenerics($paramType);
@@ -109,7 +107,7 @@ final class TypeNode
 
                     return [
                         $paramName,
-                        ParamNode::from($paramName, generic($paramType, $paramGenerics)),
+                        InputNode::from($paramName, generic($paramType, $paramGenerics)),
                     ];
                 })
                 ->entries(),
@@ -131,17 +129,17 @@ final class TypeNode
 
     public function isScalar(): bool
     {
-        return ParamType::isScalar($this->mainType());
+        return Type::isScalar($this->mainType());
     }
 
     public function isEnum(): bool
     {
-        return ParamType::isEnum($this->mainType());
+        return Type::isEnum($this->mainType());
     }
 
     public function isClass(): bool
     {
-        return ParamType::isResolvedType($this->mainType());
+        return Type::isResolvedType($this->mainType());
     }
 
     public function isList(): bool
@@ -169,14 +167,14 @@ final class TypeNode
         return match (true) {
             $this->isScalar() => $this->type,
             $this->isEnum() => array_map(fn(BackedEnum $enum) => $enum->value, $this->type::cases()),
-            $this->isList() => generic('list', $this->params['value']->node->specification()),
+            $this->isList() => generic('list', $this->inputs['value']->node->specification()),
             $this->isClass() => run(function () {
                 self::$specifications[$this->type] = true;
 
-                return array_map(fn(ParamNode $node) => $node->node->specification(), $this->params);
+                return array_map(fn(InputNode $node) => $node->node->specification(), $this->inputs);
             }),
             $this->isArrayMap() => [
-                $this->params['key']->node->type => $this->params['value']->node->specification(),
+                $this->inputs['key']->node->type => $this->inputs['value']->node->specification(),
             ],
             default => throw new SerializerException(sprintf('Unable to load specification of type `%s`', $this->type)),
         };

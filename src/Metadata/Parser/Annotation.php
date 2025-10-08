@@ -111,7 +111,7 @@ class Annotation
 
     private static function fqnOf(ReflectionClass $class, string $name): string
     {
-        if (ParamType::isResolvedType($name)) {
+        if (Type::isResolvedType($name)) {
             return $name;
         }
 

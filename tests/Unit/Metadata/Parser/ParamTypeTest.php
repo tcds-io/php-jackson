@@ -8,7 +8,7 @@ use ReflectionClass;
 use Tcds\Io\Serializer\Fixture\Pair;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Place;
-use Tcds\Io\Serializer\Metadata\Parser\ParamType;
+use Tcds\Io\Serializer\Metadata\Parser\Type;
 
 class ParamTypeTest extends TestCase
 {
@@ -20,8 +20,8 @@ class ParamTypeTest extends TestCase
             ->getConstructor()
             ->getParameters();
 
-        $this->assertEquals('K', ParamType::of($key));
-        $this->assertEquals('V', ParamType::of($value));
+        $this->assertEquals('K', Type::ofParam($key));
+        $this->assertEquals('V', Type::ofParam($value));
     }
 
     #[Test] public function given_a_param_of_a_class_then_get_its_type(): void
@@ -32,9 +32,9 @@ class ParamTypeTest extends TestCase
             ->getConstructor()
             ->getParameters();
 
-        $this->assertEquals('string', ParamType::of($street));
-        $this->assertEquals('int', ParamType::of($number));
-        $this->assertEquals('bool', ParamType::of($main));
-        $this->assertEquals(Place::class, ParamType::of($place));
+        $this->assertEquals('string', Type::ofParam($street));
+        $this->assertEquals('int', Type::ofParam($number));
+        $this->assertEquals('bool', Type::ofParam($main));
+        $this->assertEquals(Place::class, Type::ofParam($place));
     }
 }
