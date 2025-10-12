@@ -1,12 +1,13 @@
 <?php
 
-namespace Tcds\Io\Serializer\Metadata\Parser;
+namespace Tcds\Io\Serializer\Unit\Metadata\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tcds\Io\Serializer\Fixture\AccountType;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
+use Tcds\Io\Serializer\Metadata\Parser\Type;
 
 class TypeTest extends TestCase
 {
@@ -16,6 +17,9 @@ class TypeTest extends TestCase
         $this->assertEquals($type, Type::ofValue($value));
     }
 
+    /**
+     * @return array<string, array{value: mixed, type: string}>
+     */
     public static function typeDataset(): array
     {
         return [

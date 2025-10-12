@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Metadata;
+namespace Tcds\Io\Serializer\Metadata\Node;
 
 use ReflectionParameter;
 use Tcds\Io\Generic\ArrayList;
@@ -8,8 +8,10 @@ use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Metadata\Parser\Annotation;
 use Tcds\Io\Serializer\Metadata\Parser\ClassAnnotation;
 use Tcds\Io\Serializer\Metadata\Parser\Type;
+use Tcds\Io\Serializer\Metadata\Reflection;
+use Tcds\Io\Serializer\Metadata\TypeNode;
 
-readonly class InputNode
+readonly class ReadNode
 {
     public function __construct(
         public string $name,
@@ -30,7 +32,7 @@ readonly class InputNode
     /**
      * @template T
      * @param class-string<T> $type
-     * @return list<InputNode>
+     * @return list<ReadNode>
      */
     public static function of(string $type): array
     {
@@ -54,8 +56,9 @@ readonly class InputNode
                     $paramGenerics[$index] = $templates[$index] ?? $templates[$paramGeneric] ?? $paramGeneric;
                 }
 
-                return InputNode::from($param->name, generic($paramType, $paramGenerics));
+                return ReadNode::from($param->name, generic($paramType, $paramGenerics));
             })
-            ->items();
+            ->indexedBy(fn(ReadNode $node) => $node->name)
+            ->entries();
     }
 }

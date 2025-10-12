@@ -3,7 +3,6 @@
 namespace Tcds\Io\Serializer\Unit\Metadata\Parser;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Tcds\Io\Generic\ArrayList;
 use Tcds\Io\Generic\Map;
 use Tcds\Io\Serializer\Fixture\AccountType;
@@ -15,21 +14,24 @@ use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Place;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
 use Tcds\Io\Serializer\Fixture\WithShape;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
 use Tcds\Io\Serializer\Metadata\Parser\ClassParams;
+use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\SerializerTestCase;
 use Traversable;
 
-class ClassParamsTest extends TestCase
+class ClassParamsTest extends SerializerTestCase
 {
     #[Test] public function params_of_pair(): void
     {
-        $class = Pair::class;
+        $type = generic(Pair::class, ['string', 'float']);
 
-        $params = ClassParams::of(class: $class);
+        $params = ClassParams::of($type);
 
         $this->assertEquals(
             expected: [
-                'key' => 'K',
-                'value' => 'V',
+                'key' => new ReadNode('key', new TypeNode('string')),
+                'value' => new ReadNode('value', new TypeNode('float')),
             ],
             actual: $params,
         );

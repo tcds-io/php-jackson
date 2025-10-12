@@ -5,11 +5,13 @@ namespace Tcds\Io\Serializer;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Throwable;
 
 abstract class SerializerTestCase extends TestCase
 {
+    protected ArrayObjectMapper $arrayMapper;
     protected JsonObjectMapper $jsonMapper;
 
     protected function setUp(): void
@@ -17,6 +19,7 @@ abstract class SerializerTestCase extends TestCase
         TypeNode::$nodes = [];
         TypeNode::$specifications = [];
 
+        $this->arrayMapper = new ArrayObjectMapper();
         $this->jsonMapper = new JsonObjectMapper();
     }
 
@@ -41,7 +44,17 @@ abstract class SerializerTestCase extends TestCase
         throw new AssertionFailedError('Failed asserting that an exception was thrown');
     }
 
-    protected function initializeLazyParams(TypeNode $node, int $depth = 10): void
+    /**
+     * @param list<ReadNode> $nodes
+     */
+    protected function initializeReadNodes(array $nodes): void
+    {
+        foreach ($nodes as $input) {
+            $this->initializeNode($input->node);
+        }
+    }
+
+    protected function initializeNode(TypeNode $node, int $depth = 10): void
     {
         if ($depth < 1) {
             return;
@@ -51,7 +64,7 @@ abstract class SerializerTestCase extends TestCase
 
         foreach ($node->inputs as $param) {
             initializeLazyObject($param);
-            $this->initializeLazyParams($param->node, $depth);
+            $this->initializeNode($param->node, $depth);
         }
     }
 }

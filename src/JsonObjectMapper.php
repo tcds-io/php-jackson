@@ -39,8 +39,8 @@ readonly class JsonObjectMapper implements ObjectMapper
         return $this->readValueWith($type, $value);
     }
 
-    public function writeValue(mixed $value): string
+    public function writeValue(mixed $value, ?string $type = null): string
     {
-        return json_encode($this->mapper->writeValue($value));
+        return json_encode($this->mapper->writeValue($value, $type));
     }
 }

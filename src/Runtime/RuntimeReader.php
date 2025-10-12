@@ -6,7 +6,7 @@ use BackedEnum;
 use Override;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Metadata\InputNode;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
 use Tcds\Io\Serializer\Metadata\Reader;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Tcds\Io\Serializer\Metadata\TypeNodeRepository;
@@ -100,7 +100,7 @@ readonly class RuntimeReader implements Reader
             : (object) $values;
     }
 
-    private function readValueObject(ObjectMapper $mapper, InputNode $param, mixed $data, array $trace): array
+    private function readValueObject(ObjectMapper $mapper, ReadNode $param, mixed $data, array $trace): array
     {
         $data = $data[$param->name] ?? $data;
 

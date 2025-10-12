@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\InputNode;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class Address
@@ -96,10 +96,10 @@ readonly class Address
         return new TypeNode(
             type: Address::class,
             inputs: [
-                'street' => new InputNode('street', new TypeNode(type: 'string')),
-                'number' => new InputNode('number', new TypeNode(type: 'int')),
-                'main' => new InputNode('main', new TypeNode(type: 'bool')),
-                'place' => new InputNode('place', Place::node()),
+                'street' => new ReadNode('street', new TypeNode(type: 'string')),
+                'number' => new ReadNode('number', new TypeNode(type: 'int')),
+                'main' => new ReadNode('main', new TypeNode(type: 'bool')),
+                'place' => new ReadNode('place', Place::node()),
             ],
         );
     }

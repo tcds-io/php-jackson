@@ -5,9 +5,10 @@ namespace Tcds\Io\Serializer\Metadata;
 use BackedEnum;
 use ReflectionClass;
 use Tcds\Io\Serializer\Exception\SerializerException;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
+use Tcds\Io\Serializer\Metadata\Node\WriteNode;
 use Tcds\Io\Serializer\Metadata\Parser\Annotation;
 use Tcds\Io\Serializer\Metadata\Parser\ClassAnnotation;
-use Tcds\Io\Serializer\Metadata\Parser\ClassParams;
 use Tcds\Io\Serializer\Metadata\Parser\Type;
 
 /**
@@ -23,14 +24,19 @@ final class TypeNode
 
     /**
      * @param string $type
-     * @param array<ParamName, InputNode> $inputs
-     * @param list<ParamName, OutputNode> $outputs
+     * @param array<ParamName, ReadNode> $inputs
+     * @param list<ParamName, WriteNode> $outputs
      */
     public function __construct(
         public string $type,
         public array $inputs = [],
         public array $outputs = [],
     ) {
+    }
+
+    public static function lazy(string $type): self
+    {
+        return lazyOf(self::class, fn() => self::from($type));
     }
 
     public static function from(string $type): self
@@ -43,7 +49,7 @@ final class TypeNode
             Type::isEnum($type) => new self($type),
             Type::isList($type, $generics) => new self(
                 type: generic($type, $generics),
-                inputs: ['value' => new InputNode('value', node: TypeNode::from($generics[0]))],
+                inputs: ['value' => new ReadNode('value', node: TypeNode::from($generics[0]))],
             ),
             Type::isShapeType($type) => run(function () use ($type) {
                 [$type, $params] = Annotation::shaped($type);
@@ -53,13 +59,7 @@ final class TypeNode
                     inputs: mapOf($params)
                         ->map(fn(string $name, string $type) => [
                             $name,
-                            InputNode::from($name, $type),
-                        ])
-                        ->entries(),
-                    outputs: mapOf($params)
-                        ->map(fn(string $name, string $type) => [
-                            $name,
-                            OutputNode::from($name, $type),
+                            ReadNode::from($name, $type),
                         ])
                         ->entries(),
                 );
@@ -71,8 +71,8 @@ final class TypeNode
                 return new self(
                     type: generic('map', [$key, $value]),
                     inputs: [
-                        'key' => InputNode::from('key', $key),
-                        'value' => InputNode::from('value', $value),
+                        'key' => ReadNode::from('key', $key),
+                        'value' => ReadNode::from('value', $value),
                     ],
                 );
             }),
@@ -87,30 +87,18 @@ final class TypeNode
     private static function fromClass(string $type, array $generics = []): self
     {
         $reflection = new ReflectionClass($type);
-        $params = ClassParams::of(reflection: $reflection);
         $templates = ClassAnnotation::templates(reflection: $reflection);
 
         foreach (array_keys($templates) as $position => $template) {
             $templates[$template] = $generics[$position] ?? throw new SerializerException("No generic defined for template `$template`");
         }
 
+        $type = generic($type, $templates);
+
         return new self(
             type: generic($type, $templates),
-            inputs: mapOf($params)
-                ->map(function (string $paramName, string $paramType) use ($templates) {
-                    $paramType = $templates[$paramType] ?? $paramType;
-                    [$paramType, $paramGenerics] = Annotation::extractGenerics($paramType);
-
-                    foreach ($paramGenerics as $index => $paramGeneric) {
-                        $paramGenerics[$index] = $templates[$index] ?? $templates[$paramGeneric] ?? $paramGeneric;
-                    }
-
-                    return [
-                        $paramName,
-                        InputNode::from($paramName, generic($paramType, $paramGenerics)),
-                    ];
-                })
-                ->entries(),
+            inputs: ReadNode::of($type),
+            outputs: [],
         );
     }
 
@@ -171,7 +159,7 @@ final class TypeNode
             $this->isClass() => run(function () {
                 self::$specifications[$this->type] = true;
 
-                return array_map(fn(InputNode $node) => $node->node->specification(), $this->inputs);
+                return array_map(fn(ReadNode $node) => $node->node->specification(), $this->inputs);
             }),
             $this->isArrayMap() => [
                 $this->inputs['key']->node->type => $this->inputs['value']->node->specification(),

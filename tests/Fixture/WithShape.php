@@ -4,6 +4,8 @@ namespace Tcds\Io\Serializer\Fixture;
 
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
+use Tcds\Io\Serializer\Metadata\Node\ReadNode;
+use Tcds\Io\Serializer\Metadata\TypeNode;
 
 readonly class WithShape
 {
@@ -23,13 +25,34 @@ readonly class WithShape
     {
     }
 
-    public static function fingerprint(): string
+    public static function node(): TypeNode
     {
-        return sprintf(
-            '%s[%s, %s]',
-            WithShape::class,
-            sprintf('%s[%s, %s, %s]', 'array', User::fingerprint(), Address::fingerprint(), 'string'),
-            sprintf('%s[%s, %s, %s]', 'object', User::fingerprint(), Address::fingerprint(), 'string'),
+        return new TypeNode(
+            type: WithShape::class,
+            inputs: [
+                'data' => new ReadNode(
+                    name: 'data',
+                    node: new TypeNode(
+                        type: shape('array', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
+                        inputs: [
+                            'user' => new ReadNode('user', User::node()),
+                            'address' => new ReadNode('address', Address::node()),
+                            'description' => new ReadNode('description', new TypeNode('string')),
+                        ],
+                    ),
+                ),
+                'payload' => new ReadNode(
+                    name: 'payload',
+                    node: new TypeNode(
+                        type: shape('object', ['user' => User::class, 'address' => Address::class, 'description' => 'string']),
+                        inputs: [
+                            'user' => new ReadNode('user', User::node()),
+                            'address' => new ReadNode('address', Address::node()),
+                            'description' => new ReadNode('description', new TypeNode('string')),
+                        ],
+                    ),
+                ),
+            ],
         );
     }
 }

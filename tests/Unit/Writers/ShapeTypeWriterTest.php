@@ -6,18 +6,39 @@ use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
 use Tcds\Io\Serializer\Fixture\WithShape;
-use Tcds\Io\Serializer\JsonObjectMapper;
-use Tcds\Io\Serializer\ObjectMapper;
 use Tcds\Io\Serializer\SerializerTestCase;
 
 class ShapeTypeWriterTest extends SerializerTestCase
 {
-    private ObjectMapper $mapper;
+    private const array ARRAY = [
+        'main' => true,
+        'number' => 150,
+        'place' => [
+            'city' => 'Santa Catarina',
+            'country' => 'Brazil',
+            'position' => [
+                'lat' => -26.9013,
+                'lng' => -48.6655,
+            ],
+        ],
+        'street' => 'main street',
+    ];
 
-    protected function setUp(): void
+    private const string JSON = <<<JSON
     {
-        $this->mapper = new JsonObjectMapper();
+        "main": true,
+        "number": 150,
+        "place": {
+            "city": "Santa Catarina",
+            "country": "Brazil",
+            "position": {
+                "lat": -26.9013,
+                "lng": -48.6655
+            }
+        },
+        "street": "main street"
     }
+    JSON;
 
     #[Test] public function write_array_shape(): void
     {
@@ -34,6 +55,7 @@ class ShapeTypeWriterTest extends SerializerTestCase
             ],
         );
 
-        $mapped = $this->mapper->writeValue($object);
+        $this->assertEquals(self::ARRAY, $this->arrayMapper->writeValue($object));
+        $this->assertJsonStringEqualsJsonString(self::JSON, $this->jsonMapper->writeValue($object));
     }
 }

@@ -8,19 +8,33 @@ use Tcds\Io\Serializer\SerializerTestCase;
 
 class ObjectWriterTest extends SerializerTestCase
 {
-    private const string MAIN_ADDRESS_OUTPUT = <<<JSON
+    private const array ARRAY = [
+        'main' => true,
+        'number' => 150,
+        'place' => [
+            'city' => 'Santa Catarina',
+            'country' => 'Brazil',
+            'position' => [
+                'lat' => -26.9013,
+                'lng' => -48.6655,
+            ],
+        ],
+        'street' => 'main street',
+    ];
+
+    private const string JSON = <<<JSON
     {
-      "street":  "",
-      "number": "",
-      "main":  "",
-      "place": {
-        "city": "",
-        "country":"",
-        "position": {
-          "lat": "",
-          "lng": ""
-        }
-      }
+        "main": true,
+        "number": 150,
+        "place": {
+            "city": "Santa Catarina",
+            "country": "Brazil",
+            "position": {
+                "lat": -26.9013,
+                "lng": -48.6655
+            }
+        },
+        "street": "main street"
     }
     JSON;
 
@@ -28,8 +42,7 @@ class ObjectWriterTest extends SerializerTestCase
     {
         $object = Address::main();
 
-        $output = $this->jsonMapper->writeValue($object);
-
-        $this->assertEquals(self::MAIN_ADDRESS_OUTPUT, $output);
+        $this->assertEquals(self::ARRAY, $this->arrayMapper->writeValue($object));
+        $this->assertJsonStringEqualsJsonString(self::JSON, $this->jsonMapper->writeValue($object));
     }
 }

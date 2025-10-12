@@ -1,25 +1,26 @@
 <?php
 
-namespace Tcds\Io\Serializer\Metadata;
+namespace Tcds\Io\Serializer\Metadata\Node;
 
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
+use Tcds\Io\Serializer\Metadata\TypeNode;
 
-readonly class OutputNode
+readonly class WriteNode
 {
     public function __construct(
         public string $name,
         public TypeNode $node,
-        public OutputNodeType $type,
+        public WriteNodeType $type,
     ) {
     }
 
     public function read(mixed $data): mixed
     {
         return match ($this->type) {
-            OutputNodeType::PROPERTY => $data->{$this->name},
-            OutputNodeType::METHOD => $data->{$this->name}(),
+            WriteNodeType::PROPERTY => $data->{$this->name},
+            WriteNodeType::METHOD => $data->{$this->name}(),
         };
     }
 
@@ -32,7 +33,7 @@ readonly class OutputNode
         return listOf($reflection->getProperties())
             ->map(function (ReflectionProperty $property) {
                 return $property->isPublic()
-                    ? new self ($property->name, TypeNode::lazy($property->getType()), OutputNodeType::PROPERTY)
+                    ? new self ($property->name, TypeNode::lazy($property->getType()), WriteNodeType::PROPERTY)
                     : $this->findPropertyGetter($property);
             })
             ->filter()
@@ -60,6 +61,6 @@ readonly class OutputNode
             ->map(fn(ReflectionNamedType $type) => $type->getName())
             ->join('|');
 
-        return new self ($property->name, TypeNode::lazy($type), OutputNodeType::METHOD);
+        return new self ($property->name, TypeNode::lazy($type), WriteNodeType::METHOD);
     }
 }

@@ -97,11 +97,13 @@ class Type
     }
 
     /**
-     * @phpstan-assert-if-true class-string<BackedEnum> $type
+     * @return ($type is BackedEnum ? true : false)
      */
-    public static function isEnum(string $type): bool
+    public static function isEnum(mixed $type): bool
     {
-        return enum_exists($type);
+        return is_object($type)
+            ? $type instanceof BackedEnum
+            : is_string($type) && enum_exists($type);
     }
 
     public static function isClass(string $type): bool

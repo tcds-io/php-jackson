@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Metadata;
+namespace Tcds\Io\Serializer\Metadata\Node;
 
-enum OutputNodeType: string
+enum WriteNodeType: string
 {
     case PROPERTY = 'property';
     case METHOD = 'method';

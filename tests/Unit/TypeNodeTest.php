@@ -104,7 +104,7 @@ class TypeNodeTest extends SerializerTestCase
     {
         $mapper = new JsonObjectMapper();
         $node = TypeNode::from(generic(ArrayList::class, [Address::class]));
-        $this->initializeLazyParams($node);
+        $this->initializeNode($node);
 
         $read = $mapper->readValue(TypeNode::class, self::ARRAY_LIST_OF_ADDRESS_TYPE_NODE);
 
