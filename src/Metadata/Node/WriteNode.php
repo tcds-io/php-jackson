@@ -2,10 +2,11 @@
 
 namespace Tcds\Io\Serializer\Metadata\Node;
 
-use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
+use Tcds\Io\Serializer\Metadata\Reflection;
 use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Metadata\TypeResolver;
 
 readonly class WriteNode
 {
@@ -25,17 +26,22 @@ readonly class WriteNode
     }
 
     /**
-     * @param ReflectionClass $reflection
-     * @return list<self>
+     * @template T
+     * @param class-string<T> $type
+     * @return list<ReadNode>
      */
-    public static function fromReflectionClass(ReflectionClass $reflection, array $templates): array
+    public static function of(string $type): array
     {
+        [$type, $templates] = TypeResolver::from($type);
+        $reflection = Reflection::of(class: $type);
+
         return listOf($reflection->getProperties())
-            ->map(function (ReflectionProperty $property) {
-                return $property->isPublic()
-                    ? new self ($property->name, TypeNode::lazy($property->getType()), WriteNodeType::PROPERTY)
-                    : $this->findPropertyGetter($property);
-            })
+            ->filter(fn(ReflectionProperty $property) => $property->isPublic())
+            ->map(fn(ReflectionProperty $property) => new self (
+                name: $property->name,
+                node: TypeNode::lazy($property->getType()),
+                type: WriteNodeType::PROPERTY,
+            ))
             ->filter()
             ->items();
     }

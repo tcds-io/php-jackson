@@ -46,7 +46,7 @@ class Annotation
 
     public static function generic(ReflectionClass $reflection, string $type): string
     {
-        $runtimeTypes = ClassAnnotation::runtimeTypes($reflection);
+        $runtimeTypes = ClassAnnotation::aliases($reflection);
         [$type, $generics] = self::extractGenerics($type);
 
         return generic(
@@ -103,7 +103,7 @@ class Annotation
         foreach ($namedParams as $name => $paramType) {
             $paramType = Annotation::fqnOf($class, $paramType);
 
-            $params[] = "$name: $paramType";
+            $params[$name] = $paramType;
         }
 
         return [$type, $params];

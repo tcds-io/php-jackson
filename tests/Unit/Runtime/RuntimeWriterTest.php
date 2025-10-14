@@ -14,10 +14,8 @@ class RuntimeWriterTest extends SerializerTestCase
         $writer = new RuntimeWriter();
         $address = Address::main();
 
-        dd(gettype(['a' => 'b']));
+        $data = $writer($address, Address::class, $this->arrayMapper);
 
-        $data = $writer($address);
-        //
-
+        // dd($data);
     }
 }

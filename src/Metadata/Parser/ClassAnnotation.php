@@ -3,6 +3,7 @@
 namespace Tcds\Io\Serializer\Metadata\Parser;
 
 use ReflectionClass;
+use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Metadata\Reflection;
 
 class ClassAnnotation
@@ -11,10 +12,14 @@ class ClassAnnotation
      * @template T
      * @param null|ReflectionClass<T> $reflection
      * @param null|class-string<T> $class
+     * @param list<string> $generics
      * @return array<string, class-string<mixed>>
      */
-    public static function templates(?ReflectionClass $reflection = null, ?string $class = null): array
-    {
+    public static function templates(
+        ?ReflectionClass $reflection = null,
+        ?string $class = null,
+        array $generics = [],
+    ): array {
         $reflection = Reflection::of($reflection, $class);
 
         $docblock = $reflection->getDocComment() ?? '';
@@ -30,6 +35,10 @@ class ClassAnnotation
             $templates[$key] = $value ?: 'mixed';
         }
 
+        foreach (array_keys($templates) as $position => $template) {
+            $templates[$template] = $generics[$position] ?? throw new SerializerException("No generic defined for template `$template`");
+        }
+
         return $templates;
     }
 
@@ -38,7 +47,7 @@ class ClassAnnotation
      * @param ReflectionClass<T> $reflection
      * @return array<string, class-string<mixed>>
      */
-    public static function runtimeTypes(ReflectionClass $reflection): array
+    public static function aliases(ReflectionClass $reflection): array
     {
         $docblock = $reflection->getDocComment() ?? '';
         preg_match_all('/@phpstan-type\s+(\w+)\s+(.*)?/', $docblock, $matches);
@@ -69,7 +78,7 @@ class ClassAnnotation
         $docblock = $reflection->getConstructor()?->getDocComment() ?? '';
         preg_match_all('/@param\s+(\w+)\s+\$(.*)?/', $docblock, $matches);
         $indexes = array_keys($matches[1] ?? []);
-        $types = self::runtimeTypes($reflection);
+        $types = self::aliases($reflection);
 
         $params = [];
 

@@ -5,24 +5,100 @@ namespace Tcds\Io\Serializer\Unit\Readers;
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Generic\ArrayList;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\JsonObjectMapper;
 use Tcds\Io\Serializer\SerializerTestCase;
 
 class ListReaderTest extends SerializerTestCase
 {
-    private JsonObjectMapper $mapper;
+    private const array ARRAY = [
+        [
+            'main' => true,
+            'number' => 150,
+            'place' => [
+                'city' => 'Santa Catarina',
+                'country' => 'Brazil',
+                'position' => [
+                    'lat' => -26.9013,
+                    'lng' => -48.6655,
+                ],
+            ],
+            'street' => 'main street',
+        ],
+        [
+            'street' => 'street street',
+            'number' => '100',
+            'main' => 'false',
+            'place' => [
+                'city' => 'São Paulo',
+                'country' => 'Brazil',
+                'position' => [
+                    'lat' => '-26.9013',
+                    'lng' => '-48.6655',
+                ],
+            ],
+        ],
+    ];
 
-    protected function setUp(): void
+    private const string JSON = <<<JSON
+    [
+        {
+            "street": "main street",
+            "main": true,
+            "number": 150,
+            "place": {
+                "city": "Santa Catarina",
+                "country": "Brazil",
+                "position": {
+                    "lat": -26.9013,
+                    "lng": -48.6655
+                }
+            }
+        },
+        {
+          "street": "street street",
+          "main": "false",
+          "number": "100",
+          "place": {
+            "city": "São Paulo",
+            "country": "Brazil",
+            "position": {
+              "lat": "-26.9013",
+              "lng": "-48.6655"
+            }
+          }
+        }
+    ]
+    JSON;
+
+    #[Test] public function read_json_array_value(): void
     {
-        $this->mapper = new JsonObjectMapper();
+        $type = generic('array', [Address::class]);
+
+        $addresses = $this->jsonMapper->readValue($type, self::JSON);
+
+        $this->assertEquals(
+            [Address::main(), Address::other()],
+            $addresses,
+        );
+    }
+
+    #[Test] public function read_json_array_list_value(): void
+    {
+        $type = generic(ArrayList::class, [Address::class]);
+
+        /** @var ArrayList $addresses */
+        $addresses = $this->jsonMapper->readValue($type, self::JSON);
+
+        $this->assertEquals(
+            [Address::main(), Address::other()],
+            $addresses->items(),
+        );
     }
 
     #[Test] public function read_array_value(): void
     {
-        $json = json_encode([Address::mainData(), Address::otherData()]);
         $type = generic('array', [Address::class]);
 
-        $addresses = $this->mapper->readValue($type, $json);
+        $addresses = $this->arrayMapper->readValue($type, self::ARRAY);
 
         $this->assertEquals(
             [Address::main(), Address::other()],
@@ -32,11 +108,10 @@ class ListReaderTest extends SerializerTestCase
 
     #[Test] public function read_array_list_value(): void
     {
-        $json = json_encode([Address::mainData(), Address::otherData()]);
         $type = generic(ArrayList::class, [Address::class]);
 
         /** @var ArrayList $addresses */
-        $addresses = $this->mapper->readValue($type, $json);
+        $addresses = $this->arrayMapper->readValue($type, self::ARRAY);
 
         $this->assertEquals(
             [Address::main(), Address::other()],

@@ -86,7 +86,7 @@ class ClassAnnotationTest extends SerializerTestCase
     {
         $reflection = new ReflectionClass(ArrayList::class);
 
-        $templates = ClassAnnotation::runtimeTypes($reflection);
+        $templates = ClassAnnotation::aliases($reflection);
 
         $this->assertEquals(
             expected: [
@@ -101,7 +101,7 @@ class ClassAnnotationTest extends SerializerTestCase
     {
         $reflection = new ReflectionClass(Address::class);
 
-        $templates = ClassAnnotation::runtimeTypes($reflection);
+        $templates = ClassAnnotation::aliases($reflection);
 
         $this->assertEquals(expected: [], actual: $templates);
     }

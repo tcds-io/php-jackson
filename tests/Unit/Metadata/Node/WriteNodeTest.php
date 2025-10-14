@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Unit\Metadata;
+namespace Tcds\Io\Serializer\Unit\Metadata\Node;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Generic\ArrayList;
@@ -11,22 +11,20 @@ use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
 use Tcds\Io\Serializer\Fixture\WithShape;
 use Tcds\Io\Serializer\Metadata\Node\ReadNode;
+use Tcds\Io\Serializer\Metadata\Node\WriteNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
 use Tcds\Io\Serializer\SerializerTestCase;
 
-class InputNodeTest extends SerializerTestCase
+class WriteNodeTest extends SerializerTestCase
 {
     #[Test] public function data_class_address(): void
     {
         $type = Address::class;
 
-        $inputs = ReadNode::of($type);
+        $inputs = WriteNode::of($type);
         $this->initializeReadNodes($inputs);
 
-        $this->assertEquals(
-            expected: Address::node()->inputs,
-            actual: $inputs,
-        );
+        $this->assertEquals(expected: Address::node()->inputs, actual: $inputs);
     }
 
     #[Test] public function generic_class_pair(): void
@@ -76,9 +74,6 @@ class InputNodeTest extends SerializerTestCase
         $nodes = ReadNode::of($type);
         $this->initializeReadNodes($nodes);
 
-        $this->assertEquals(
-            expected: WithShape::node()->inputs,
-            actual: $nodes,
-        );
+        $this->assertEquals(expected: WithShape::node()->inputs, actual: $nodes);
     }
 }
