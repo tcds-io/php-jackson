@@ -5,8 +5,11 @@ namespace Tcds\Io\Serializer;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use Tcds\Io\Generic\ArrayList;
 use Tcds\Io\Serializer\Metadata\Node\ReadNode;
 use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Reflection\ReflectionParameter;
+use Tcds\Io\Serializer\Reflection\ReflectionProperty;
 use Throwable;
 
 abstract class SerializerTestCase extends TestCase
@@ -66,5 +69,19 @@ abstract class SerializerTestCase extends TestCase
             initializeLazyObject($param);
             $this->initializeNode($param->node, $depth);
         }
+    }
+
+    protected function assertParams(array $expected, array $actual): void
+    {
+        $this->assertEquals(
+            $expected,
+            new ArrayList($actual)
+                ->indexedBy(fn(ReflectionProperty|ReflectionParameter $param) => $param->name)
+                ->mapValues(fn(ReflectionProperty|ReflectionParameter $prop) => [
+                    get_class($prop->getType()),
+                    $prop->getType()->getName(),
+                ])
+                ->entries(),
+        );
     }
 }

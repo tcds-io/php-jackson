@@ -45,13 +45,13 @@ final class TypeNode
         $key = generic($type, $generics);
 
         return self::$nodes[$key] ??= match (true) {
-            Type::isScalar($type),
+            Type::isPrimitive($type),
             Type::isEnum($type) => new self($type),
             Type::isList($type, $generics) => new self(
                 type: generic($type, $generics),
                 inputs: ['value' => new ReadNode('value', node: TypeNode::from($generics[0]))],
             ),
-            Type::isShapeType($type) => run(function () use ($type) {
+            Type::isShape($type) => run(function () use ($type) {
                 [$type, $params] = Annotation::shaped($type);
 
                 return new self(
@@ -117,7 +117,7 @@ final class TypeNode
 
     public function isScalar(): bool
     {
-        return Type::isScalar($this->mainType());
+        return Type::isPrimitive($this->mainType());
     }
 
     public function isEnum(): bool

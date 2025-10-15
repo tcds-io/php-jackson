@@ -44,7 +44,7 @@ class Type
             return $type;
         }
 
-        if (self::isShapeType($type)) {
+        if (self::isShape($type)) {
             [$type, $params] = Annotation::shapedFqn($class, $type);
 
             return sprintf('%s{ %s }', $type, join(', ', $params));
@@ -53,7 +53,11 @@ class Type
         return Annotation::generic($class, $type);
     }
 
-    public static function isScalar(string $type): bool
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isPrimitive(string $type): bool
     {
         $simpleNodeTypes = ['int', 'float', 'string', 'bool', 'boolean', 'mixed'];
         $types = explode('|', str_replace('&', '|', $type));
@@ -67,16 +71,30 @@ class Type
         return empty($notScalar);
     }
 
+    /**
+     * @deprecated
+     */
     public static function isResolvedType(string $type): bool
     {
         return class_exists($type) ||
             enum_exists($type) ||
-            self::isScalar($type);
+            self::isPrimitive($type);
     }
 
-    public static function isShapeType(?string $type): bool
+    /**
+     * @param string|null $type
+     * @return bool
+     */
+    public static function isShape(?string $type): bool
     {
         return str_starts_with($type ?? '', 'array{') || str_starts_with($type ?? '', 'object{');
+    }
+
+    public static function isGeneric(string $type): bool
+    {
+        [, $generics] = Annotation::extractGenerics($type);
+
+        return !empty($generics);
     }
 
     /**

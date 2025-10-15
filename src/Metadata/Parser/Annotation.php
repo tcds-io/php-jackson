@@ -17,6 +17,14 @@ class Annotation
         );
     }
 
+    public static function return(ReflectionMethod $method): ?string
+    {
+        return Annotation::extract(
+            docblock: $method->getDocComment(),
+            pattern: '/@return\s+([\s\S]*)/',
+        );
+    }
+
     /**
      * @param string $type
      * @return array{ 0: string, 0: list<string> }|null
@@ -63,7 +71,8 @@ class Annotation
         $docblock = trim($docblock ?: '');
         $docblock = preg_replace('/\/\*\*|\*\/|\*/', '', $docblock);
         $docblock = preg_replace('/\s*\n\s*/', ' ', $docblock);
-        $docblock = join(PHP_EOL, array_map(fn(string $line) => "@$line", explode('@', $docblock)));
+        $annotations = array_filter(explode('@', trim($docblock)));
+        $docblock = join(PHP_EOL, array_map(fn(string $line) => "@$line", $annotations));
         preg_match($pattern, $docblock, $matches);
 
         return $matches[1] ?? null;
@@ -109,7 +118,22 @@ class Annotation
         return [$type, $params];
     }
 
-    private static function fqnOf(ReflectionClass $class, string $name): string
+    public static function fqn(ReflectionClass $reflection, string $shape): array
+    {
+        [$type, $namedParams] = Annotation::shaped($shape);
+
+        $params = [];
+
+        foreach ($namedParams as $name => $paramType) {
+            $paramType = Annotation::fqnOf($reflection, $paramType);
+
+            $params[$name] = $paramType;
+        }
+
+        return [$type, $params];
+    }
+
+    public static function fqnOf(ReflectionClass $class, string $name): string
     {
         if (Type::isResolvedType($name)) {
             return $name;
