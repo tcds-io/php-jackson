@@ -15,4 +15,20 @@ readonly class Pair
     public function __construct(public mixed $key, public object $value)
     {
     }
+
+    /**
+     * @return K
+     */
+    public function key(): mixed
+    {
+        return $this->key;
+    }
+
+    /**
+     * @return V
+     */
+    public function value(): object
+    {
+        return $this->value;
+    }
 }

@@ -24,8 +24,9 @@ class ObjectWriterTest extends SerializerTestCase
 
     private const string JSON = <<<JSON
     {
-        "main": true,
+        "street": "main street",
         "number": 150,
+        "main": true,
         "place": {
             "city": "Santa Catarina",
             "country": "Brazil",
@@ -33,8 +34,7 @@ class ObjectWriterTest extends SerializerTestCase
                 "lat": -26.9013,
                 "lng": -48.6655
             }
-        },
-        "street": "main street"
+        }
     }
     JSON;
 
