@@ -13,6 +13,7 @@ use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
 use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeTypeNodeFactory;
 use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\SerializerTestCase;
@@ -59,6 +60,7 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                 inputs: [
                     new InputNode(name: 'value', type: LatLng::class),
                 ],
+                outputs: [],
             ),
             $node,
         );
@@ -78,6 +80,11 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                     new InputNode(name: 'user', type: User::class),
                     new InputNode(name: 'address', type: Address::class),
                     new InputNode(name: 'description', type: 'string'),
+                ],
+                outputs: [
+                    OutputNode::param(name: 'user', type: User::class),
+                    OutputNode::param(name: 'address', type: Address::class),
+                    OutputNode::param(name: 'description', type: 'string'),
                 ],
             ),
             $node,
@@ -99,6 +106,11 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                     new InputNode(name: 'address', type: Address::class),
                     new InputNode(name: 'description', type: 'string'),
                 ],
+                outputs: [
+                    OutputNode::property(name: 'user', type: User::class),
+                    OutputNode::property(name: 'address', type: Address::class),
+                    OutputNode::property(name: 'description', type: 'string'),
+                ],
             ),
             $node,
         );
@@ -118,6 +130,7 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                     new InputNode(name: 'key', type: 'string'),
                     new InputNode(name: 'value', type: Address::class),
                 ],
+                outputs: [],
             ),
             $node,
         );
@@ -156,6 +169,9 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                 inputs: [
                     new InputNode(name: 'items', type: generic('list', [LatLng::class])),
                 ],
+                outputs: [
+                    OutputNode::property(name: 'items', type: generic('list', [LatLng::class])),
+                ],
             ),
             $node,
         );
@@ -175,6 +191,10 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                 inputs: [
                     new InputNode(name: 'data', type: shape('array', $params)),
                     new InputNode(name: 'payload', type: shape('object', $params)),
+                ],
+                outputs: [
+                    OutputNode::property(name: 'data', type: shape('array', $params)),
+                    OutputNode::property(name: 'payload', type: shape('object', $params)),
                 ],
             ),
             $node,

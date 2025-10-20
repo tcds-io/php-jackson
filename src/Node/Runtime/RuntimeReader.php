@@ -5,12 +5,14 @@ namespace Tcds\Io\Serializer\Node\Runtime;
 use BackedEnum;
 use Override;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
+use Tcds\Io\Generic\Reflection\Type\TypeParser;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;
 use Tcds\Io\Serializer\Node\InputNode;
 use Tcds\Io\Serializer\Node\Reader;
 use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\Node\TypeNodeFactory;
+use Tcds\Io\Serializer\Node\TypeNodeSpecificationFactory;
 use Tcds\Io\Serializer\ObjectMapper;
 use Throwable;
 use TypeError;
@@ -19,10 +21,11 @@ readonly class RuntimeReader implements Reader
 {
     public function __construct(
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
+        private TypeNodeSpecificationFactory $specification = new RuntimeTypeNodeSpecificationFactory(),
     ) {
     }
 
-    #[Override] public function __invoke(mixed $data, ObjectMapper $mapper, string $type, array $trace)
+    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace)
     {
         $node = $this->node->create($type);
 
@@ -31,9 +34,10 @@ readonly class RuntimeReader implements Reader
             ReflectionType::isPrimitive($node->type) => $data,
             ReflectionType::isList($node->type) => $this->readList($mapper, $node, $data, $trace),
             ReflectionType::isEnum($node->type) => $this->readEnum($node->type, $data),
-            ReflectionType::isClass($node->type) => $this->readClass($mapper, $node, $data, $trace),
             ReflectionType::isShape($node->type) => $this->readShape($mapper, $node, $data, $trace),
             ReflectionType::isArray($node->type) => $this->readArrayMap($mapper, $node, $data, $trace),
+            ReflectionType::isGeneric($node->type),
+            ReflectionType::isClass($node->type) => $this->readClass($mapper, $node, $data, $trace),
             default => throw new SerializerException(sprintf('Unable to handle value of type <%s>', $node->type)),
         };
     }
@@ -43,7 +47,7 @@ readonly class RuntimeReader implements Reader
         return array_map(
             callback: function (mixed $item) use ($mapper, $node, $trace) {
                 return $mapper->readValue(
-                    type: $node->inputs['value']->node->type,
+                    type: $node->inputs[0]->type,
                     value: $item,
                     trace: $trace,
                 );
@@ -55,9 +59,9 @@ readonly class RuntimeReader implements Reader
     /**
      * @template E of BackedEnum
      * @param class-string<E> $enum
-     * @return BackedEnum
+     * @return E
      */
-    private function readEnum(string $enum, mixed $value)
+    private function readEnum(string $enum, mixed $value): BackedEnum
     {
         return $enum::from($value);
     }
@@ -69,18 +73,18 @@ readonly class RuntimeReader implements Reader
     private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
     {
         $values = $this->readValues($mapper, $node, $data, $trace);
-        $class = $node->mainType();
+        [$class] = TypeParser::getGenericTypes($node->type);
 
         try {
             return new $class(...$values);
         } catch (Throwable $e) {
-            throw new UnableToParseValue($trace, $node->specification(), $data, $e);
+            throw new UnableToParseValue($trace, $this->specification->create($node->type), $data, $e);
         }
     }
 
-    private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
-        $param = $node->inputs['value']->node->type;
+        $param = $node->inputs[1]->type;
 
         return array_map(
             callback: fn($item) => $mapper->readValue(
@@ -92,7 +96,7 @@ readonly class RuntimeReader implements Reader
         );
     }
 
-    private function readShape(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readShape(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): object|array
     {
         $values = $this->readValues($mapper, $node, $data, $trace);
 
@@ -106,7 +110,7 @@ readonly class RuntimeReader implements Reader
         $data = $data[$param->name] ?? $data;
 
         return [
-            $param->name => $mapper->readValue($param->node->type, $data, $trace),
+            $param->name => $mapper->readValue($param->type, $data, $trace),
         ];
     }
 
@@ -129,7 +133,7 @@ readonly class RuntimeReader implements Reader
             } catch (TypeError $e) {
                 $node = $this->node->create($input->type);
 
-                throw new UnableToParseValue($innerTrace, $node->specification(), $value, $e);
+                throw new UnableToParseValue($innerTrace, $this->specification->create($node->type), $value, $e);
             }
         }
 

@@ -5,9 +5,11 @@ namespace Tcds\Io\Serializer\Node\Runtime;
 use Override;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionParameter;
+use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Generic\Reflection\Type\TypeParser;
 use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\Node\TypeNodeFactory;
 
@@ -40,13 +42,20 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
     private static function fromShape(string $type): TypeNode
     {
-        [, $params] = TypeParser::getParamMapFromShape($type);
+        [$shapeType, $params] = TypeParser::getParamMapFromShape($type);
 
         return new TypeNode(
             type: $type,
             inputs: mapOf($params)
-                ->map(function ($name, $type) {
-                    return [$name, new InputNode(name: $name, type: $type)];
+                ->map(fn($name, $type) => [$name, new InputNode(name: $name, type: $type)])
+                ->values(),
+            outputs: mapOf($params)
+                ->map(function ($name, $type) use ($shapeType, $params) {
+                    $node = $shapeType === 'array'
+                        ? OutputNode::param(name: $name, type: $type)
+                        : OutputNode::property(name: $name, type: $type);
+
+                    return [$name, $node];
                 })
                 ->values(),
         );
@@ -79,7 +88,12 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                     type: $param->getType()->getName(),
                 ))
                 ->items(),
-            outputs: [],
+            outputs: listOf($reflection->getProperties())
+                ->map(fn(ReflectionProperty $param) => OutputNode::property(
+                    name: $param->name,
+                    type: $param->getType()->getName(),
+                ))
+                ->items(),
         );
     }
 }

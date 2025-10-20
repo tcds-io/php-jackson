@@ -69,9 +69,9 @@ class ListReaderTest extends SerializerTestCase
     ]
     JSON;
 
-    #[Test] public function read_json_array_value(): void
+    #[Test] public function read_json_list_value(): void
     {
-        $type = generic('array', [Address::class]);
+        $type = generic('list', [Address::class]);
 
         $addresses = $this->jsonMapper->readValue($type, self::JSON);
 
@@ -96,7 +96,7 @@ class ListReaderTest extends SerializerTestCase
 
     #[Test] public function read_array_value(): void
     {
-        $type = generic('array', [Address::class]);
+        $type = generic('list', [Address::class]);
 
         $addresses = $this->arrayMapper->readValue($type, self::ARRAY);
 
@@ -118,4 +118,36 @@ class ListReaderTest extends SerializerTestCase
             $addresses->items(),
         );
     }
+
+//    #[Test] public function read_json_list_with_generic_value(): void
+//    {
+//        $type = generic('list', [generic(Pair::class, ['string', Address::class])]);
+//        $json = <<<JSON
+//        [
+//            {
+//              "key": "other",
+//              "value": {
+//                "street": "street street",
+//                "main": "false",
+//                "number": "100",
+//                "place": {
+//                  "city": "São Paulo",
+//                  "country": "Brazil",
+//                  "position": {
+//                    "lat": "-26.9013",
+//                    "lng": "-48.6655"
+//                  }
+//                }
+//              }
+//            }
+//        ]
+//        JSON;
+//
+//        $pairs = $this->jsonMapper->readValue($type, $json);
+//
+//        $this->assertEquals(
+//            [new Pair('other', Address::other())],
+//            $pairs,
+//        );
+//    }
 }

@@ -16,9 +16,6 @@ abstract class SerializerTestCase extends TestCase
 
     protected function setUp(): void
     {
-//        TypeNode::$nodes = [];
-//        TypeNode::$specifications = [];
-
         $this->arrayMapper = new ArrayObjectMapper();
         $this->jsonMapper = new JsonObjectMapper();
     }

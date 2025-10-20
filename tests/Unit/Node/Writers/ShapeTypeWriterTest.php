@@ -10,33 +10,76 @@ use Tcds\Io\Serializer\SerializerTestCase;
 
 class ShapeTypeWriterTest extends SerializerTestCase
 {
-    private const array ARRAY = [
-        'main' => true,
-        'number' => 150,
-        'place' => [
-            'city' => 'Santa Catarina',
-            'country' => 'Brazil',
-            'position' => [
-                'lat' => -26.9013,
-                'lng' => -48.6655,
-            ],
-        ],
-        'street' => 'main street',
-    ];
-
     private const string JSON = <<<JSON
     {
-        "main": true,
-        "number": 150,
-        "place": {
+      "data": {
+        "user": {
+          "name": "Arthur Dent",
+          "age": 27,
+          "height": 1.77,
+          "address": {
+            "street": "main street",
+            "number": 150,
+            "main": true,
+            "place": {
+              "city": "Santa Catarina",
+              "country": "Brazil",
+              "position": {
+                "lat": -26.9013,
+                "lng": -48.6655
+              }
+            }
+          }
+        },
+        "address": {
+          "street": "main street",
+          "number": 150,
+          "main": true,
+          "place": {
             "city": "Santa Catarina",
             "country": "Brazil",
             "position": {
+              "lat": -26.9013,
+              "lng": -48.6655
+            }
+          }
+        },
+        "description": "Array shaped"
+      },
+      "payload": {
+        "user": {
+          "name": "Arthur Dent",
+          "age": 27,
+          "height": 1.77,
+          "address": {
+            "street": "main street",
+            "number": 150,
+            "main": true,
+            "place": {
+              "city": "Santa Catarina",
+              "country": "Brazil",
+              "position": {
                 "lat": -26.9013,
                 "lng": -48.6655
+              }
             }
+          }
         },
-        "street": "main street"
+        "address": {
+          "street": "street street",
+          "number": 100,
+          "main": false,
+          "place": {
+            "city": "São Paulo",
+            "country": "Brazil",
+            "position": {
+              "lat": -26.9013,
+              "lng": -48.6655
+            }
+          }
+        },
+        "description": "Object shaped"
+      }
     }
     JSON;
 
@@ -55,7 +98,21 @@ class ShapeTypeWriterTest extends SerializerTestCase
             ],
         );
 
-        $this->assertEquals(self::ARRAY, $this->arrayMapper->writeValue($object));
+        $this->assertEquals(
+            [
+                'data' => [
+                    'user' => User::arthurDentData(),
+                    'address' => Address::mainData(),
+                    'description' => 'Array shaped',
+                ],
+                'payload' => [
+                    'user' => User::arthurDentData(),
+                    'address' => Address::otherData(),
+                    'description' => 'Object shaped',
+                ],
+            ],
+            $this->arrayMapper->writeValue($object),
+        );
         $this->assertJsonStringEqualsJsonString(self::JSON, $this->jsonMapper->writeValue($object));
     }
 }

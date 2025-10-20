@@ -4,6 +4,7 @@ namespace Tcds\Io\Serializer\Fixture;
 
 use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
 use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\TypeNode;
 
 /**
@@ -43,6 +44,10 @@ readonly class Pair
             inputs: [
                 new InputNode(name: 'key', type: 'string'),
                 new InputNode(name: 'value', type: LatLng::class),
+            ],
+            outputs: [
+                OutputNode::property(name: 'key', type: 'string'),
+                OutputNode::property(name: 'value', type: LatLng::class),
             ],
         );
     }

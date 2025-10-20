@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tcds-io/php-better-generics.git",
-                "reference": "0bd583310d8275b96d1ab195ff41585a4f781e28"
+                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/0bd583310d8275b96d1ab195ff41585a4f781e28",
-                "reference": "0bd583310d8275b96d1ab195ff41585a4f781e28",
+                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
+                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
                 "source": "https://github.com/tcds-io/php-better-generics/tree/main"
             },
-            "time": "2025-10-16T20:02:21+00:00"
+            "time": "2025-10-20T17:07:27+00:00"
         }
     ],
     "packages-dev": [
@@ -296,16 +296,16 @@
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.88.2",
+            "version": "v3.89.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f"
+                "reference": "a9c89b309b89e2df8eb798594cf3c883f63fa6b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/b70300670e5a37dd3a9cb0f188e186c8c206f70f",
-                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/a9c89b309b89e2df8eb798594cf3c883f63fa6b7",
+                "reference": "a9c89b309b89e2df8eb798594cf3c883f63fa6b7",
                 "shasum": ""
             },
             "require": {
@@ -342,9 +342,9 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.88.2"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.89.0"
             },
-            "time": "2025-09-27T00:25:01+00:00"
+            "time": "2025-10-18T19:30:40+00:00"
         },
         {
             "name": "phpstan/phpstan",

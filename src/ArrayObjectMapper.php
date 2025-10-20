@@ -3,10 +3,10 @@
 namespace Tcds\Io\Serializer;
 
 use Override;
-use Tcds\Io\Serializer\Metadata\Parser\Type;
 use Tcds\Io\Serializer\Node\Reader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\Node\Writer;
 
 /**
@@ -38,12 +38,12 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
 
-        return $reader($value, $this, $type, $trace);
+        return $reader($value, $type, $this, $trace);
     }
 
     #[Override] public function writeValue(mixed $value, ?string $type = null): mixed
     {
-        $type ??= Type::ofValue($value);
+        $type ??= TypeNode::of($value);
         $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
 
         return $writer($value, $type, $this);

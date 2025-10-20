@@ -27,16 +27,4 @@ readonly class GenericStubs
         Pair $accounts,
     ) {
     }
-
-    public static function fingerprint(): string
-    {
-        return sprintf(
-            '%s[%s, %s, %s, %s]',
-            self::class,
-            sprintf('%s[%s[%s]]', ArrayList::class, 'list', Address::fingerprint()),
-            sprintf('%s[%s]', Traversable::class, User::fingerprint()),
-            sprintf('%s[%s[%s, %s]]', Map::class, 'array', 'string', LatLng::fingerprint()),
-            sprintf('%s[%s, %s]', Pair::class, AccountType::class, BankAccount::fingerprint()),
-        );
-    }
 }

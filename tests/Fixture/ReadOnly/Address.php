@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
 use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\TypeNode;
 
 readonly class Address
@@ -78,8 +79,8 @@ readonly class Address
     {
         return [
             'street' => 'street street',
-            'number' => '100',
-            'main' => 'false',
+            'number' => 100,
+            'main' => false,
             'place' => [
                 'city' => 'São Paulo',
                 'country' => 'Brazil',
@@ -100,6 +101,12 @@ readonly class Address
                 new InputNode(name: 'number', type: 'int'),
                 new InputNode(name: 'main', type: 'bool'),
                 new InputNode(name: 'place', type: Place::class),
+            ],
+            outputs: [
+                OutputNode::property(name: 'street', type: 'string'),
+                OutputNode::property(name: 'number', type: 'int'),
+                OutputNode::property(name: 'main', type: 'bool'),
+                OutputNode::property(name: 'place', type: Place::class),
             ],
         );
     }
