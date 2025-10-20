@@ -4,10 +4,10 @@ namespace Tcds\Io\Serializer;
 
 use Override;
 use Tcds\Io\Serializer\Metadata\Parser\Type;
-use Tcds\Io\Serializer\Metadata\Reader;
-use Tcds\Io\Serializer\Metadata\Writer;
-use Tcds\Io\Serializer\Runtime\RuntimeReader;
-use Tcds\Io\Serializer\Runtime\RuntimeWriter;
+use Tcds\Io\Serializer\Node\Reader;
+use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
+use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Serializer\Node\Writer;
 
 /**
  * @phpstan-import-type TypeMapper from ObjectMapper

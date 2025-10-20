@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\Node\ReadNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
 
 readonly class User
 {
@@ -32,10 +32,10 @@ readonly class User
         return new TypeNode(
             type: User::class,
             inputs: [
-                'name' => new ReadNode('name', new TypeNode('string')),
-                'age' => new ReadNode('age', new TypeNode('int')),
-                'height' => new ReadNode('height', new TypeNode('float')),
-                'address' => new ReadNode('address', Address::node()),
+                'name' => new InputNode('name', new TypeNode('string')),
+                'age' => new InputNode('age', new TypeNode('int')),
+                'height' => new InputNode('height', new TypeNode('float')),
+                'address' => new InputNode('address', Address::node()),
             ],
         );
     }

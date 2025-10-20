@@ -17,10 +17,7 @@
   "autoload": {
     "psr-4": {
       "Tcds\\Io\\Serializer\\": "src/"
-    },
-    "files": [
-      "fn/functions.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {

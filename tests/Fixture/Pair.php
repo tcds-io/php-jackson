@@ -2,6 +2,10 @@
 
 namespace Tcds\Io\Serializer\Fixture;
 
+use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
+
 /**
  * @template K
  * @template V of object
@@ -30,5 +34,16 @@ readonly class Pair
     public function value(): object
     {
         return $this->value;
+    }
+
+    public static function node(): TypeNode
+    {
+        return new TypeNode(
+            type: generic(Pair::class, ['string', LatLng::class]),
+            inputs: [
+                new InputNode(name: 'key', type: 'string'),
+                new InputNode(name: 'value', type: LatLng::class),
+            ],
+        );
     }
 }

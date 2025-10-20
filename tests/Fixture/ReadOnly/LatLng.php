@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\Node\ReadNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
 
 readonly class LatLng
 {
@@ -20,8 +20,8 @@ readonly class LatLng
         return new TypeNode(
             type: LatLng::class,
             inputs: [
-                'lat' => new ReadNode('lat', new TypeNode('float')),
-                'lng' => new ReadNode('lng', new TypeNode('float')),
+                'lat' => new InputNode('lat', new TypeNode('float')),
+                'lng' => new InputNode('lng', new TypeNode('float')),
             ],
         );
     }

@@ -2,8 +2,8 @@
 
 namespace Tcds\Io\Serializer;
 
-use Tcds\Io\Serializer\Metadata\Reader;
-use Tcds\Io\Serializer\Metadata\Writer;
+use Tcds\Io\Serializer\Node\Reader;
+use Tcds\Io\Serializer\Node\Writer;
 
 /**
  * @phpstan-type Type string|class-string<mixed>

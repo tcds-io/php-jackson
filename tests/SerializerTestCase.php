@@ -5,11 +5,8 @@ namespace Tcds\Io\Serializer;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Tcds\Io\Generic\ArrayList;
-use Tcds\Io\Serializer\Metadata\Node\ReadNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
-use Tcds\Io\Serializer\Reflection\ReflectionParameter;
-use Tcds\Io\Serializer\Reflection\ReflectionProperty;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
 use Throwable;
 
 abstract class SerializerTestCase extends TestCase
@@ -19,8 +16,8 @@ abstract class SerializerTestCase extends TestCase
 
     protected function setUp(): void
     {
-        TypeNode::$nodes = [];
-        TypeNode::$specifications = [];
+//        TypeNode::$nodes = [];
+//        TypeNode::$specifications = [];
 
         $this->arrayMapper = new ArrayObjectMapper();
         $this->jsonMapper = new JsonObjectMapper();
@@ -32,7 +29,7 @@ abstract class SerializerTestCase extends TestCase
      * @param callable $action
      * @return E
      */
-    public function expectThrows(string $expected, callable $action)
+    public function expectThrows(string $expected, callable $action): Throwable
     {
         try {
             $action();
@@ -48,7 +45,7 @@ abstract class SerializerTestCase extends TestCase
     }
 
     /**
-     * @param list<ReadNode> $nodes
+     * @param list<InputNode> $nodes
      */
     protected function initializeReadNodes(array $nodes): void
     {
@@ -69,19 +66,5 @@ abstract class SerializerTestCase extends TestCase
             initializeLazyObject($param);
             $this->initializeNode($param->node, $depth);
         }
-    }
-
-    protected function assertParams(array $expected, array $actual): void
-    {
-        $this->assertEquals(
-            $expected,
-            new ArrayList($actual)
-                ->indexedBy(fn(ReflectionProperty|ReflectionParameter $param) => $param->name)
-                ->mapValues(fn(ReflectionProperty|ReflectionParameter $prop) => [
-                    get_class($prop->getType()),
-                    $prop->getType()->getName(),
-                ])
-                ->entries(),
-        );
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\Node\ReadNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
 
 readonly class Address
 {
@@ -96,16 +96,11 @@ readonly class Address
         return new TypeNode(
             type: Address::class,
             inputs: [
-                'street' => new ReadNode('street', new TypeNode(type: 'string')),
-                'number' => new ReadNode('number', new TypeNode(type: 'int')),
-                'main' => new ReadNode('main', new TypeNode(type: 'bool')),
-                'place' => new ReadNode('place', Place::node()),
+                new InputNode(name: 'street', type: 'string'),
+                new InputNode(name: 'number', type: 'int'),
+                new InputNode(name: 'main', type: 'bool'),
+                new InputNode(name: 'place', type: Place::class),
             ],
         );
-    }
-
-    public static function fingerprint(): string
-    {
-        return sprintf('%s[%s, %s, %s, %s]', self::class, 'string', 'int', 'bool', Place::fingerprint());
     }
 }
