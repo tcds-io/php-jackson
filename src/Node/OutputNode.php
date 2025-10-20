@@ -26,8 +26,11 @@ readonly class OutputNode
     public function read(mixed $data): mixed
     {
         return match ($this->outputType) {
+            OutputType::PARAM => run(function () use ($data) {
+                /** @var array<string, mixed> $data */
+                return $data[$this->name];
+            }),
             OutputType::PROPERTY => $data->{$this->name},
-            OutputType::PARAM => $data[$this->name],
             OutputType::METHOD => $data->{$this->name}(),
         };
     }

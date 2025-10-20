@@ -14,6 +14,7 @@ use Tcds\Io\Serializer\Node\Writer;
  */
 readonly class ArrayObjectMapper implements ObjectMapper
 {
+    /** @var TypeMapper */
     private array $typeMappers;
 
     /**
@@ -31,10 +32,14 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
     {
-        return $this->readValue($type, [...$value, ...$with]);
+        /** @var array<mixed> $value */
+        return $this->readValue($type, [
+            ...$value,
+            ...$with,
+        ]);
     }
 
-    #[Override] public function readValue(string $type, mixed $value, array $trace = [])
+    #[Override] public function readValue(string $type, mixed $value, array $trace = []): mixed
     {
         $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
 

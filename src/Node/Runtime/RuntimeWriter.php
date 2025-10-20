@@ -4,7 +4,6 @@ namespace Tcds\Io\Serializer\Node\Runtime;
 
 use BackedEnum;
 use Exception;
-use stdClass;
 use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\Node\TypeNodeFactory;
@@ -18,38 +17,29 @@ readonly class RuntimeWriter implements Writer
     ) {
     }
 
-    public function __invoke(mixed $data, string $type, ObjectMapper $mapper)
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper): mixed
     {
         return match (true) {
-            is_scalar($data) => run(function () use ($data) {
-                return $data;
-            }),
-            $data instanceof BackedEnum => run(function () use ($data) {
-                return $data->value;
-            }),
-            is_array($data) => run(function () use ($type, $mapper, $data) {
-                return array_map(fn($item) => $mapper->writeValue($item), $data);
-            }),
-            $data instanceof stdClass => run(function () use ($type, $mapper, $data) {
-                $node = $this->node->create($type);
-
-                return $this->writeFromNode(data: $data, node: $node, mapper: $mapper);
-            }),
-
-            is_object($data) => run(function () use ($data, $mapper) {
-                $node = $this->node->create($data::class);
-
-                return $this->writeFromNode(data: $data, node: $node, mapper: $mapper);
-            }),
+            is_scalar($data) => $data,
+            $data instanceof BackedEnum => $data->value,
+            is_array($data) => array_map(fn ($item) => $mapper->writeValue($item), $data),
+            is_object($data) => $this->writeFromNode(
+                data: $data,
+                node: $this->node->create($type),
+                mapper: $mapper,
+            ),
             is_null($data) => null,
             default => throw new Exception(sprintf('Unable to write `%s` valur', gettype($data))),
         };
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function writeFromNode(mixed $data, TypeNode $node, ObjectMapper $mapper): array
     {
-        return listOf($node->outputs)
-            ->indexedBy(fn(OutputNode $node) => $node->name)
+        return listOf(...$node->outputs)
+            ->indexedBy(fn (OutputNode $node) => $node->name)
             ->mapValues(function (OutputNode $node) use ($mapper, $data) {
                 return $mapper->writeValue($node->read($data), $node->type);
             })

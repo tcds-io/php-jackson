@@ -5,7 +5,6 @@ namespace Tcds\Io\Serializer\Node;
 final class TypeNode
 {
     /**
-     * @param string $type
      * @param list<InputNode> $inputs
      * @param list<OutputNode> $outputs
      */
@@ -18,10 +17,9 @@ final class TypeNode
 
     public static function of(mixed $data): string
     {
-        return match ($type = gettype($data)) {
-            'object' => $data::class,
-            'double' => 'float',
-            'array' => run(function () use ($data) {
+        return match (true) {
+            is_object($data) => $data::class,
+            is_array($data) => run(function () use ($data) {
                 $value = self::of(reset($data));
                 $key = self::of(array_key_first($data));
 
@@ -29,7 +27,7 @@ final class TypeNode
                     ? sprintf('list<%s>', $value)
                     : sprintf('map<%s, %s>', $key, $value);
             }),
-            default => $type,
+            default => gettype($data),
         };
     }
 }

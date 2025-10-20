@@ -25,7 +25,7 @@ readonly class RuntimeReader implements Reader
     ) {
     }
 
-    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace)
+    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
     {
         $node = $this->node->create($type);
 
@@ -42,17 +42,21 @@ readonly class RuntimeReader implements Reader
         };
     }
 
+    /**
+     * @param list<string> $trace
+     * @return array<mixed>
+     */
     private function readList(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         return array_map(
             callback: function (mixed $item) use ($mapper, $node, $trace) {
                 return $mapper->readValue(
-                    type: $node->inputs[0]->type,
+                    type: asClassString($node->inputs[0]->type),
                     value: $item,
                     trace: $trace,
                 );
             },
-            array: $data,
+            array: asArray($data),
         );
     }
 
@@ -63,63 +67,79 @@ readonly class RuntimeReader implements Reader
      */
     private function readEnum(string $enum, mixed $value): BackedEnum
     {
-        return $enum::from($value);
+        return $enum::from(asStringOrInt($value));
     }
 
     /**
-     * @template C
-     * @return C
+     * @param list<string> $trace
      */
-    private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace)
+    private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): mixed
     {
-        $values = $this->readValues($mapper, $node, $data, $trace);
+        $values = $this->readValues($mapper, $node, asArray($data), $trace);
         [$class] = TypeParser::getGenericTypes($node->type);
 
         try {
             return new $class(...$values);
         } catch (Throwable $e) {
-            throw new UnableToParseValue($trace, $this->specification->create($node->type), $data, $e);
+            throw new UnableToParseValue($trace, $this->specification->create($node->type), $data);
         }
     }
 
+    /**
+     * @param list<string> $trace
+     * @return array<mixed>
+     */
     private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
-        $param = $node->inputs[1]->type;
-
         return array_map(
-            callback: fn($item) => $mapper->readValue(
-                type: $param,
+            callback: fn ($item) => $mapper->readValue(
+                type: asClassString($node->inputs[1]->type),
                 value: $item,
                 trace: $trace,
             ),
-            array: $data,
+            array: asArray($data),
         );
     }
 
+    /**
+     * @param list<string> $trace
+     * @return object|array<mixed>
+     */
     private function readShape(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): object|array
     {
-        $values = $this->readValues($mapper, $node, $data, $trace);
+        $values = $this->readValues($mapper, $node, asArray($data), $trace);
 
         return str_starts_with($node->type, 'array')
             ? $values
             : (object) $values;
     }
 
+    /**
+     * @param list<string> $trace
+     * @return array<mixed>
+     */
     private function readValueObject(ObjectMapper $mapper, InputNode $param, mixed $data, array $trace): array
     {
-        $data = $data[$param->name] ?? $data;
+        $data = is_array($data) && array_key_exists($param->name, $data)
+            ? $data[$param->name]
+            : $data;
 
         return [
-            $param->name => $mapper->readValue($param->type, $data, $trace),
+            $param->name => $mapper->readValue(asClassString($param->type), $data, $trace),
         ];
     }
 
-    private function readValues(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
+    /**
+     * @param array<mixed> $data
+     * @param list<string> $trace
+     * @return array<mixed>
+     */
+    private function readValues(ObjectMapper $mapper, TypeNode $node, array $data, array $trace): array
     {
         $values = [];
 
         if (count($node->inputs) === 1) {
-            $param = array_values($node->inputs)[0];
+            $param = $node->inputs[0];
 
             return $this->readValueObject($mapper, $param, $data, $trace);
         }
@@ -129,11 +149,11 @@ readonly class RuntimeReader implements Reader
             $innerTrace = [...$trace, $input->name];
 
             try {
-                $values[$input->name] = $mapper->readValue($input->type, $value, $innerTrace);
+                $values[$input->name] = $mapper->readValue(asClassString($input->type), $value, $innerTrace);
             } catch (TypeError $e) {
                 $node = $this->node->create($input->type);
 
-                throw new UnableToParseValue($innerTrace, $this->specification->create($node->type), $value, $e);
+                throw new UnableToParseValue($innerTrace, $this->specification->create($node->type), $value);
             }
         }
 

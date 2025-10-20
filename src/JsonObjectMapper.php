@@ -3,6 +3,7 @@
 namespace Tcds\Io\Serializer;
 
 use Override;
+use Tcds\Io\Serializer\Node\Json;
 use Tcds\Io\Serializer\Node\Reader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
@@ -29,18 +30,18 @@ readonly class JsonObjectMapper implements ObjectMapper
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
     {
         return $this->mapper->readValue($type, [
-            ...json_decode($value, true, 512, JSON_THROW_ON_ERROR),
+            ...Json::decode($value),
             ...$with,
         ]);
     }
 
-    #[Override] public function readValue(string $type, mixed $value, array $trace = [])
+    #[Override] public function readValue(string $type, mixed $value, array $trace = []): mixed
     {
         return $this->readValueWith($type, $value);
     }
 
     public function writeValue(mixed $value, ?string $type = null): string
     {
-        return json_encode($this->mapper->writeValue($value, $type));
+        return Json::encode($this->mapper->writeValue($value, $type));
     }
 }

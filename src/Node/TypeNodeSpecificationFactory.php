@@ -7,5 +7,5 @@ interface TypeNodeSpecificationFactory
     /**
      * @return array<string, mixed>|list<mixed>|string
      */
-    public function create(TypeNode $node): array|string;
+    public function create(TypeNode|string $node): array|string;
 }

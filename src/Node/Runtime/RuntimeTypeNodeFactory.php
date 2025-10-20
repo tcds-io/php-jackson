@@ -15,7 +15,7 @@ use Tcds\Io\Serializer\Node\TypeNodeFactory;
 
 class RuntimeTypeNodeFactory implements TypeNodeFactory
 {
-    /** @var array<string, self> */
+    /** @var array<string, TypeNode> */
     public static array $nodes = [];
 
     #[Override] public function create(string $type): TypeNode
@@ -47,16 +47,15 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: $type,
             inputs: mapOf($params)
-                ->map(fn($name, $type) => [$name, new InputNode(name: $name, type: $type)])
+                ->map(fn ($name, $type) => [$name, new InputNode(name: $name, type: $type)])
                 ->values(),
             outputs: mapOf($params)
-                ->map(function ($name, $type) use ($shapeType, $params) {
-                    $node = $shapeType === 'array'
+                ->map(fn ($name, $type) => [
+                    $name,
+                    $shapeType === 'array'
                         ? OutputNode::param(name: $name, type: $type)
-                        : OutputNode::property(name: $name, type: $type);
-
-                    return [$name, $node];
-                })
+                        : OutputNode::property(name: $name, type: $type),
+                ])
                 ->values(),
         );
     }
@@ -82,14 +81,14 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
         return new TypeNode(
             type: generic($reflection->name, $reflection->generics),
-            inputs: listOf($reflection->getConstructor()->getParameters())
-                ->map(fn(ReflectionParameter $param) => new InputNode(
+            inputs: listOf(...$reflection->getConstructor()->getParameters())
+                ->map(fn (ReflectionParameter $param) => new InputNode(
                     name: $param->name,
                     type: $param->getType()->getName(),
                 ))
                 ->items(),
-            outputs: listOf($reflection->getProperties())
-                ->map(fn(ReflectionProperty $param) => OutputNode::property(
+            outputs: listOf(...$reflection->getProperties())
+                ->map(fn (ReflectionProperty $param) => OutputNode::property(
                     name: $param->name,
                     type: $param->getType()->getName(),
                 ))
