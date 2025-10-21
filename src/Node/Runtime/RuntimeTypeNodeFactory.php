@@ -7,7 +7,7 @@ use Tcds\Io\Generic\Reflection\ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Generic\Reflection\Type\TypeParser;
+use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Serializer\Node\InputNode;
 use Tcds\Io\Serializer\Node\OutputNode;
 use Tcds\Io\Serializer\Node\TypeNode;

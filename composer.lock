@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tcds-io/php-better-generics.git",
-                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293"
+                "reference": "55f574c00a64dd4f2e7626084cbf385372f8e94e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
-                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
+                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/55f574c00a64dd4f2e7626084cbf385372f8e94e",
+                "reference": "55f574c00a64dd4f2e7626084cbf385372f8e94e",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
                 "source": "https://github.com/tcds-io/php-better-generics/tree/main"
             },
-            "time": "2025-10-20T17:07:27+00:00"
+            "time": "2025-10-21T17:57:39+00:00"
         }
     ],
     "packages-dev": [

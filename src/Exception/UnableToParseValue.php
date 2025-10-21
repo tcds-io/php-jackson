@@ -2,6 +2,8 @@
 
 namespace Tcds\Io\Serializer\Exception;
 
+use Throwable;
+
 class UnableToParseValue extends SerializerException
 {
     public mixed $given;
@@ -9,9 +11,9 @@ class UnableToParseValue extends SerializerException
     /**
      * @param list<string> $trace
      */
-    public function __construct(public array $trace, public mixed $expected, mixed $given)
+    public function __construct(public array $trace, public mixed $expected, mixed $given, ?Throwable $previous = null)
     {
-        parent::__construct(sprintf('Unable to parse value at .%s', join('.', $trace)));
+        parent::__construct(sprintf('Unable to parse value at .%s', join('.', $trace)), $previous);
 
         $this->given = $this->toType($given);
     }
