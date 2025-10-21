@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit;
+namespace Tcds\Io\Serializer\Unit\Exception;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;

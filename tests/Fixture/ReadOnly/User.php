@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\ParamNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
-
 readonly class User
 {
     public function __construct(
@@ -17,21 +14,26 @@ readonly class User
     ) {
     }
 
-    public static function node(): TypeNode
+    public static function arthurDent(): self
     {
-        return new TypeNode(
-            type: User::class,
-            params: [
-                'name' => new ParamNode('name', new TypeNode('string')),
-                'age' => new ParamNode('age', new TypeNode('int')),
-                'height' => new ParamNode('height', new TypeNode('float')),
-                'address' => new ParamNode('address', Address::node()),
-            ],
+        return new self(
+            name: 'Arthur Dent',
+            age: 27,
+            height: 1.77,
+            address: Address::main(),
         );
     }
 
-    public static function fingerprint(): string
+    /**
+     * @return array<string, mixed>
+     */
+    public static function arthurDentData(): array
     {
-        return sprintf('%s[%s, %s, %s, %s]', self::class, 'string', 'int', 'float', Address::fingerprint());
+        return [
+            'name' => 'Arthur Dent',
+            'age' => 27,
+            'height' => 1.77,
+            'address' => Address::mainData(),
+        ];
     }
 }

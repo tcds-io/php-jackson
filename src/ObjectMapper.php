@@ -2,12 +2,14 @@
 
 namespace Tcds\Io\Serializer;
 
-use Tcds\Io\Serializer\Metadata\Reader;
+use Tcds\Io\Serializer\Node\Reader;
+use Tcds\Io\Serializer\Node\Writer;
 
 /**
  * @phpstan-type Type string|class-string<mixed>
- * @phpstan-type ReaderFn Reader::__invoke
- * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn }>
+ * @phpstan-type ReaderFn callable(mixed $data, string $type, ArrayObjectMapper $mapper, list<string> $trace): mixed
+ * @phpstan-type WriterFn callable(mixed $data, string $type, ObjectMapper $mapper): mixed
+ * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn, writer: Writer|WriterFn }>
  */
 interface ObjectMapper
 {
@@ -22,7 +24,9 @@ interface ObjectMapper
     /**
      * @template T
      * @param class-string<T> $type
-     * @return T
+     * @param list<string> $trace
      */
-    public function readValue(string $type, mixed $value, array $trace = []);
+    public function readValue(string $type, mixed $value, array $trace = []): mixed;
+
+    public function writeValue(mixed $value, ?string $type = null): mixed;
 }

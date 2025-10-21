@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Tcds\Io\Serializer\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Metadata\ParamNode;
-use Tcds\Io\Serializer\Metadata\TypeNode;
+use Tcds\Io\Serializer\Node\InputNode;
+use Tcds\Io\Serializer\Node\OutputNode;
+use Tcds\Io\Serializer\Node\TypeNode;
 
 readonly class Address
 {
@@ -17,7 +18,7 @@ readonly class Address
     ) {
     }
 
-    public static function mainAddress(): self
+    public static function main(): self
     {
         return new self(
             street: 'main street',
@@ -34,7 +35,7 @@ readonly class Address
         );
     }
 
-    public static function otherAddress(): self
+    public static function other(): self
     {
         return new self(
             street: 'street street',
@@ -54,7 +55,7 @@ readonly class Address
     /**
      * @return array<string, mixed>
      */
-    public static function mainAddressData(): array
+    public static function mainData(): array
     {
         return [
             'street' => 'main street',
@@ -74,12 +75,12 @@ readonly class Address
     /**
      * @return array<string, mixed>
      */
-    public static function otherAddressData(): array
+    public static function otherData(): array
     {
         return [
             'street' => 'street street',
-            'number' => '100',
-            'main' => 'false',
+            'number' => 100,
+            'main' => false,
             'place' => [
                 'city' => 'São Paulo',
                 'country' => 'Brazil',
@@ -95,17 +96,18 @@ readonly class Address
     {
         return new TypeNode(
             type: Address::class,
-            params: [
-                'street' => new ParamNode('street', new TypeNode(type: 'string')),
-                'number' => new ParamNode('number', new TypeNode(type: 'int')),
-                'main' => new ParamNode('main', new TypeNode(type: 'bool')),
-                'place' => new ParamNode('place', Place::node()),
+            inputs: [
+                new InputNode(name: 'street', type: 'string'),
+                new InputNode(name: 'number', type: 'int'),
+                new InputNode(name: 'main', type: 'bool'),
+                new InputNode(name: 'place', type: Place::class),
+            ],
+            outputs: [
+                OutputNode::property(name: 'street', type: 'string'),
+                OutputNode::property(name: 'number', type: 'int'),
+                OutputNode::property(name: 'main', type: 'bool'),
+                OutputNode::property(name: 'place', type: Place::class),
             ],
         );
-    }
-
-    public static function fingerprint(): string
-    {
-        return sprintf('%s[%s, %s, %s, %s]', self::class, 'string', 'int', 'bool', Place::fingerprint());
     }
 }

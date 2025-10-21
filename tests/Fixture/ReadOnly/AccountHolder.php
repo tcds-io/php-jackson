@@ -24,7 +24,7 @@ readonly class AccountHolder
         return new self(
             name: 'Thiago Cordeiro',
             account: BankAccount::checking(),
-            address: Address::otherAddress(),
+            address: Address::other(),
             status: [
                 AccountStatus::ACTIVE,
                 AccountStatus::FINALISED,
@@ -41,7 +41,7 @@ readonly class AccountHolder
             'name' => 'Thiago Cordeiro',
             'active' => 'true',
             'account' => BankAccount::data(),
-            'address' => Address::otherAddressData(),
+            'address' => Address::otherData(),
             'status' => ['Active', 'Finalized'],
         ];
     }

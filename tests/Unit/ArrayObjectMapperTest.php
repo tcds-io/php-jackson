@@ -32,29 +32,13 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $this->mapper = new ArrayObjectMapper();
     }
 
-    #[Test] public function given_custom_reader_then_parse_into_the_object(): void
-    {
-        $data = AccountHolder::data();
-        $data['address']['place']['position'] = '-26.9013, -48.6655';
-
-        $mapper = new ArrayObjectMapper(
-            typeMappers: [
-                LatLng::class => [
-                    'reader' => fn(string $value) => new LatLng(...explode(',', $value)),
-                ],
-            ],
-        );
-
-        $accountHolder = $mapper->readValue(AccountHolder::class, $data);
-
-        $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
-    }
-
     #[Test] public function given_a_json_then_read_value_into_the_object(): void
     {
-        $accountHolder = $this->mapper->readValueWith(AccountHolder::class, $this->data, []);
+        $data = json_decode(AccountHolder::json(), true);
 
-        $this->assertEquals($this->object, $accountHolder);
+        $accountHolder = $this->mapper->readValueWith(AccountHolder::class, $data);
+
+        $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
 
     #[Test] public function given_a_json_then_parse_into_the_object_with_additional_content(): void
@@ -86,12 +70,30 @@ class ArrayObjectMapperTest extends SerializerTestCase
 
         $exception = $this->expectThrows(
             UnableToParseValue::class,
-            fn() => $this->mapper->readValue(AccountHolder::class, $data),
+            fn () => $this->mapper->readValue(AccountHolder::class, $data),
         );
 
         $this->assertEquals(['address', 'place', 'position'], $exception->trace);
         $this->assertEquals(['lat' => 'float', 'lng' => 'float'], $exception->expected);
         $this->assertEquals('string', $exception->given);
+    }
+
+    #[Test] public function given_custom_reader_then_parse_into_the_object(): void
+    {
+        $data = AccountHolder::data();
+        $data['address']['place']['position'] = '-26.9013, -48.6655';
+
+        $mapper = new ArrayObjectMapper(
+            typeMappers: [
+                LatLng::class => [
+                    'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
+                ],
+            ],
+        );
+
+        $accountHolder = $mapper->readValue(AccountHolder::class, $data);
+
+        $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
 
     #[Test] public function given_an_object_with_map_param_then_handle_value(): void
@@ -108,14 +110,14 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $type = generic('map', ['string', Address::class]);
 
         $response = $this->mapper->readValue($type, [
-            'main' => Address::mainAddressData(),
-            'other' => Address::otherAddressData(),
+            'main' => Address::mainData(),
+            'other' => Address::otherData(),
         ]);
 
         $this->assertEquals(
             [
-                'main' => Address::mainAddress(),
-                'other' => Address::otherAddress(),
+                'main' => Address::main(),
+                'other' => Address::other(),
             ],
             $response,
         );

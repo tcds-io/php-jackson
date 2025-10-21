@@ -19,7 +19,7 @@
       "Tcds\\Io\\Serializer\\": "src/"
     },
     "files": [
-      "fn/functions.php"
+      "fn/types.php"
     ]
   },
   "autoload-dev": {

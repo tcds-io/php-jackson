@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tcds-io/php-better-generics.git",
-                "reference": "b0dea8ab3554132bc5d6c36817d306dea14aea65"
+                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/b0dea8ab3554132bc5d6c36817d306dea14aea65",
-                "reference": "b0dea8ab3554132bc5d6c36817d306dea14aea65",
+                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
+                "reference": "6f1fed2d59e9cc1147616f2ec060cf95f7cbf293",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,7 @@
             "type": "library",
             "autoload": {
                 "files": [
-                    "src/functional/functions.php"
+                    "fn/functions.php"
                 ],
                 "psr-4": {
                     "Tcds\\Io\\Generic\\": "src/"
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
                 "source": "https://github.com/tcds-io/php-better-generics/tree/main"
             },
-            "time": "2025-09-23T06:51:07+00:00"
+            "time": "2025-10-20T17:07:27+00:00"
         }
     ],
     "packages-dev": [
@@ -296,16 +296,16 @@
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.88.2",
+            "version": "v3.89.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f"
+                "reference": "a9c89b309b89e2df8eb798594cf3c883f63fa6b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/b70300670e5a37dd3a9cb0f188e186c8c206f70f",
-                "reference": "b70300670e5a37dd3a9cb0f188e186c8c206f70f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/a9c89b309b89e2df8eb798594cf3c883f63fa6b7",
+                "reference": "a9c89b309b89e2df8eb798594cf3c883f63fa6b7",
                 "shasum": ""
             },
             "require": {
@@ -342,22 +342,17 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.88.2"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.89.0"
             },
-            "time": "2025-09-27T00:25:01+00:00"
+            "time": "2025-10-18T19:30:40+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.29",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan-phar-composer-source.git",
-                "reference": "git"
-            },
+            "version": "2.1.31",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
-                "reference": "d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ead89849d879fe203ce9292c6ef5e7e76f867b96",
+                "reference": "ead89849d879fe203ce9292c6ef5e7e76f867b96",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +397,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-25T06:58:18+00:00"
+            "time": "2025-10-10T14:14:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -740,16 +735,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.3.15",
+            "version": "12.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b035ee2cd8ecad4091885b61017ebb1d80eb0e57"
+                "reference": "fc5413a2e6d240d2f6d9317bdf7f0a24e73de194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b035ee2cd8ecad4091885b61017ebb1d80eb0e57",
-                "reference": "b035ee2cd8ecad4091885b61017ebb1d80eb0e57",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc5413a2e6d240d2f6d9317bdf7f0a24e73de194",
+                "reference": "fc5413a2e6d240d2f6d9317bdf7f0a24e73de194",
                 "shasum": ""
             },
             "require": {
@@ -785,7 +780,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "12.3-dev"
+                    "dev-main": "12.4-dev"
                 }
             },
             "autoload": {
@@ -817,7 +812,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.3.15"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.4.1"
             },
             "funding": [
                 {
@@ -841,7 +836,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-28T12:10:54+00:00"
+            "time": "2025-10-09T14:08:29+00:00"
         },
         {
             "name": "sebastian/cli-parser",

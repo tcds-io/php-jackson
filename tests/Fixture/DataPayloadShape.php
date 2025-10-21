@@ -5,7 +5,7 @@ namespace Tcds\Io\Serializer\Fixture;
 use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
 use Tcds\Io\Serializer\Fixture\ReadOnly\User;
 
-readonly class WithShape
+readonly class DataPayloadShape
 {
     /**
      * @param array{
@@ -23,13 +23,27 @@ readonly class WithShape
     {
     }
 
-    public static function fingerprint(): string
+    /**
+     * @return array{
+     *      user: User,
+     *      address: Address,
+     *      description: string,
+     *  }
+     */
+    public function getData(): array
     {
-        return sprintf(
-            '%s[%s, %s]',
-            WithShape::class,
-            sprintf('%s[%s, %s, %s]', 'array', User::fingerprint(), Address::fingerprint(), 'string'),
-            sprintf('%s[%s, %s, %s]', 'object', User::fingerprint(), Address::fingerprint(), 'string'),
-        );
+        return $this->data;
+    }
+
+    /**
+     * @return object{
+     *      user: User,
+     *      address: Address,
+     *      description: string,
+     *  }
+     */
+    public function getPayload(): object
+    {
+        return $this->payload;
     }
 }
