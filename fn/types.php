@@ -2,7 +2,6 @@
 
 /**
  * @return class-string<object>
- * @internal
  */
 function asClassString(string $value): string
 {
@@ -11,7 +10,6 @@ function asClassString(string $value): string
 }
 
 /**
- * @internal
  */
 function asStringOrInt(mixed $value): string|int
 {
@@ -21,7 +19,6 @@ function asStringOrInt(mixed $value): string|int
 
 /**
  * @return array<mixed>
- * @internal
  */
 function asArray(mixed $value): array
 {

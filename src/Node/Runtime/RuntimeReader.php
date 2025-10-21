@@ -4,8 +4,8 @@ namespace Tcds\Io\Serializer\Node\Runtime;
 
 use BackedEnum;
 use Override;
+use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Generic\Reflection\Type\TypeParser;
 use Tcds\Io\Serializer\Exception\SerializerException;
 use Tcds\Io\Serializer\Exception\UnableToParseValue;
 use Tcds\Io\Serializer\Node\InputNode;
@@ -81,7 +81,7 @@ readonly class RuntimeReader implements Reader
         try {
             return new $class(...$values);
         } catch (Throwable $e) {
-            throw new UnableToParseValue($trace, $this->specification->create($node->type), $data);
+            throw new UnableToParseValue($trace, $this->specification->create($node->type), $data, $e);
         }
     }
 
