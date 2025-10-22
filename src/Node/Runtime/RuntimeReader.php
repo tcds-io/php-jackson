@@ -17,6 +17,9 @@ use Tcds\Io\Serializer\ObjectMapper;
 use Throwable;
 use TypeError;
 
+/**
+ * @implements Reader<mixed>
+ */
 readonly class RuntimeReader implements Reader
 {
     public function __construct(
@@ -75,7 +78,7 @@ readonly class RuntimeReader implements Reader
      */
     private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): mixed
     {
-        $values = $this->readValues($mapper, $node, asArray($data), $trace);
+        $values = $this->readValues($mapper, $node, $data, $trace);
         [$class] = TypeParser::getGenericTypes($node->type);
 
         try {
@@ -130,15 +133,14 @@ readonly class RuntimeReader implements Reader
     }
 
     /**
-     * @param array<mixed> $data
      * @param list<string> $trace
      * @return array<mixed>
      */
-    private function readValues(ObjectMapper $mapper, TypeNode $node, array $data, array $trace): array
+    private function readValues(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         $values = [];
 
-        if (count($node->inputs) === 1) {
+        if (!is_array($data) || count($node->inputs) === 1) {
             $param = $node->inputs[0];
 
             return $this->readValueObject($mapper, $param, $data, $trace);

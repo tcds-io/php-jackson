@@ -10,6 +10,9 @@ use Tcds\Io\Serializer\Node\TypeNodeFactory;
 use Tcds\Io\Serializer\Node\Writer;
 use Tcds\Io\Serializer\ObjectMapper;
 
+/**
+ * @implements Writer<mixed>
+ */
 readonly class RuntimeWriter implements Writer
 {
     public function __construct(

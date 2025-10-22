@@ -12,7 +12,8 @@
     "symfony/var-dumper": "^6.0",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.3",
-    "php-cs-fixer/shim": "^3.88"
+    "php-cs-fixer/shim": "^3.88",
+    "nesbot/carbon": "^3.10"
   },
   "autoload": {
     "psr-4": {

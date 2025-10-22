@@ -10,14 +10,16 @@ use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
 use Tcds\Io\Serializer\Node\Writer;
 
 /**
- * @phpstan-import-type TypeMapper from ObjectMapper
+ * @phpstan-import-type TypeMappers from ObjectMapper
  */
 readonly class JsonObjectMapper implements ObjectMapper
 {
     private ArrayObjectMapper $mapper;
 
     /**
-     * @param TypeMapper $typeMappers
+     * @param Reader<mixed> $defaultTypeReader
+     * @param Writer<mixed> $defaultTypeWriter
+     * @param TypeMappers $typeMappers
      */
     public function __construct(
         Reader $defaultTypeReader = new RuntimeReader(),

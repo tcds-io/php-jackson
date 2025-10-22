@@ -15,35 +15,19 @@ use Tcds\Io\Serializer\SerializerTestCase;
 
 class ArrayObjectMapperTest extends SerializerTestCase
 {
-    private object $object;
-    /** @var array<string, mixed> */
-    private array $data;
-    /** @var array<string, mixed> */
-    private array $partialData;
-
-    private ArrayObjectMapper $mapper;
-
-    protected function setUp(): void
-    {
-        $this->object = AccountHolder::thiagoCordeiro();
-        $this->data = json_decode(AccountHolder::json(), true);
-        $this->partialData = json_decode(AccountHolder::partialJsonValue(), true);
-
-        $this->mapper = new ArrayObjectMapper();
-    }
-
     #[Test] public function given_a_json_then_read_value_into_the_object(): void
     {
         $data = json_decode(AccountHolder::json(), true);
 
-        $accountHolder = $this->mapper->readValueWith(AccountHolder::class, $data);
+        $accountHolder = $this->arrayMapper->readValueWith(AccountHolder::class, $data);
 
         $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
 
     #[Test] public function given_a_json_then_parse_into_the_object_with_additional_content(): void
     {
-        $accountHolder = $this->mapper->readValueWith(AccountHolder::class, $this->partialData, [
+        $partialData = json_decode(AccountHolder::partialJsonValue(), true);
+        $accountHolder = $this->arrayMapper->readValueWith(AccountHolder::class, $partialData, [
             'name' => 'Thiago Cordeiro',
             'account' => [
                 'number' => '12345-X',
@@ -51,14 +35,14 @@ class ArrayObjectMapperTest extends SerializerTestCase
             ],
         ]);
 
-        $this->assertEquals($this->object, $accountHolder);
+        $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
 
     #[Test] public function given_a_data_then_parse_into_the_object(): void
     {
         $data = AccountHolder::data();
 
-        $accountHolder = $this->mapper->readValue(AccountHolder::class, $data);
+        $accountHolder = $this->arrayMapper->readValue(AccountHolder::class, $data);
 
         $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
@@ -70,7 +54,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
 
         $exception = $this->expectThrows(
             UnableToParseValue::class,
-            fn () => $this->mapper->readValue(AccountHolder::class, $data),
+            fn () => $this->arrayMapper->readValue(AccountHolder::class, $data),
         );
 
         $this->assertEquals(['address', 'place', 'position'], $exception->trace);
@@ -96,11 +80,29 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
     }
 
+    #[Test] public function given_custom_reader_when_value_is_missing_then_run_custom_reader(): void
+    {
+        $data = AccountHolder::data();
+        unset($data['address']['place']['position']);
+
+        $mapper = new ArrayObjectMapper(
+            typeMappers: [
+                LatLng::class => [
+                    'reader' => fn () => new LatLng(-26.9013, -48.6655),
+                ],
+            ],
+        );
+
+        $accountHolder = $mapper->readValue(AccountHolder::class, $data);
+
+        $this->assertEquals(AccountHolder::thiagoCordeiro(), $accountHolder);
+    }
+
     #[Test] public function given_an_object_with_map_param_then_handle_value(): void
     {
         $data = Response::data();
 
-        $response = $this->mapper->readValue(Response::class, $data);
+        $response = $this->arrayMapper->readValue(Response::class, $data);
 
         $this->assertEquals(Response::firstPage(), $response);
     }
@@ -109,7 +111,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
     {
         $type = generic('map', ['string', Address::class]);
 
-        $response = $this->mapper->readValue($type, [
+        $response = $this->arrayMapper->readValue($type, [
             'main' => Address::mainData(),
             'other' => Address::otherData(),
         ]);
@@ -127,7 +129,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
     {
         $type = shape('array', ['type' => AccountType::class, 'position' => LatLng::class]);
 
-        $response = $this->mapper->readValue($type, [
+        $response = $this->arrayMapper->readValue($type, [
             'type' => 'checking',
             'position' => [
                 'lat' => '-26.9013',
@@ -151,7 +153,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
     {
         $type = shape('object', ['type' => AccountType::class, 'position' => LatLng::class]);
 
-        $response = $this->mapper->readValue($type, [
+        $response = $this->arrayMapper->readValue($type, [
             'type' => 'checking',
             'position' => [
                 'lat' => '-26.9013',

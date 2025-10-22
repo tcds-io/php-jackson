@@ -2,30 +2,47 @@
 
 namespace Tcds\Io\Serializer;
 
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Override;
 use Tcds\Io\Serializer\Node\Reader;
+use Tcds\Io\Serializer\Node\Readers\DateTimeReader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
 use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
 use Tcds\Io\Serializer\Node\TypeNode;
 use Tcds\Io\Serializer\Node\Writer;
+use Tcds\Io\Serializer\Node\Writers\DateTimeWriter;
 
 /**
- * @phpstan-import-type TypeMapper from ObjectMapper
+ * @phpstan-import-type TypeMappers from ObjectMapper
  */
 readonly class ArrayObjectMapper implements ObjectMapper
 {
-    /** @var TypeMapper */
+    /** @var TypeMappers */
     private array $typeMappers;
 
     /**
-     * @param TypeMapper $typeMappers
+     * @param Reader<mixed> $defaultTypeReader
+     * @param Writer<mixed> $defaultTypeWriter
+     * @param TypeMappers $typeMappers
      */
     public function __construct(
         private Reader $defaultTypeReader = new RuntimeReader(),
         private Writer $defaultTypeWriter = new RuntimeWriter(),
         array $typeMappers = [],
     ) {
+        $dateTimeMapper = ['reader' => new DateTimeReader(), 'writer' => new DateTimeWriter()];
+
         $this->typeMappers = [
+            DateTime::class => $dateTimeMapper,
+            DateTimeImmutable::class => $dateTimeMapper,
+            DateTimeInterface::class => [
+                'reader' => new DateTimeReader(DateTime::class),
+                'writer' => new DateTimeWriter(),
+            ],
+            'Carbon\Carbon' => $dateTimeMapper,
+            'Carbon\CarbonImmutable' => $dateTimeMapper,
             ...$typeMappers,
         ];
     }
