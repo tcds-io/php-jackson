@@ -6,10 +6,7 @@ use Tcds\Io\Serializer\Node\Reader;
 use Tcds\Io\Serializer\Node\Writer;
 
 /**
- * @phpstan-type Type string|class-string<mixed>
- * @phpstan-type ReaderFn callable(mixed $data, string $type, ArrayObjectMapper $mapper, list<string> $trace): mixed
- * @phpstan-type WriterFn callable(mixed $data, string $type, ObjectMapper $mapper): mixed
- * @phpstan-type TypeMapper array<Type, array{ reader: Reader|ReaderFn, writer: Writer|WriterFn }>
+ * @phpstan-type TypeMappers array<string, array{ reader: Reader<mixed>, writer: Writer<mixed> }>
  */
 interface ObjectMapper
 {
