@@ -1,11 +1,11 @@
 <?php
 
-namespace Tcds\Io\Serializer\Fixture;
+namespace Test\Tcds\Io\Jackson\Fixture;
 
-use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\OutputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
 
 /**
  * @template K

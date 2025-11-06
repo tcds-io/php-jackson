@@ -1,14 +1,14 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node\Runtime;
+namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Exception;
-use Tcds\Io\Serializer\Node\OutputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\Node\TypeNodeFactory;
-use Tcds\Io\Serializer\Node\Writer;
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
+use Tcds\Io\Jackson\Node\Writer;
+use Tcds\Io\Jackson\ObjectMapper;
 
 /**
  * @implements Writer<mixed>

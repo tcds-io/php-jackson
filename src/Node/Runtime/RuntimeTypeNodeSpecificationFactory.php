@@ -1,14 +1,14 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node\Runtime;
+namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Serializer\Exception\SerializerException;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\Node\TypeNodeFactory;
-use Tcds\Io\Serializer\Node\TypeNodeSpecificationFactory;
+use Tcds\Io\Jackson\Exception\SerializerException;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
+use Tcds\Io\Jackson\Node\TypeNodeSpecificationFactory;
 
 class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactory
 {

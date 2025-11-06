@@ -1,12 +1,12 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit;
+namespace Test\Tcds\Io\Jackson\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Place;
-use Tcds\Io\Serializer\JsonObjectMapper;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Place;
+use Tcds\Io\Jackson\JsonObjectMapper;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ReadmeTest extends SerializerTestCase
 {
@@ -43,7 +43,7 @@ class ReadmeTest extends SerializerTestCase
         ]
         JSON;
 
-        $positions = $mapper->readValue('list<Tcds\Io\Serializer\Fixture\ReadOnly\LatLng>', $jsonPositions);
+        $positions = $mapper->readValue('list<Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng>', $jsonPositions);
 
         $this->assertEquals(
             [

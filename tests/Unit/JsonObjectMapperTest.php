@@ -1,11 +1,11 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit;
+namespace Test\Tcds\Io\Jackson\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\ReadOnly\AccountHolder;
-use Tcds\Io\Serializer\JsonObjectMapper;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\AccountHolder;
+use Tcds\Io\Jackson\JsonObjectMapper;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class JsonObjectMapperTest extends SerializerTestCase
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit\Node\Writers;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Writers;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ObjectWriterTest extends SerializerTestCase
 {

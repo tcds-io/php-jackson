@@ -1,19 +1,19 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node\Runtime;
+namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Override;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Serializer\Exception\SerializerException;
-use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\Reader;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\Node\TypeNodeFactory;
-use Tcds\Io\Serializer\Node\TypeNodeSpecificationFactory;
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Jackson\Exception\SerializerException;
+use Tcds\Io\Jackson\Exception\UnableToParseValue;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\Reader;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
+use Tcds\Io\Jackson\Node\TypeNodeSpecificationFactory;
+use Tcds\Io\Jackson\ObjectMapper;
 use Throwable;
 use TypeError;
 

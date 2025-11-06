@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Node;
+namespace Tcds\Io\Jackson\Node;
 
 class Json
 {

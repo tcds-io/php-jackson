@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Unit\Node\Runtime;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Runtime;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Generic\ArrayList;
-use Tcds\Io\Serializer\Fixture\AccountStatus;
-use Tcds\Io\Serializer\Fixture\DataPayloadShape;
-use Tcds\Io\Serializer\Fixture\Pair;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
-use Tcds\Io\Serializer\Fixture\ReadOnly\User;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\OutputNode;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeTypeNodeFactory;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\AccountStatus;
+use Test\Tcds\Io\Jackson\Fixture\DataPayloadShape;
+use Test\Tcds\Io\Jackson\Fixture\Pair;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\User;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeFactory;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class RuntimeTypeNodeFactoryTest extends SerializerTestCase
 {

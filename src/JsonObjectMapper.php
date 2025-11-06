@@ -1,13 +1,13 @@
 <?php
 
-namespace Tcds\Io\Serializer;
+namespace Tcds\Io\Jackson;
 
 use Override;
-use Tcds\Io\Serializer\Node\Json;
-use Tcds\Io\Serializer\Node\Reader;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
-use Tcds\Io\Serializer\Node\Writer;
+use Tcds\Io\Jackson\Node\Json;
+use Tcds\Io\Jackson\Node\Reader;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Jackson\Node\Writer;
 
 /**
  * @phpstan-import-type TypeMappers from ObjectMapper

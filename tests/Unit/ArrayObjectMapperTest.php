@@ -1,17 +1,17 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit;
+namespace Test\Tcds\Io\Jackson\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Tcds\Io\Serializer\ArrayObjectMapper;
-use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Fixture\AccountType;
-use Tcds\Io\Serializer\Fixture\ReadOnly\AccountHolder;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Response;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Tcds\Io\Jackson\ArrayObjectMapper;
+use Tcds\Io\Jackson\Exception\UnableToParseValue;
+use Test\Tcds\Io\Jackson\Fixture\AccountType;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\AccountHolder;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Response;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ArrayObjectMapperTest extends SerializerTestCase
 {
@@ -54,7 +54,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
 
         $exception = $this->expectThrows(
             UnableToParseValue::class,
-            fn () => $this->arrayMapper->readValue(AccountHolder::class, $data),
+            fn() => $this->arrayMapper->readValue(AccountHolder::class, $data),
         );
 
         $this->assertEquals(['address', 'place', 'position'], $exception->trace);
@@ -70,7 +70,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $mapper = new ArrayObjectMapper(
             typeMappers: [
                 LatLng::class => [
-                    'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
+                    'reader' => fn(string $value) => new LatLng(...explode(',', $value)),
                 ],
             ],
         );
@@ -88,7 +88,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $mapper = new ArrayObjectMapper(
             typeMappers: [
                 LatLng::class => [
-                    'reader' => fn () => new LatLng(-26.9013, -48.6655),
+                    'reader' => fn() => new LatLng(-26.9013, -48.6655),
                 ],
             ],
         );

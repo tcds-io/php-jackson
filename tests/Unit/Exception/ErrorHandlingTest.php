@@ -1,12 +1,12 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit\Exception;
+namespace Test\Tcds\Io\Jackson\Unit\Exception;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Exception\UnableToParseValue;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Place;
-use Tcds\Io\Serializer\JsonObjectMapper;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Tcds\Io\Jackson\Exception\UnableToParseValue;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Place;
+use Tcds\Io\Jackson\JsonObjectMapper;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ErrorHandlingTest extends SerializerTestCase
 {

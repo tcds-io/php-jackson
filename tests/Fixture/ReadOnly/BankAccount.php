@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Fixture\ReadOnly;
+namespace Test\Tcds\Io\Jackson\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Fixture\AccountType;
+use Test\Tcds\Io\Jackson\Fixture\AccountType;
 
 readonly class BankAccount
 {

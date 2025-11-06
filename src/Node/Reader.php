@@ -1,8 +1,8 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node;
+namespace Tcds\Io\Jackson\Node;
 
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Jackson\ObjectMapper;
 
 /**
  * @template T

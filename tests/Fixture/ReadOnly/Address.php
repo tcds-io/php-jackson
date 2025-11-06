@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Fixture\ReadOnly;
+namespace Test\Tcds\Io\Jackson\Fixture\ReadOnly;
 
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\OutputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
 
 readonly class Address
 {

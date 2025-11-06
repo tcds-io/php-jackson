@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node\Runtime;
+namespace Tcds\Io\Jackson\Node\Runtime;
 
 use Override;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
@@ -8,10 +8,10 @@ use Tcds\Io\Generic\Reflection\ReflectionParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\OutputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\Node\TypeNodeFactory;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
 
 class RuntimeTypeNodeFactory implements TypeNodeFactory
 {

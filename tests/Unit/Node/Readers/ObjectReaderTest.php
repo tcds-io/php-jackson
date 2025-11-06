@@ -1,11 +1,11 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit\Node\Readers;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Readers;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\Pair;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\Pair;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ObjectReaderTest extends SerializerTestCase
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Node\Readers;
+namespace Tcds\Io\Jackson\Node\Readers;
 
 use DateTimeInterface;
 use Override;
-use Tcds\Io\Serializer\Node\Reader;
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Jackson\Node\Reader;
+use Tcds\Io\Jackson\ObjectMapper;
 
 /**
  * @implements Reader<DateTimeInterface>

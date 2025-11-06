@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Exception;
+namespace Tcds\Io\Jackson\Exception;
 
 use Throwable;
 

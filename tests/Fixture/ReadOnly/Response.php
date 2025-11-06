@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Fixture\ReadOnly;
+namespace Test\Tcds\Io\Jackson\Fixture\ReadOnly;
 
 readonly class Response
 {

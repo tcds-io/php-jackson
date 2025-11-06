@@ -1,9 +1,9 @@
 <?php
 
-namespace Tcds\Io\Serializer;
+namespace Tcds\Io\Jackson;
 
-use Tcds\Io\Serializer\Node\Reader;
-use Tcds\Io\Serializer\Node\Writer;
+use Tcds\Io\Jackson\Node\Reader;
+use Tcds\Io\Jackson\Node\Writer;
 
 /**
  * @phpstan-type TypeMappers array<string, array{ reader: Reader<mixed>, writer: Writer<mixed> }>

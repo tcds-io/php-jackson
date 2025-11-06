@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Unit\Node\Writers;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Writers;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\WithDateTime;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\WithDateTime;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class DateTimeWriterTest extends SerializerTestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tcds\Io\Serializer\Fixture;
+namespace Test\Tcds\Io\Jackson\Fixture;
 
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\Fixture\ReadOnly\User;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\User;
 
 readonly class DataPayloadShape
 {

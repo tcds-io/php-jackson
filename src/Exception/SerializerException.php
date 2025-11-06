@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Exception;
+namespace Tcds\Io\Jackson\Exception;
 
 use Exception;
 use Throwable;

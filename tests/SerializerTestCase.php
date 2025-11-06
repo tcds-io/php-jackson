@@ -1,12 +1,14 @@
 <?php
 
-namespace Tcds\Io\Serializer;
+namespace Test\Tcds\Io\Jackson;
 
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Tcds\Io\Serializer\Node\InputNode;
-use Tcds\Io\Serializer\Node\TypeNode;
+use Tcds\Io\Jackson\ArrayObjectMapper;
+use Tcds\Io\Jackson\JsonObjectMapper;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\TypeNode;
 use Throwable;
 
 abstract class SerializerTestCase extends TestCase

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Unit\Node\Runtime;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Runtime;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\Fixture\ReadOnly\LatLng;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeTypeNodeSpecificationFactory;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeSpecificationFactory;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class RuntimeTypeNodeSpecificationFactoryTest extends SerializerTestCase
 {

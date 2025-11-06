@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Fixture\ReadOnly;
+namespace Test\Tcds\Io\Jackson\Fixture\ReadOnly;
 
 readonly class Company
 {

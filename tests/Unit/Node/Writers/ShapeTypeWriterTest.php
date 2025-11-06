@@ -1,12 +1,12 @@
 <?php
 
-namespace Tcds\Io\Serializer\Unit\Node\Writers;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Writers;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tcds\Io\Serializer\Fixture\DataPayloadShape;
-use Tcds\Io\Serializer\Fixture\ReadOnly\Address;
-use Tcds\Io\Serializer\Fixture\ReadOnly\User;
-use Tcds\Io\Serializer\SerializerTestCase;
+use Test\Tcds\Io\Jackson\Fixture\DataPayloadShape;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\User;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ShapeTypeWriterTest extends SerializerTestCase
 {

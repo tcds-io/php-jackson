@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Node;
+namespace Tcds\Io\Jackson\Node;
 
 readonly class InputNode
 {

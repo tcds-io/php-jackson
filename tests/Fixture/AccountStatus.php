@@ -1,6 +1,6 @@
 <?php
 
-namespace Tcds\Io\Serializer\Fixture;
+namespace Test\Tcds\Io\Jackson\Fixture;
 
 enum AccountStatus: string
 {

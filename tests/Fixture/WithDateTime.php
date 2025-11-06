@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Fixture;
+namespace Test\Tcds\Io\Jackson\Fixture;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;

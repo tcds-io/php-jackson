@@ -1,18 +1,18 @@
 <?php
 
-namespace Tcds\Io\Serializer;
+namespace Tcds\Io\Jackson;
 
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Override;
-use Tcds\Io\Serializer\Node\Reader;
-use Tcds\Io\Serializer\Node\Readers\DateTimeReader;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeReader;
-use Tcds\Io\Serializer\Node\Runtime\RuntimeWriter;
-use Tcds\Io\Serializer\Node\TypeNode;
-use Tcds\Io\Serializer\Node\Writer;
-use Tcds\Io\Serializer\Node\Writers\DateTimeWriter;
+use Tcds\Io\Jackson\Node\Reader;
+use Tcds\Io\Jackson\Node\Readers\DateTimeReader;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\Writer;
+use Tcds\Io\Jackson\Node\Writers\DateTimeWriter;
 
 /**
  * @phpstan-import-type TypeMappers from ObjectMapper

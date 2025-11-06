@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Serializer\Node\Writers;
+namespace Tcds\Io\Jackson\Node\Writers;
 
 use DateTimeInterface;
 use Override;
-use Tcds\Io\Serializer\Node\Writer;
-use Tcds\Io\Serializer\ObjectMapper;
+use Tcds\Io\Jackson\Node\Writer;
+use Tcds\Io\Jackson\ObjectMapper;
 
 /**
  * @implements Writer<DateTimeInterface>
