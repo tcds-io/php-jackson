@@ -6,7 +6,7 @@ use BackedEnum;
 use Override;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Jackson\Exception\SerializerException;
+use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
 use Tcds\Io\Jackson\Node\InputNode;
 use Tcds\Io\Jackson\Node\Reader;
@@ -41,7 +41,7 @@ readonly class RuntimeReader implements Reader
             ReflectionType::isArray($node->type) => $this->readArrayMap($mapper, $node, $data, $trace),
             ReflectionType::isGeneric($node->type),
             ReflectionType::isClass($node->type) => $this->readClass($mapper, $node, $data, $trace),
-            default => throw new SerializerException(sprintf('Unable to handle value of type <%s>', $node->type)),
+            default => throw new JacksonException(sprintf('Unable to handle value of type <%s>', $node->type)),
         };
     }
 

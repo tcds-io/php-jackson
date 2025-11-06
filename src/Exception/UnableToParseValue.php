@@ -4,7 +4,7 @@ namespace Tcds\Io\Jackson\Exception;
 
 use Throwable;
 
-class UnableToParseValue extends SerializerException
+class UnableToParseValue extends JacksonException
 {
     public mixed $given;
 

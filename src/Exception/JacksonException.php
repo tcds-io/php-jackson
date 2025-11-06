@@ -7,7 +7,7 @@ namespace Tcds\Io\Jackson\Exception;
 use Exception;
 use Throwable;
 
-class SerializerException extends Exception
+class JacksonException extends Exception
 {
     public function __construct(string $message = '', ?Throwable $previous = null)
     {

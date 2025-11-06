@@ -4,7 +4,7 @@ namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Jackson\Exception\SerializerException;
+use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\InputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\TypeNodeFactory;
@@ -46,7 +46,7 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
             ReflectionType::isArray($node->type) => [
                 $node->inputs[0]->type => $this->create($node->inputs[1]->type),
             ],
-            default => throw new SerializerException(sprintf('Unable to load specification of type `%s`', $node->type)),
+            default => throw new JacksonException(sprintf('Unable to load specification of type `%s`', $node->type)),
         };
     }
 }
