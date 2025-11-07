@@ -36,7 +36,7 @@ readonly class RuntimeReader implements Reader
             $node->type === 'bool' || $node->type === 'boolean' => filter_var($data, FILTER_VALIDATE_BOOL),
             ReflectionType::isPrimitive($node->type) => $data,
             ReflectionType::isList($node->type) => $this->readList($mapper, $node, $data, $trace),
-            ReflectionType::isEnum($node->type) => $this->readEnum($node->type, $data),
+            ReflectionType::isEnum($node->type) => $this->readEnum($node->type, $data, $trace),
             ReflectionType::isShape($node->type) => $this->readShape($mapper, $node, $data, $trace),
             ReflectionType::isArray($node->type) => $this->readArrayMap($mapper, $node, $data, $trace),
             ReflectionType::isGeneric($node->type),
@@ -66,11 +66,16 @@ readonly class RuntimeReader implements Reader
     /**
      * @template E of BackedEnum
      * @param class-string<E> $enum
+     * @param list<string> $trace
      * @return E
      */
-    private function readEnum(string $enum, mixed $value): BackedEnum
+    private function readEnum(string $enum, mixed $value, array $trace): BackedEnum
     {
-        return $enum::from(asStringOrInt($value));
+        try {
+            return $enum::from(asStringOrInt($value));
+        } catch (Throwable $e) {
+            throw new UnableToParseValue($trace, $this->specification->create($enum), $value, $e);
+        }
     }
 
     /**
