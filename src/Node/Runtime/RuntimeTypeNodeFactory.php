@@ -4,6 +4,7 @@ namespace Tcds\Io\Jackson\Node\Runtime;
 
 use Override;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
+use Tcds\Io\Generic\Reflection\ReflectionMethodParameter;
 use Tcds\Io\Generic\Reflection\ReflectionParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
@@ -82,7 +83,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: generic($reflection->name, $reflection->generics),
             inputs: listOf(...$reflection->getConstructor()->getParameters())
-                ->map(fn (ReflectionParameter $param) => new InputNode(
+                ->map(fn (ReflectionMethodParameter $param) => new InputNode(
                     name: $param->name,
                     type: $param->getType()->getName(),
                 ))
