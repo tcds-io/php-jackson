@@ -7,6 +7,10 @@ It provides strong typing, JSON ↔ object mapping, generics support, array/obje
 ## 📚 Contents
 
 - [Overview](#overview)
+- [Integrations](#-integrations)
+    - <a href="https://github.com/tcds-io/php-jackson-laravel" target="_blank" rel="noopener noreferrer">Laravel <small>↗</small></a>
+    - <a href="https://github.com/tcds-io/php-jackson-symfony" target="_blank" rel="noopener noreferrer">Symfony <small>↗</small></a>
+    - <a href="https://github.com/tcds-io/php-jackson-guzzle" target="_blank" rel="noopener noreferrer">Guzzle <small>↗</small></a>
 - [Installation](#-installation)
 - [Basic Usage](#-basic-usage)
 - [Deserializing from JSON](#-deserializing-from-json)
@@ -43,20 +47,23 @@ Main components:
 composer require tcds-io/php-jackson
 ```
 
-Namespaces:
+## 🧩 Integrations
 
-```php
-use Tcds\Io\Jackson\JsonObjectMapper;
-use Tcds\Io\Jackson\ArrayObjectMapper;
-```
+PHP Jackson offers first-class integrations for popular PHP frameworks and tools.
+Each integration extends the core mapper with framework-specific features for a smoother development experience.
 
----
+Official Plugins:
+- <a href="https://github.com/tcds-io/php-jackson-laravel" target="_blank" rel="noopener noreferrer">Laravel <small>↗</small></a>
+- <a href="https://github.com/tcds-io/php-jackson-symfony" target="_blank" rel="noopener noreferrer">Symfony <small>↗</small></a>
+- <a href="https://github.com/tcds-io/php-jackson-guzzle" target="_blank" rel="noopener noreferrer">Guzzle <small>↗</small></a>
 
 ## 🔧 Basic Usage
 
 ### Reading JSON into typed objects
 
 ```php
+use Tcds\Io\Jackson\JsonObjectMapper;
+
 $mapper = new JsonObjectMapper();
 
 $address = $mapper->readValue(Address::class, $json);
@@ -65,7 +72,10 @@ $address = $mapper->readValue(Address::class, $json);
 Equivalent array version:
 
 ```php
+use Tcds\Io\Jackson\ArrayObjectMapper;
+
 $mapper = new ArrayObjectMapper();
+
 $address = $mapper->readValue(Address::class, $dataArray);
 ```
 
