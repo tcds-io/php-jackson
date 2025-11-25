@@ -3,12 +3,14 @@
 namespace Tcds\Io\Jackson\Node\Runtime;
 
 use Override;
+use RuntimeException;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionMethodParameter;
 use Tcds\Io\Generic\Reflection\ReflectionParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
+use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\InputNode;
 use Tcds\Io\Jackson\Node\OutputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
@@ -89,10 +91,37 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                 ))
                 ->items(),
             outputs: listOf(...$reflection->getProperties())
-                ->map(fn (ReflectionProperty $param) => OutputNode::property(
-                    name: $param->name,
-                    type: $param->getType()->getName(),
-                ))
+                ->map(function (ReflectionProperty $property) {
+                    $nameOnMethods = ucfirst($property->name);
+
+                    return match (true) {
+                        $property->isPublic() => OutputNode::property(
+                            name: $property->name,
+                            type: $property->getType()->getName(),
+                        ),
+                        $property->reflection->hasMethod($property->name) => OutputNode::method(
+                            name: $property->name,
+                            accessor: $property->name,
+                            type: $property->getType()->getName(),
+                        ),
+                        $property->reflection->hasMethod("get$nameOnMethods") => OutputNode::method(
+                            name: $property->name,
+                            accessor: "get$nameOnMethods",
+                            type: $property->getType()->getName(),
+                        ),
+                        $property->reflection->hasMethod("is$nameOnMethods") => OutputNode::method(
+                            name: $property->name,
+                            accessor: "is$nameOnMethods",
+                            type: $property->getType()->getName(),
+                        ),
+                        $property->reflection->hasMethod("has$nameOnMethods") => OutputNode::method(
+                            name: $property->name,
+                            accessor: "has$nameOnMethods",
+                            type: $property->getType()->getName(),
+                        ),
+                        default => throw new JacksonException('Cannot identify property accessor'),
+                    };
+                })
                 ->items(),
         );
     }

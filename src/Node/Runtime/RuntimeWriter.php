@@ -44,7 +44,7 @@ readonly class RuntimeWriter implements Writer
         return listOf(...$node->outputs)
             ->indexedBy(fn (OutputNode $node) => $node->name)
             ->mapValues(function (OutputNode $node) use ($mapper, $data) {
-                return $mapper->writeValue($node->read($data), $node->type);
+                return $mapper->writeValue(value: $node->read($data), type: $node->type);
             })
             ->entries();
     }

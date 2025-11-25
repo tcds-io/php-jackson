@@ -6,16 +6,17 @@ namespace Test\Tcds\Io\Jackson\Unit\Node\Runtime;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Generic\ArrayList;
+use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\OutputNode;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeFactory;
+use Tcds\Io\Jackson\Node\TypeNode;
 use Test\Tcds\Io\Jackson\Fixture\AccountStatus;
+use Test\Tcds\Io\Jackson\Fixture\Credentials;
 use Test\Tcds\Io\Jackson\Fixture\DataPayloadShape;
 use Test\Tcds\Io\Jackson\Fixture\Pair;
 use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Address;
 use Test\Tcds\Io\Jackson\Fixture\ReadOnly\LatLng;
 use Test\Tcds\Io\Jackson\Fixture\ReadOnly\User;
-use Tcds\Io\Jackson\Node\InputNode;
-use Tcds\Io\Jackson\Node\OutputNode;
-use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeFactory;
-use Tcds\Io\Jackson\Node\TypeNode;
 use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class RuntimeTypeNodeFactoryTest extends SerializerTestCase
@@ -170,7 +171,7 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                     new InputNode(name: 'items', type: generic('list', [LatLng::class])),
                 ],
                 outputs: [
-                    OutputNode::property(name: 'items', type: generic('list', [LatLng::class])),
+                    OutputNode::method(name: 'items', accessor: 'items', type: generic('list', [LatLng::class])),
                 ],
             ),
             $node,
@@ -195,6 +196,35 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
                 outputs: [
                     OutputNode::property(name: 'data', type: shape('array', $params)),
                     OutputNode::property(name: 'payload', type: shape('object', $params)),
+                ],
+            ),
+            $node,
+        );
+    }
+
+    #[Test]
+    public function private_properties(): void
+    {
+        $type = Credentials::class;
+
+        $node = $this->factory->create($type);
+
+        $this->assertEquals(
+            new TypeNode(
+                type: $type,
+                inputs: [
+                    new InputNode(name: 'user', type: User::class),
+                    new InputNode(name: 'login', type: 'string'),
+                    new InputNode(name: 'password', type: 'string'),
+                    new InputNode(name: 'valid', type: 'bool'),
+                    new InputNode(name: 'expired', type: 'bool'),
+                ],
+                outputs: [
+                    OutputNode::property(name: 'user', type: User::class),
+                    OutputNode::method(name: 'login', accessor: 'login', type: 'string'),
+                    OutputNode::method(name: 'password', accessor: 'getPassword', type: 'string'),
+                    OutputNode::method(name: 'valid', accessor: 'isValid', type: 'bool'),
+                    OutputNode::method(name: 'expired', accessor: 'hasExpired', type: 'bool'),
                 ],
             ),
             $node,
