@@ -3,10 +3,8 @@
 namespace Tcds\Io\Jackson\Node\Runtime;
 
 use Override;
-use RuntimeException;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionMethodParameter;
-use Tcds\Io\Generic\Reflection\ReflectionParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
@@ -119,7 +117,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                             accessor: "has$nameOnMethods",
                             type: $property->getType()->getName(),
                         ),
-                        default => throw new JacksonException('Cannot identify property accessor'),
+                        default => throw new JacksonException("Cannot identify property `$property->name` accessor"),
                     };
                 })
                 ->items(),
