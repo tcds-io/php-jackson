@@ -2,6 +2,8 @@
 
 namespace Tcds\Io\Jackson;
 
+use Tcds\Io\Jackson\Exception\JacksonException;
+use Tcds\Io\Jackson\Exception\UnableToParseValue;
 use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\Node\Writer;
 
@@ -22,6 +24,8 @@ interface ObjectMapper
      * @template T
      * @param class-string<T> $type
      * @param list<string> $trace
+     * @throws UnableToParseValue
+     * @throws JacksonException
      */
     public function readValue(string $type, mixed $value, array $trace = []): mixed;
 
