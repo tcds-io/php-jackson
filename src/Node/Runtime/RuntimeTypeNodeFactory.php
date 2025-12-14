@@ -48,10 +48,10 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: $type,
             inputs: mapOf($params)
-                ->map(fn($name, $type) => [$name, new InputNode(name: $name, type: $type)])
+                ->map(fn ($name, $type) => [$name, new InputNode(name: $name, type: $type)])
                 ->values(),
             outputs: mapOf($params)
-                ->map(fn($name, $type) => [
+                ->map(fn ($name, $type) => [
                     $name,
                     $shapeType === 'array'
                         ? OutputNode::param(name: $name, type: $type)
@@ -83,7 +83,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: generic($reflection->name, $reflection->generics),
             inputs: listOf(...$reflection->getConstructor()->getParameters())
-                ->map(fn(ReflectionMethodParameter $param) => new InputNode(
+                ->map(fn (ReflectionMethodParameter $param) => new InputNode(
                     name: $param->name,
                     type: $param->getType()->getName(),
                 ))
@@ -124,6 +124,9 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         );
     }
 
+    /**
+     * @return list<ReflectionProperty>
+     */
     private static function getAllProperties(?ReflectionClass $reflection): array
     {
         if (null === $reflection) {

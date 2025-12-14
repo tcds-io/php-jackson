@@ -2,6 +2,8 @@
 
 namespace Tcds\Io\Jackson\Node;
 
+use Tcds\Io\Generic\Reflection\Type\ReflectionType;
+
 final class TypeNode
 {
     /**
@@ -29,5 +31,10 @@ final class TypeNode
             }),
             default => gettype($data),
         };
+    }
+
+    public function isValueObject(): bool
+    {
+        return count($this->outputs) === 1 && ReflectionType::isPrimitive($this->outputs[0]->type);
     }
 }

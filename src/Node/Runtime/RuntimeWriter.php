@@ -36,16 +36,20 @@ readonly class RuntimeWriter implements Writer
         };
     }
 
-    /**
-     * @return array<mixed>
-     */
-    private function writeFromNode(mixed $data, TypeNode $node, ObjectMapper $mapper): array
+    private function writeFromNode(mixed $data, TypeNode $node, ObjectMapper $mapper): mixed
     {
+        if ($node->isValueObject()) {
+            return $this->writeFromOutput($data, $node->outputs[0], $mapper);
+        }
+
         return listOf(...$node->outputs)
-            ->indexedBy(fn (OutputNode $node) => $node->name)
-            ->mapValues(function (OutputNode $node) use ($mapper, $data) {
-                return $mapper->writeValue(value: $node->read($data), type: $node->type);
-            })
+            ->indexedBy(fn (OutputNode $output) => $output->name)
+            ->mapValues(fn (OutputNode $output) => $this->writeFromOutput($data, $output, $mapper))
             ->entries();
+    }
+
+    private function writeFromOutput(mixed $data, OutputNode $output, ObjectMapper $mapper): mixed
+    {
+        return $mapper->writeValue(value: $output->read($data), type: $output->type);
     }
 }
