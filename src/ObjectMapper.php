@@ -29,5 +29,8 @@ interface ObjectMapper
      */
     public function readValue(string $type, mixed $value, array $trace = []): mixed;
 
-    public function writeValue(mixed $value, ?string $type = null): mixed;
+    /**
+     * @param list<string> $trace
+     */
+    public function writeValue(mixed $value, ?string $type = null, array $trace = []): mixed;
 }

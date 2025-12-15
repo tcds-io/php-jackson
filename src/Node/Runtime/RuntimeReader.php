@@ -27,7 +27,8 @@ readonly class RuntimeReader implements Reader
         private TypeNodeSpecificationFactory $specification = new RuntimeTypeNodeSpecificationFactory(),
     ) {}
 
-    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
+    #[Override]
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
     {
         $node = $this->node->create($type);
 

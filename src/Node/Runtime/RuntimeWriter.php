@@ -4,6 +4,7 @@ namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Exception;
+use Override;
 use Tcds\Io\Jackson\Node\OutputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\TypeNodeFactory;
@@ -19,7 +20,8 @@ readonly class RuntimeWriter implements Writer
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
     ) {}
 
-    public function __invoke(mixed $data, string $type, ObjectMapper $mapper): mixed
+    #[Override]
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
     {
         return match (true) {
             is_scalar($data) => $data,
@@ -29,26 +31,35 @@ readonly class RuntimeWriter implements Writer
                 data: $data,
                 node: $this->node->create($type),
                 mapper: $mapper,
+                trace: $trace,
             ),
             is_null($data) => null,
             default => throw new Exception(sprintf('Unable to write `%s` valur', gettype($data))),
         };
     }
 
-    private function writeFromNode(mixed $data, TypeNode $node, ObjectMapper $mapper): mixed
+    /**
+     * @param list<string> $trace
+     */
+    private function writeFromNode(mixed $data, TypeNode $node, ObjectMapper $mapper, array $trace = []): mixed
     {
-        if ($node->isValueObject()) {
-            return $this->writeFromOutput($data, $node->outputs[0], $mapper);
+        $isRootObject = empty($trace);
+
+        if ($isRootObject && $node->isValueObject()) {
+            return $this->writeFromOutput($data, $node->outputs[0], $mapper, $trace);
         }
 
         return listOf(...$node->outputs)
             ->indexedBy(fn(OutputNode $output) => $output->name)
-            ->mapValues(fn(OutputNode $output) => $this->writeFromOutput($data, $output, $mapper))
+            ->mapValues(fn(OutputNode $output) => $this->writeFromOutput($data, $output, $mapper, $trace))
             ->entries();
     }
 
-    private function writeFromOutput(mixed $data, OutputNode $output, ObjectMapper $mapper): mixed
+    /**
+     * @param list<string> $trace
+     */
+    private function writeFromOutput(mixed $data, OutputNode $output, ObjectMapper $mapper, array $trace = []): mixed
     {
-        return $mapper->writeValue(value: $output->read($data), type: $output->type);
+        return $mapper->writeValue(value: $output->read($data), type: $output->type, trace: $trace);
     }
 }

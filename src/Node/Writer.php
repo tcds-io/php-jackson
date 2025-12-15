@@ -11,6 +11,7 @@ interface Writer
 {
     /**
      * @param T|null $data
+     * @param list<string> $trace
      */
-    public function __invoke(mixed $data, string $type, ObjectMapper $mapper): mixed;
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed;
 }

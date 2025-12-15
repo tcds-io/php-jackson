@@ -63,11 +63,12 @@ readonly class ArrayObjectMapper implements ObjectMapper
         return $reader($value, $type, $this, $trace);
     }
 
-    #[Override] public function writeValue(mixed $value, ?string $type = null): mixed
+    #[Override]
+    public function writeValue(mixed $value, ?string $type = null, array $trace = []): mixed
     {
         $type ??= TypeNode::of($value);
         $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
 
-        return $writer($value, $type, $this);
+        return $writer($value, $type, $this, $trace);
     }
 }
