@@ -9,8 +9,7 @@ readonly class OutputNode
         public string $accessor,
         public string $type,
         public OutputType $outputType,
-    ) {
-    }
+    ) {}
 
     public static function property(string $name, string $type): self
     {

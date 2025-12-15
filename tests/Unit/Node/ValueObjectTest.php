@@ -15,10 +15,10 @@ class ValueObjectTest extends SerializerTestCase
     }
 
     private string $json = <<<JSON
-    {
-        "email": "foo@bar.com"
-    }
-    JSON;
+        {
+            "email": "foo@bar.com"
+        }
+        JSON;
 
     private array $array = [
         'email' => 'foo@bar.com',

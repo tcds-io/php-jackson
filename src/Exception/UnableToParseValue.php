@@ -35,8 +35,8 @@ class UnableToParseValue extends JacksonException
                 is_numeric($value) => 'float',
                 default => 'string',
             },
-            is_array($value) => array_map(fn ($inner) => $this->toType($inner), $value),
-            is_object($value) => array_map(fn ($inner) => $this->toType($inner), get_object_vars($value)),
+            is_array($value) => array_map(fn($inner) => $this->toType($inner), $value),
+            is_object($value) => array_map(fn($inner) => $this->toType($inner), get_object_vars($value)),
             default => get_debug_type($value),
         };
     }

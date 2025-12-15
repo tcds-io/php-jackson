@@ -23,20 +23,20 @@ class ObjectWriterTest extends SerializerTestCase
     ];
 
     private const string JSON = <<<JSON
-    {
-        "street": "main street",
-        "number": 150,
-        "main": true,
-        "place": {
-            "city": "Santa Catarina",
-            "country": "Brazil",
-            "position": {
-                "lat": -26.9013,
-                "lng": -48.6655
+        {
+            "street": "main street",
+            "number": 150,
+            "main": true,
+            "place": {
+                "city": "Santa Catarina",
+                "country": "Brazil",
+                "position": {
+                    "lat": -26.9013,
+                    "lng": -48.6655
+                }
             }
         }
-    }
-    JSON;
+        JSON;
 
     #[Test] public function write_object_value(): void
     {

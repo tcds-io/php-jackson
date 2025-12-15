@@ -14,8 +14,7 @@ final class TypeNode
         public string $type,
         public array $inputs = [],
         public array $outputs = [],
-    ) {
-    }
+    ) {}
 
     public static function of(mixed $data): string
     {

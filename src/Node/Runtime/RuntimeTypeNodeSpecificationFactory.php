@@ -17,8 +17,7 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
 
     public function __construct(
         private readonly TypeNodeFactory $factory = new RuntimeTypeNodeFactory(),
-    ) {
-    }
+    ) {}
 
     public function create(TypeNode|string $node): array|string
     {
@@ -32,15 +31,15 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
 
         return match (true) {
             ReflectionType::isPrimitive($node->type) => $node->type,
-            ReflectionType::isEnum($node->type) => array_map(fn (BackedEnum $enum) => $enum->value, $node->type::cases()),
+            ReflectionType::isEnum($node->type) => array_map(fn(BackedEnum $enum) => $enum->value, $node->type::cases()),
             ReflectionType::isList($node->type) => [$this->create($node->inputs[0]->type)],
             ReflectionType::isClass($node->type),
             ReflectionType::isShape($node->type) => run(function () use ($node) {
                 $this->specifications[$node->type] = true;
 
                 return listOf(...$node->inputs)
-                    ->indexedBy(fn (InputNode $input) => $input->name)
-                    ->mapValues(fn (InputNode $input) => $this->create($input->type))
+                    ->indexedBy(fn(InputNode $input) => $input->name)
+                    ->mapValues(fn(InputNode $input) => $this->create($input->type))
                     ->entries();
             }),
             ReflectionType::isArray($node->type) => [

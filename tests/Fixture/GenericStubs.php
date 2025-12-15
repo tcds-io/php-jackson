@@ -25,6 +25,5 @@ readonly class GenericStubs
         Traversable $users,
         Map $positions,
         Pair $accounts,
-    ) {
-    }
+    ) {}
 }

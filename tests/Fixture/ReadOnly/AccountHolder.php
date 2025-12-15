@@ -16,8 +16,7 @@ readonly class AccountHolder
         public BankAccount $account,
         public Address $address,
         public array $status,
-    ) {
-    }
+    ) {}
 
     public static function thiagoCordeiro(): self
     {
@@ -49,57 +48,57 @@ readonly class AccountHolder
     public static function json(): string
     {
         return <<<JSON
-        {
-          "name": "Thiago Cordeiro",
-          "account": {
-            "number": "12345-X",
-            "type": "checking"
-          },
-          "active": "true",
-          "address": {
-            "street": "street street",
-            "number": "100",
-            "main": "false",
-            "place": {
-              "city": "São Paulo",
-              "country": "Brazil",
-              "position": {
-                "lat": "-26.9013",
-                "lng": "-48.6655"
-              }
+            {
+              "name": "Thiago Cordeiro",
+              "account": {
+                "number": "12345-X",
+                "type": "checking"
+              },
+              "active": "true",
+              "address": {
+                "street": "street street",
+                "number": "100",
+                "main": "false",
+                "place": {
+                  "city": "São Paulo",
+                  "country": "Brazil",
+                  "position": {
+                    "lat": "-26.9013",
+                    "lng": "-48.6655"
+                  }
+                }
+              },
+              "status": [
+                "Active",
+                "Finalized"
+              ]
             }
-          },
-          "status": [
-            "Active",
-            "Finalized"
-          ]
-        }
-        JSON;
+            JSON;
     }
 
     public static function partialJsonValue(): string
     {
         return <<<JSON
-        {
-          "active": "true",
-          "address": {
-            "street": "street street",
-            "number": "100",
-            "main": "false",
-            "place": {
-              "city": "São Paulo",
-              "country": "Brazil",
-              "position": {
-                "lat": "-26.9013",
-                "lng": "-48.6655"
-              }
+            {
+              "active": "true",
+              "address": {
+                "street": "street street",
+                "number": "100",
+                "main": "false",
+                "place": {
+                  "city": "São Paulo",
+                  "country": "Brazil",
+                  "position": {
+                    "lat": "-26.9013",
+                    "lng": "-48.6655"
+                  }
+                }
+              },
+              "status": [
+                "Active",
+                "Finalized"
+              ]
             }
-          },
-          "status": [
-            "Active",
-            "Finalized"
-          ]
-        }
-        JSON;
+            JSON;
     }
 }

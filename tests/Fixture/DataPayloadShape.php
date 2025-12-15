@@ -19,9 +19,7 @@ readonly class DataPayloadShape
      *     description: string,
      * } $payload
      */
-    public function __construct(public array $data, public object $payload)
-    {
-    }
+    public function __construct(public array $data, public object $payload) {}
 
     /**
      * @return array{

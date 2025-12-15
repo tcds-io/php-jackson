@@ -13,23 +13,23 @@ class ObjectReaderTest extends SerializerTestCase
     {
         $type = generic(Pair::class, ['string', Address::class]);
         $json = <<<JSON
-        {
-          "key": "other",
-          "value": {
-            "street": "street street",
-            "main": "false",
-            "number": "100",
-            "place": {
-              "city": "São Paulo",
-              "country": "Brazil",
-              "position": {
-                "lat": "-26.9013",
-                "lng": "-48.6655"
+            {
+              "key": "other",
+              "value": {
+                "street": "street street",
+                "main": "false",
+                "number": "100",
+                "place": {
+                  "city": "São Paulo",
+                  "country": "Brazil",
+                  "position": {
+                    "lat": "-26.9013",
+                    "lng": "-48.6655"
+                  }
+                }
               }
             }
-          }
-        }
-        JSON;
+            JSON;
 
         $pair = $this->jsonMapper->readValue($type, $json);
 

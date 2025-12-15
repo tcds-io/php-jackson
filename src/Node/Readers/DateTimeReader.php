@@ -14,9 +14,7 @@ use Tcds\Io\Jackson\ObjectMapper;
  */
 readonly class DateTimeReader implements Reader
 {
-    public function __construct(private ?string $type = null)
-    {
-    }
+    public function __construct(private ?string $type = null) {}
 
     /**
      * @template T of DateTimeInterface

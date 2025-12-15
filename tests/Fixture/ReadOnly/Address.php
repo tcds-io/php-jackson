@@ -15,8 +15,7 @@ readonly class Address
         public int $number,
         public bool $main,
         public Place $place,
-    ) {
-    }
+    ) {}
 
     public static function main(): self
     {
@@ -97,10 +96,10 @@ readonly class Address
         return new TypeNode(
             type: Address::class,
             inputs: [
-                new InputNode(name: 'street', type: 'string'),
-                new InputNode(name: 'number', type: 'int'),
-                new InputNode(name: 'main', type: 'bool'),
-                new InputNode(name: 'place', type: Place::class),
+                new InputNode(name: 'street', type: 'string', default: null),
+                new InputNode(name: 'number', type: 'int', default: null),
+                new InputNode(name: 'main', type: 'bool', default: null),
+                new InputNode(name: 'place', type: Place::class, default: null),
             ],
             outputs: [
                 OutputNode::property(name: 'street', type: 'string'),

@@ -18,6 +18,5 @@ readonly class WithDateTime
         public Carbon $carbon,
         public CarbonImmutable $carbonImmutable,
         public DateTimeInterface $datetimeInterface,
-    ) {
-    }
+    ) {}
 }

@@ -23,5 +23,5 @@ function asStringOrInt(mixed $value): string|int
 function asArray(mixed $value): array
 {
     /** @var array<mixed> */
-    return $value;
+    return $value ?: [];
 }

@@ -21,6 +21,10 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
     #[Override] public function create(string $type): TypeNode
     {
+        if (str_contains($type, '|')) {
+            $type = str_replace(['|null', 'null|', '?'], '', $type);
+        }
+
         return self::$nodes[$type] ??= match (true) {
             ReflectionType::isPrimitive($type),
             ReflectionType::isEnum($type) => new TypeNode($type),
@@ -37,7 +41,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
         return new TypeNode(
             type: $type,
-            inputs: [new InputNode(name: 'value', type: $generics[0])],
+            inputs: [new InputNode(name: 'value', type: $generics[0], default: null)],
         );
     }
 
@@ -48,10 +52,10 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: $type,
             inputs: mapOf($params)
-                ->map(fn ($name, $type) => [$name, new InputNode(name: $name, type: $type)])
+                ->map(fn($name, $type) => [$name, new InputNode(name: $name, type: $type, default: null)])
                 ->values(),
             outputs: mapOf($params)
-                ->map(fn ($name, $type) => [
+                ->map(fn($name, $type) => [
                     $name,
                     $shapeType === 'array'
                         ? OutputNode::param(name: $name, type: $type)
@@ -70,8 +74,8 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: generic('map', $generics),
             inputs: [
-                new InputNode(name: 'key', type: $key),
-                new InputNode(name: 'value', type: $value),
+                new InputNode(name: 'key', type: $key, default: null),
+                new InputNode(name: 'value', type: $value, default: null),
             ],
         );
     }
@@ -83,9 +87,10 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
         return new TypeNode(
             type: generic($reflection->name, $reflection->generics),
             inputs: listOf(...$reflection->getConstructor()->getParameters())
-                ->map(fn (ReflectionMethodParameter $param) => new InputNode(
+                ->map(fn(ReflectionMethodParameter $param) => new InputNode(
                     name: $param->name,
                     type: $param->getType()->getName(),
+                    default: $param->getDefaultValue(),
                 ))
                 ->items(),
             outputs: listOf(...self::getAllProperties($reflection))

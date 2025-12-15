@@ -17,15 +17,14 @@ readonly class RuntimeWriter implements Writer
 {
     public function __construct(
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
-    ) {
-    }
+    ) {}
 
     public function __invoke(mixed $data, string $type, ObjectMapper $mapper): mixed
     {
         return match (true) {
             is_scalar($data) => $data,
             $data instanceof BackedEnum => $data->value,
-            is_array($data) => array_map(fn ($item) => $mapper->writeValue($item), $data),
+            is_array($data) => array_map(fn($item) => $mapper->writeValue($item), $data),
             is_object($data) => $this->writeFromNode(
                 data: $data,
                 node: $this->node->create($type),
@@ -43,8 +42,8 @@ readonly class RuntimeWriter implements Writer
         }
 
         return listOf(...$node->outputs)
-            ->indexedBy(fn (OutputNode $output) => $output->name)
-            ->mapValues(fn (OutputNode $output) => $this->writeFromOutput($data, $output, $mapper))
+            ->indexedBy(fn(OutputNode $output) => $output->name)
+            ->mapValues(fn(OutputNode $output) => $this->writeFromOutput($data, $output, $mapper))
             ->entries();
     }
 

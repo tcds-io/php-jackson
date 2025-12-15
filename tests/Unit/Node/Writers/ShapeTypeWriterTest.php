@@ -11,77 +11,77 @@ use Test\Tcds\Io\Jackson\SerializerTestCase;
 class ShapeTypeWriterTest extends SerializerTestCase
 {
     private const string JSON = <<<JSON
-    {
-      "data": {
-        "user": {
-          "name": "Arthur Dent",
-          "age": 27,
-          "height": 1.77,
-          "address": {
-            "street": "main street",
-            "number": 150,
-            "main": true,
-            "place": {
-              "city": "Santa Catarina",
-              "country": "Brazil",
-              "position": {
-                "lat": -26.9013,
-                "lng": -48.6655
+        {
+          "data": {
+            "user": {
+              "name": "Arthur Dent",
+              "age": 27,
+              "height": 1.77,
+              "address": {
+                "street": "main street",
+                "number": 150,
+                "main": true,
+                "place": {
+                  "city": "Santa Catarina",
+                  "country": "Brazil",
+                  "position": {
+                    "lat": -26.9013,
+                    "lng": -48.6655
+                  }
+                }
               }
-            }
-          }
-        },
-        "address": {
-          "street": "main street",
-          "number": 150,
-          "main": true,
-          "place": {
-            "city": "Santa Catarina",
-            "country": "Brazil",
-            "position": {
-              "lat": -26.9013,
-              "lng": -48.6655
-            }
-          }
-        },
-        "description": "Array shaped"
-      },
-      "payload": {
-        "user": {
-          "name": "Arthur Dent",
-          "age": 27,
-          "height": 1.77,
-          "address": {
-            "street": "main street",
-            "number": 150,
-            "main": true,
-            "place": {
-              "city": "Santa Catarina",
-              "country": "Brazil",
-              "position": {
-                "lat": -26.9013,
-                "lng": -48.6655
+            },
+            "address": {
+              "street": "main street",
+              "number": 150,
+              "main": true,
+              "place": {
+                "city": "Santa Catarina",
+                "country": "Brazil",
+                "position": {
+                  "lat": -26.9013,
+                  "lng": -48.6655
+                }
               }
-            }
+            },
+            "description": "Array shaped"
+          },
+          "payload": {
+            "user": {
+              "name": "Arthur Dent",
+              "age": 27,
+              "height": 1.77,
+              "address": {
+                "street": "main street",
+                "number": 150,
+                "main": true,
+                "place": {
+                  "city": "Santa Catarina",
+                  "country": "Brazil",
+                  "position": {
+                    "lat": -26.9013,
+                    "lng": -48.6655
+                  }
+                }
+              }
+            },
+            "address": {
+              "street": "street street",
+              "number": 100,
+              "main": false,
+              "place": {
+                "city": "São Paulo",
+                "country": "Brazil",
+                "position": {
+                  "lat": -26.9013,
+                  "lng": -48.6655
+                }
+              }
+            },
+            "description": "Object shaped"
           }
-        },
-        "address": {
-          "street": "street street",
-          "number": 100,
-          "main": false,
-          "place": {
-            "city": "São Paulo",
-            "country": "Brazil",
-            "position": {
-              "lat": -26.9013,
-              "lng": -48.6655
-            }
-          }
-        },
-        "description": "Object shaped"
-      }
-    }
-    JSON;
+        }
+        JSON;
 
     #[Test] public function write_array_shape(): void
     {

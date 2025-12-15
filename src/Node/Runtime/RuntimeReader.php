@@ -25,14 +25,14 @@ readonly class RuntimeReader implements Reader
     public function __construct(
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
         private TypeNodeSpecificationFactory $specification = new RuntimeTypeNodeSpecificationFactory(),
-    ) {
-    }
+    ) {}
 
     #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
     {
         $node = $this->node->create($type);
 
         return match (true) {
+            is_null($data) => null,
             $node->type === 'bool' || $node->type === 'boolean' => filter_var($data, FILTER_VALIDATE_BOOL),
             ReflectionType::isPrimitive($node->type) => $data,
             ReflectionType::isList($node->type) => $this->readList($mapper, $node, $data, $trace),
@@ -100,7 +100,7 @@ readonly class RuntimeReader implements Reader
     private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         return array_map(
-            callback: fn ($item) => $mapper->readValue(
+            callback: fn($item) => $mapper->readValue(
                 type: asClassString($node->inputs[1]->type),
                 value: $item,
                 trace: $trace,
@@ -152,7 +152,7 @@ readonly class RuntimeReader implements Reader
         }
 
         foreach ($node->inputs as $input) {
-            $value = $data[$input->name] ?? null;
+            $value = $data[$input->name] ?? $input->default;
             $innerTrace = [...$trace, $input->name];
 
             try {

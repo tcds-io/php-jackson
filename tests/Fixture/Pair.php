@@ -17,9 +17,7 @@ readonly class Pair
      * @param K $key
      * @param V $value
      */
-    public function __construct(public mixed $key, public object $value)
-    {
-    }
+    public function __construct(public mixed $key, public object $value) {}
 
     /**
      * @return K
@@ -42,8 +40,8 @@ readonly class Pair
         return new TypeNode(
             type: generic(Pair::class, ['string', LatLng::class]),
             inputs: [
-                new InputNode(name: 'key', type: 'string'),
-                new InputNode(name: 'value', type: LatLng::class),
+                new InputNode(name: 'key', type: 'string', default: null),
+                new InputNode(name: 'value', type: LatLng::class, default: null),
             ],
             outputs: [
                 OutputNode::property(name: 'key', type: 'string'),

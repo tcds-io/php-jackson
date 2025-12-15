@@ -10,6 +10,5 @@ readonly class Place
         public string $city,
         public string $country,
         public LatLng $position,
-    ) {
-    }
+    ) {}
 }

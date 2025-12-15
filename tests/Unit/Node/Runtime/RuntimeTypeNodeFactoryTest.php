@@ -59,7 +59,7 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'value', type: LatLng::class),
+                    new InputNode(name: 'value', type: LatLng::class, default: null),
                 ],
                 outputs: [],
             ),
@@ -78,9 +78,9 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'user', type: User::class),
-                    new InputNode(name: 'address', type: Address::class),
-                    new InputNode(name: 'description', type: 'string'),
+                    new InputNode(name: 'user', type: User::class, default: null),
+                    new InputNode(name: 'address', type: Address::class, default: null),
+                    new InputNode(name: 'description', type: 'string', default: null),
                 ],
                 outputs: [
                     OutputNode::param(name: 'user', type: User::class),
@@ -103,9 +103,9 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'user', type: User::class),
-                    new InputNode(name: 'address', type: Address::class),
-                    new InputNode(name: 'description', type: 'string'),
+                    new InputNode(name: 'user', type: User::class, default: null),
+                    new InputNode(name: 'address', type: Address::class, default: null),
+                    new InputNode(name: 'description', type: 'string', default: null),
                 ],
                 outputs: [
                     OutputNode::property(name: 'user', type: User::class),
@@ -128,8 +128,8 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: generic('map', ['string', Address::class]),
                 inputs: [
-                    new InputNode(name: 'key', type: 'string'),
-                    new InputNode(name: 'value', type: Address::class),
+                    new InputNode(name: 'key', type: 'string', default: null),
+                    new InputNode(name: 'value', type: Address::class, default: null),
                 ],
                 outputs: [],
             ),
@@ -168,7 +168,7 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'items', type: generic('list', [LatLng::class])),
+                    new InputNode(name: 'items', type: generic('list', [LatLng::class]), default: null),
                 ],
                 outputs: [
                     OutputNode::method(name: 'items', accessor: 'items', type: generic('list', [LatLng::class])),
@@ -190,8 +190,8 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'data', type: shape('array', $params)),
-                    new InputNode(name: 'payload', type: shape('object', $params)),
+                    new InputNode(name: 'data', type: shape('array', $params), default: null),
+                    new InputNode(name: 'payload', type: shape('object', $params), default: null),
                 ],
                 outputs: [
                     OutputNode::property(name: 'data', type: shape('array', $params)),
@@ -213,11 +213,11 @@ class RuntimeTypeNodeFactoryTest extends SerializerTestCase
             new TypeNode(
                 type: $type,
                 inputs: [
-                    new InputNode(name: 'user', type: User::class),
-                    new InputNode(name: 'login', type: 'string'),
-                    new InputNode(name: 'password', type: 'string'),
-                    new InputNode(name: 'valid', type: 'bool'),
-                    new InputNode(name: 'expired', type: 'bool'),
+                    new InputNode(name: 'user', type: User::class, default: null),
+                    new InputNode(name: 'login', type: 'string', default: null),
+                    new InputNode(name: 'password', type: 'string', default: null),
+                    new InputNode(name: 'valid', type: 'bool', default: null),
+                    new InputNode(name: 'expired', type: 'bool', default: null),
                 ],
                 outputs: [
                     OutputNode::property(name: 'user', type: User::class),
