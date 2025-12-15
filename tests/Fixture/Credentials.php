@@ -12,7 +12,8 @@ readonly class Credentials
         private string $password,
         private bool $valid,
         private bool $expired,
-    ) {}
+    ) {
+    }
 
     public function login(): string
     {

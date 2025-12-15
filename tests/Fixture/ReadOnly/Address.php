@@ -15,7 +15,8 @@ readonly class Address
         public int $number,
         public bool $main,
         public Place $place,
-    ) {}
+    ) {
+    }
 
     public static function main(): self
     {

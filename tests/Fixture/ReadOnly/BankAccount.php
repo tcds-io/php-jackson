@@ -11,7 +11,8 @@ readonly class BankAccount
     public function __construct(
         public string $number,
         public AccountType $type,
-    ) {}
+    ) {
+    }
 
     public static function checking(): self
     {

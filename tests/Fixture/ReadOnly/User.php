@@ -11,7 +11,8 @@ readonly class User
         public int $age,
         public float $height = 1.50,
         public ?Address $address = null,
-    ) {}
+    ) {
+    }
 
     public static function arthurDent(): self
     {

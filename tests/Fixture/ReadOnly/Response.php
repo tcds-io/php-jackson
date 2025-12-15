@@ -9,7 +9,8 @@ readonly class Response
      */
     public function __construct(
         public array $_meta,
-    ) {}
+    ) {
+    }
 
     /**
      * @return self<list<Address>>

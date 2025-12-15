@@ -16,7 +16,8 @@ readonly class AccountHolder
         public BankAccount $account,
         public Address $address,
         public array $status,
-    ) {}
+    ) {
+    }
 
     public static function thiagoCordeiro(): self
     {

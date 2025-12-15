@@ -18,7 +18,8 @@ readonly class RuntimeWriter implements Writer
 {
     public function __construct(
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
@@ -26,7 +27,7 @@ readonly class RuntimeWriter implements Writer
         return match (true) {
             is_scalar($data) => $data,
             $data instanceof BackedEnum => $data->value,
-            is_array($data) => array_map(fn($item) => $mapper->writeValue($item), $data),
+            is_array($data) => array_map(fn ($item) => $mapper->writeValue($item, trace: [...$trace, '[]']), $data),
             is_object($data) => $this->writeFromNode(
                 data: $data,
                 node: $this->node->create($type),
@@ -45,13 +46,13 @@ readonly class RuntimeWriter implements Writer
     {
         $isRootObject = empty($trace);
 
-        if ($isRootObject && $node->isValueObject()) {
+        if (!$isRootObject && $node->isValueObject()) {
             return $this->writeFromOutput($data, $node->outputs[0], $mapper, $trace);
         }
 
         return listOf(...$node->outputs)
-            ->indexedBy(fn(OutputNode $output) => $output->name)
-            ->mapValues(fn(OutputNode $output) => $this->writeFromOutput($data, $output, $mapper, $trace))
+            ->indexedBy(fn (OutputNode $output) => $output->name)
+            ->mapValues(fn (OutputNode $output) => $this->writeFromOutput($data, $output, $mapper, $trace))
             ->entries();
     }
 
@@ -60,6 +61,10 @@ readonly class RuntimeWriter implements Writer
      */
     private function writeFromOutput(mixed $data, OutputNode $output, ObjectMapper $mapper, array $trace = []): mixed
     {
-        return $mapper->writeValue(value: $output->read($data), type: $output->type, trace: $trace);
+        return $mapper->writeValue(
+            value: $output->read($data),
+            type: $output->type,
+            trace: [...$trace, $output->name],
+        );
     }
 }

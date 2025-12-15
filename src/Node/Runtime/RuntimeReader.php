@@ -25,7 +25,8 @@ readonly class RuntimeReader implements Reader
     public function __construct(
         private TypeNodeFactory $node = new RuntimeTypeNodeFactory(),
         private TypeNodeSpecificationFactory $specification = new RuntimeTypeNodeSpecificationFactory(),
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed
@@ -101,7 +102,7 @@ readonly class RuntimeReader implements Reader
     private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $trace): array
     {
         return array_map(
-            callback: fn($item) => $mapper->readValue(
+            callback: fn ($item) => $mapper->readValue(
                 type: asClassString($node->inputs[1]->type),
                 value: $item,
                 trace: $trace,
