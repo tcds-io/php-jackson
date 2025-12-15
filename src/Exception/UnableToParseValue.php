@@ -13,7 +13,11 @@ class UnableToParseValue extends JacksonException
      */
     public function __construct(public array $trace, public mixed $expected, mixed $given, ?Throwable $previous = null)
     {
-        parent::__construct(sprintf('Unable to parse value at .%s', join('.', $trace)), $previous);
+        $message = empty($trace)
+            ? 'Unable to parse value'
+            : sprintf('Unable to parse value at .%s', join('.', $trace));
+
+        parent::__construct($message, $previous);
 
         $this->given = $this->toType($given);
     }
@@ -35,8 +39,8 @@ class UnableToParseValue extends JacksonException
                 is_numeric($value) => 'float',
                 default => 'string',
             },
-            is_array($value) => array_map(fn ($inner) => $this->toType($inner), $value),
-            is_object($value) => array_map(fn ($inner) => $this->toType($inner), get_object_vars($value)),
+            is_array($value) => array_map(fn($inner) => $this->toType($inner), $value),
+            is_object($value) => array_map(fn($inner) => $this->toType($inner), get_object_vars($value)),
             default => get_debug_type($value),
         };
     }
