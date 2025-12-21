@@ -4,6 +4,7 @@ namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Exception;
+use JsonSerializable;
 use Override;
 use Tcds\Io\Jackson\Node\OutputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
@@ -27,7 +28,7 @@ readonly class RuntimeWriter implements Writer
         return match (true) {
             is_scalar($data) => $data,
             $data instanceof BackedEnum => $data->value,
-            is_array($data) => array_map(fn ($item) => $mapper->writeValue($item, trace: [...$trace, '[]']), $data),
+            is_array($data) => array_map(fn($item) => $mapper->writeValue($item, trace: [...$trace, '[]']), $data),
             is_object($data) => $this->writeFromNode(
                 data: $data,
                 node: $this->node->create($type),
@@ -46,14 +47,14 @@ readonly class RuntimeWriter implements Writer
     {
         $isRootObject = empty($trace);
 
-        if (!$isRootObject && $node->isValueObject()) {
-            return $this->writeFromOutput($data, $node->outputs[0], $mapper, $trace);
-        }
-
-        return listOf(...$node->outputs)
-            ->indexedBy(fn (OutputNode $output) => $output->name)
-            ->mapValues(fn (OutputNode $output) => $this->writeFromOutput($data, $output, $mapper, $trace))
-            ->entries();
+        return match (true) {
+            $data instanceof JsonSerializable => $data->jsonSerialize(),
+            !$isRootObject && $node->isValueObject() => $this->writeFromOutput($data, $node->outputs[0], $mapper, $trace),
+            default => listOf(...$node->outputs)
+                ->indexedBy(fn(OutputNode $output) => $output->name)
+                ->mapValues(fn(OutputNode $output) => $this->writeFromOutput($data, $output, $mapper, $trace))
+                ->entries()
+        };
     }
 
     /**
