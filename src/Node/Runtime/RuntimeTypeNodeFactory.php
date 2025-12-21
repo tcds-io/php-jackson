@@ -83,10 +83,13 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
     private static function fromClass(string $type): TypeNode
     {
         $reflection = new ReflectionClass($type);
+        $params = $reflection->hasMethod('__construct')
+            ? $reflection->getConstructor()->getParameters()
+            : [];
 
         return new TypeNode(
             type: generic($reflection->name, $reflection->generics),
-            inputs: listOf(...$reflection->getConstructor()->getParameters())
+            inputs: listOf(...$params)
                 ->map(fn (ReflectionMethodParameter $param) => new InputNode(
                     name: $param->name,
                     type: $param->getType()->getName(),
