@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Test\Tcds\Io\Jackson\Unit\Node\Readers;
+namespace Test\Tcds\Io\Jackson\Unit\Node\Mappers;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;

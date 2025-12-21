@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tcds\Io\Jackson\Node\Writers;
+namespace Tcds\Io\Jackson\Node\Mappers\Writers;
 
 use DateTimeInterface;
 use Override;
