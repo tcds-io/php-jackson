@@ -35,6 +35,8 @@ final class TypeNode
 
     public function isValueObject(): bool
     {
-        return count($this->outputs) === 1 && ReflectionType::isPrimitive($this->outputs[0]->type);
+        return count($this->outputs) === 1
+            && $this->outputs[0]->name === 'value'
+            && ReflectionType::isPrimitive($this->outputs[0]->type);
     }
 }
