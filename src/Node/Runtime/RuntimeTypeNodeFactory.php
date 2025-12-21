@@ -8,7 +8,6 @@ use Tcds\Io\Generic\Reflection\ReflectionMethodParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
-use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\InputNode;
 use Tcds\Io\Jackson\Node\OutputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
@@ -97,7 +96,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                 ))
                 ->items(),
             outputs: listOf(...self::getAllProperties($reflection))
-                ->map(function (ReflectionProperty $property) {
+                ->map(function (ReflectionProperty $property) use ($type) {
                     $nameOnMethods = ucfirst($property->name);
 
                     return match (true) {
@@ -125,9 +124,10 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                             accessor: "has$nameOnMethods",
                             type: $property->getType()->getName(),
                         ),
-                        default => throw new JacksonException("Cannot identify property `$property->name` accessor"),
+                        default => null,
                     };
                 })
+                ->filter(fn (?OutputNode $output) => $output !== null)
                 ->items(),
         );
     }
