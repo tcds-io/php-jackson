@@ -53,6 +53,7 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
             ReflectionType::isPrimitive($node->type) => $node->type,
             ReflectionType::isEnum($node->type) => array_map(fn (BackedEnum $enum) => $enum->value, $node->type::cases()),
             ReflectionType::isList($node->type) => [$this->create($node->inputs[0]->type)],
+            ReflectionType::isGeneric($node->type) || !ReflectionType::isArray($node->type),
             ReflectionType::isClass($node->type),
             ReflectionType::isShape($node->type) => run(function () use ($node) {
                 $this->defined[$node->type] = true;

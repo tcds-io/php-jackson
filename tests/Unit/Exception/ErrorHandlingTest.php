@@ -22,7 +22,7 @@ class ErrorHandlingTest extends SerializerTestCase
 
         $exception = $this->expectThrows(UnableToParseValue::class, fn () => $mapper->readValue(Place::class, $json));
 
-        $this->assertEquals('Unable to parse value at .', $exception->getMessage());
+        $this->assertEquals('Unable to parse value', $exception->getMessage());
         $this->assertEquals([], $exception->trace);
         $this->assertEquals(
             [

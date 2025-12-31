@@ -17,6 +17,11 @@ final class TypeNode
     ) {
     }
 
+    public function main():string
+    {
+
+    }
+
     public static function of(mixed $data): string
     {
         return match (true) {
