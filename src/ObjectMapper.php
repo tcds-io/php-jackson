@@ -24,6 +24,7 @@ interface ObjectMapper
      * @template T
      * @param class-string<T> $type
      * @param list<string> $path
+     * @return T
      * @throws UnableToParseValue
      * @throws JacksonException
      */
