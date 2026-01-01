@@ -6,6 +6,9 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Override;
+use Tcds\Io\Generic\Reflection\Type\Parser\GenericTypeParser;
+use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
+use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
@@ -60,7 +63,8 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
     #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
-        $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
+        [$main] = TypeParser::getGenericTypes($type);
+        $reader = $this->typeMappers[$main]['reader'] ?? $this->defaultTypeReader;
 
         try {
             return $reader($value, $type, $this, $path);
@@ -75,7 +79,8 @@ readonly class ArrayObjectMapper implements ObjectMapper
     public function writeValue(mixed $value, ?string $type = null, array $path = []): mixed
     {
         $type ??= TypeNode::of($value);
-        $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
+        [$main] = TypeParser::getGenericTypes($type);
+        $writer = $this->typeMappers[$main]['writer'] ?? $this->defaultTypeWriter;
 
         try {
             return $writer($value, $type, $this, $path);
