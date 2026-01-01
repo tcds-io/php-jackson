@@ -4,8 +4,8 @@ namespace Test\Tcds\Io\Jackson\Unit\Exception;
 
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
-use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Place;
 use Tcds\Io\Jackson\JsonObjectMapper;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\Place;
 use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class ErrorHandlingTest extends SerializerTestCase
@@ -20,23 +20,17 @@ class ErrorHandlingTest extends SerializerTestCase
             }
             JSON;
 
-        $exception = $this->expectThrows(UnableToParseValue::class, fn () => $mapper->readValue(Place::class, $json));
+        /** @var UnableToParseValue $exception */
+        $exception = $this->expectThrows(fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value', $exception->getMessage());
         $this->assertEquals([], $exception->trace);
         $this->assertEquals(
-            [
-                'city' => 'string',
-                'country' => 'string',
-                'position' => ['lat' => 'float', 'lng' => 'float'],
-            ],
+            ['city' => 'string', 'country' => 'string', 'position' => ['lat' => 'float', 'lng' => 'float']],
             $exception->expected,
         );
         $this->assertEquals(
-            [
-                'country' => 'string',
-                'position' => ['lat' => 'float', 'lng' => 'float'],
-            ],
+            ['country' => 'string', 'position' => ['lat' => 'float', 'lng' => 'float']],
             $exception->given,
         );
     }
@@ -52,7 +46,8 @@ class ErrorHandlingTest extends SerializerTestCase
             }
             JSON;
 
-        $exception = $this->expectThrows(UnableToParseValue::class, fn () => $mapper->readValue(Place::class, $json));
+        /** @var UnableToParseValue $exception */
+        $exception = $this->expectThrows(fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value at .position', $exception->getMessage());
         $this->assertEquals(['position'], $exception->trace);

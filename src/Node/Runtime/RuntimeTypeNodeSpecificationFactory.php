@@ -6,6 +6,7 @@ use BackedEnum;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Override;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\InputNode;
@@ -13,17 +14,17 @@ use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\TypeNodeFactory;
 use Tcds\Io\Jackson\Node\TypeNodeSpecificationFactory;
 
-/**
- * @template Type of string
- */
 class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactory
 {
-    /** @var array<Type, bool> */
+    /** @var array<string, bool> */
     private array $defined = [];
 
-    /** @var array<Type, mixed> */
+    /** @var array<string, mixed> */
     private array $specifications;
 
+    /**
+     * @param array<string, mixed> $specifications
+     */
     public function __construct(
         private readonly TypeNodeFactory $factory = new RuntimeTypeNodeFactory(),
         array $specifications = [],
@@ -38,7 +39,8 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
         ];
     }
 
-    public function create(TypeNode|string $node): array|string
+    #[Override]
+    public function create(TypeNode|string $node): mixed
     {
         if (is_string($node)) {
             $node = $this->factory->create($node);
@@ -53,7 +55,7 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
             ReflectionType::isPrimitive($node->type) => $node->type,
             ReflectionType::isEnum($node->type) => array_map(fn (BackedEnum $enum) => $enum->value, $node->type::cases()),
             ReflectionType::isList($node->type) => [$this->create($node->inputs[0]->type)],
-            ReflectionType::isGeneric($node->type) || !ReflectionType::isArray($node->type),
+            ReflectionType::isGeneric($node->type) && !ReflectionType::isArray($node->type),
             ReflectionType::isClass($node->type),
             ReflectionType::isShape($node->type) => run(function () use ($node) {
                 $this->defined[$node->type] = true;

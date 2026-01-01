@@ -29,8 +29,8 @@
     }
   },
   "scripts": {
-    "cs:check": "vendor/bin/php-cs-fixer check -v ./",
-    "cs:fix": "vendor/bin/php-cs-fixer fix ./",
+    "cs:check": "vendor/bin/php-cs-fixer check -v ./ --no-interaction",
+    "cs:fix": "vendor/bin/php-cs-fixer fix ./ --no-interaction",
     "test:stan": "vendor/bin/phpstan analyse src --level=max --ansi",
     "test:unit": "vendor/bin/phpunit --testdox --color=always",
     "tests": [

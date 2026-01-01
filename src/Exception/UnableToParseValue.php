@@ -11,13 +11,17 @@ class UnableToParseValue extends JacksonException
     /**
      * @param list<string> $trace
      */
-    public function __construct(public array $trace, public mixed $expected, mixed $given, ?Throwable $previous = null)
-    {
+    public function __construct(
+        array $trace,
+        public readonly mixed $expected,
+        mixed $given,
+        ?Throwable $previous = null,
+    ) {
         $message = empty($trace)
             ? 'Unable to parse value'
             : sprintf('Unable to parse value at .%s', join('.', $trace));
 
-        parent::__construct($message, $previous);
+        parent::__construct($message, $trace, $previous);
 
         $this->given = $this->toType($given);
     }

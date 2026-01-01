@@ -43,7 +43,7 @@ readonly class RuntimeReader implements Reader
             ReflectionType::isArray($node->type) => $this->readArrayMap($mapper, $node, $data, $trace),
             ReflectionType::isGeneric($node->type),
             ReflectionType::isClass($node->type) => $this->readClass($mapper, $node, $data, $trace),
-            default => throw new JacksonException(sprintf('Unable to handle value of type <%s>', $node->type)),
+            default => throw new JacksonException(sprintf('Unable to handle value of type <%s>', $node->type), $trace),
         };
     }
 
@@ -159,7 +159,7 @@ readonly class RuntimeReader implements Reader
 
             try {
                 $values[$input->name] = $mapper->readValue(asClassString($input->type), $value, $innerTrace);
-            } catch (TypeError $e) {
+            } catch (TypeError) {
                 $node = $this->node->create($input->type);
 
                 throw new UnableToParseValue($innerTrace, $this->specification->create($node->type), $value);

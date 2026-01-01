@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Override;
+use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
 use Tcds\Io\Jackson\Node\Reader;
@@ -13,6 +14,7 @@ use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
 use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\Writer;
+use Throwable;
 
 /**
  * @phpstan-import-type TypeMappers from ObjectMapper
@@ -60,7 +62,13 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
 
-        return $reader($value, $type, $this, $trace);
+        try {
+            return $reader($value, $type, $this, $trace);
+        } catch (JacksonException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new JacksonException('Failed to read value', trace: $trace, previous: $e);
+        }
     }
 
     #[Override]
@@ -69,6 +77,12 @@ readonly class ArrayObjectMapper implements ObjectMapper
         $type ??= TypeNode::of($value);
         $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
 
-        return $writer($value, $type, $this, $trace);
+        try {
+            return $writer($value, $type, $this, $trace);
+        } catch (JacksonException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new JacksonException('Failed to write value', trace: $trace, previous: $e);
+        }
     }
 }

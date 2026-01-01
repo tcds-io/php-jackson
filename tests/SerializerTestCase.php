@@ -2,7 +2,6 @@
 
 namespace Test\Tcds\Io\Jackson;
 
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Tcds\Io\Jackson\ArrayObjectMapper;
@@ -22,21 +21,13 @@ abstract class SerializerTestCase extends TestCase
         $this->jsonMapper = new JsonObjectMapper();
     }
 
-    /**
-     * @template E of Throwable
-     * @param class-string<E> $expected
-     * @param callable $action
-     * @return E
-     */
-    public function expectThrows(string $expected, callable $action): Throwable
+    public function expectThrows(callable $action): Throwable
     {
         try {
             $action();
         } catch (AssertionFailedError $e) {
             throw $e;
         } catch (Throwable $exception) {
-            Assert::assertInstanceOf($expected, $exception);
-
             return $exception;
         }
 

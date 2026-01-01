@@ -96,7 +96,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                 ))
                 ->items(),
             outputs: listOf(...self::getAllProperties($reflection))
-                ->map(function (ReflectionProperty $property) use ($type) {
+                ->map(function (ReflectionProperty $property) {
                     $nameOnMethods = ucfirst($property->name);
 
                     return match (true) {

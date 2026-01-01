@@ -6,20 +6,19 @@ use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 
 final class TypeNode
 {
+    /** @var list<OutputNode> */
+    public array $outputs = [];
+
     /**
      * @param list<InputNode> $inputs
-     * @param list<OutputNode> $outputs
+     * @param list<OutputNode|null> $outputs
      */
     public function __construct(
         public string $type,
         public array $inputs = [],
-        public array $outputs = [],
+        array $outputs = [],
     ) {
-    }
-
-    public function main():string
-    {
-
+        $this->outputs = self::filterOutputs($outputs);
     }
 
     public static function of(mixed $data): string
@@ -43,5 +42,15 @@ final class TypeNode
         return count($this->outputs) === 1
             && $this->outputs[0]->name === 'value'
             && ReflectionType::isPrimitive($this->outputs[0]->type);
+    }
+
+    /**
+     * @param list<OutputNode|null> $outputs
+     * @return list<OutputNode>
+     */
+    private static function filterOutputs(array $outputs): array
+    {
+        /** @var list<OutputNode> */
+        return array_filter($outputs, static fn ($v) => $v !== null);
     }
 }
