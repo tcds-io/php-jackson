@@ -10,8 +10,8 @@ use Tcds\Io\Jackson\ObjectMapper;
 interface StaticReader
 {
     /**
-     * @param list<string> $trace
+     * @param list<string> $path
      * @return T|null
      */
-    public static function read(mixed $data, string $type, ObjectMapper $mapper, array $trace);
+    public static function read(mixed $data, string $type, ObjectMapper $mapper, array $path);
 }

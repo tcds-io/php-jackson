@@ -14,7 +14,7 @@ use Tcds\Io\Jackson\ObjectMapper;
  */
 readonly class DateTimeWriter implements Writer
 {
-    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): ?string
+    #[Override] public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $path): ?string
     {
         return $data?->format(DateTimeInterface::ATOM);
     }

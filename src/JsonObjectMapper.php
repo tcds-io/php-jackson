@@ -37,14 +37,14 @@ readonly class JsonObjectMapper implements ObjectMapper
         ]);
     }
 
-    #[Override] public function readValue(string $type, mixed $value, array $trace = []): mixed
+    #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
         return $this->readValueWith($type, $value);
     }
 
     #[Override]
-    public function writeValue(mixed $value, ?string $type = null, array $trace = []): string
+    public function writeValue(mixed $value, ?string $type = null, array $path = []): string
     {
-        return Json::encode($this->mapper->writeValue($value, $type, $trace));
+        return Json::encode($this->mapper->writeValue($value, $type, $path));
     }
 }

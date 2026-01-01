@@ -9,19 +9,19 @@ class UnableToParseValue extends JacksonException
     public mixed $given;
 
     /**
-     * @param list<string> $trace
+     * @param list<string> $path
      */
     public function __construct(
-        array $trace,
+        array $path,
         public readonly mixed $expected,
         mixed $given,
         ?Throwable $previous = null,
     ) {
-        $message = empty($trace)
+        $message = empty($path)
             ? 'Unable to parse value'
-            : sprintf('Unable to parse value at .%s', join('.', $trace));
+            : sprintf('Unable to parse value at .%s', join('.', $path));
 
-        parent::__construct($message, $trace, $previous);
+        parent::__construct($message, $path, $previous);
 
         $this->given = $this->toType($given);
     }

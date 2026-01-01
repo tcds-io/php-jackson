@@ -27,7 +27,7 @@ class UnableToParseValueTest extends TestCase
     #[Test] public function map_given_to_types(): void
     {
         $exception = new UnableToParseValue(
-            trace: [],
+            path: [],
             expected: [],
             given: [
                 'null-value' => null,

@@ -23,14 +23,14 @@ interface ObjectMapper
     /**
      * @template T
      * @param class-string<T> $type
-     * @param list<string> $trace
+     * @param list<string> $path
      * @throws UnableToParseValue
      * @throws JacksonException
      */
-    public function readValue(string $type, mixed $value, array $trace = []): mixed;
+    public function readValue(string $type, mixed $value, array $path = []): mixed;
 
     /**
-     * @param list<string> $trace
+     * @param list<string> $path
      */
-    public function writeValue(mixed $value, ?string $type = null, array $trace = []): mixed;
+    public function writeValue(mixed $value, ?string $type = null, array $path = []): mixed;
 }

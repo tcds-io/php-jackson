@@ -11,7 +11,7 @@ interface StaticWriter
 {
     /**
      * @param T|null $data
-     * @param list<string> $trace
+     * @param list<string> $path
      */
-    public static function write(mixed $data, string $type, ObjectMapper $mapper, array $trace): mixed;
+    public static function write(mixed $data, string $type, ObjectMapper $mapper, array $path): mixed;
 }

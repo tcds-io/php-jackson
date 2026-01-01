@@ -10,8 +10,8 @@ use Tcds\Io\Jackson\ObjectMapper;
 interface Reader
 {
     /**
-     * @param list<string> $trace
+     * @param list<string> $path
      * @return T|null
      */
-    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace);
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $path);
 }

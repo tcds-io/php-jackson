@@ -56,7 +56,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $exception = $this->expectThrows(fn () => $this->arrayMapper->readValue(AccountHolder::class, $data));
 
         $this->assertEquals('Unable to parse value at .address.place.position', $exception->getMessage());
-        $this->assertEquals(['address', 'place', 'position'], $exception->trace);
+        $this->assertEquals(['address', 'place', 'position'], $exception->path);
         $this->assertEquals(['lat' => 'float', 'lng' => 'float'], $exception->expected);
         $this->assertEquals('string', $exception->given);
     }

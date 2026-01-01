@@ -24,7 +24,7 @@ class ErrorHandlingTest extends SerializerTestCase
         $exception = $this->expectThrows(fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value', $exception->getMessage());
-        $this->assertEquals([], $exception->trace);
+        $this->assertEquals([], $exception->path);
         $this->assertEquals(
             ['city' => 'string', 'country' => 'string', 'position' => ['lat' => 'float', 'lng' => 'float']],
             $exception->expected,
@@ -50,7 +50,7 @@ class ErrorHandlingTest extends SerializerTestCase
         $exception = $this->expectThrows(fn () => $mapper->readValue(Place::class, $json));
 
         $this->assertEquals('Unable to parse value at .position', $exception->getMessage());
-        $this->assertEquals(['position'], $exception->trace);
+        $this->assertEquals(['position'], $exception->path);
         $this->assertEquals(['lat' => 'float', 'lng' => 'float'], $exception->expected);
         $this->assertEquals(['lat' => 'float'], $exception->given);
     }

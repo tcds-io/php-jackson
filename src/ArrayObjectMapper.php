@@ -58,31 +58,31 @@ readonly class ArrayObjectMapper implements ObjectMapper
         ]);
     }
 
-    #[Override] public function readValue(string $type, mixed $value, array $trace = []): mixed
+    #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
         $reader = $this->typeMappers[$type]['reader'] ?? $this->defaultTypeReader;
 
         try {
-            return $reader($value, $type, $this, $trace);
+            return $reader($value, $type, $this, $path);
         } catch (JacksonException $e) {
             throw $e;
         } catch (Throwable $e) {
-            throw new JacksonException('Failed to read value', trace: $trace, previous: $e);
+            throw new JacksonException('Failed to read value', path: $path, previous: $e);
         }
     }
 
     #[Override]
-    public function writeValue(mixed $value, ?string $type = null, array $trace = []): mixed
+    public function writeValue(mixed $value, ?string $type = null, array $path = []): mixed
     {
         $type ??= TypeNode::of($value);
         $writer = $this->typeMappers[$type]['writer'] ?? $this->defaultTypeWriter;
 
         try {
-            return $writer($value, $type, $this, $trace);
+            return $writer($value, $type, $this, $path);
         } catch (JacksonException $e) {
             throw $e;
         } catch (Throwable $e) {
-            throw new JacksonException('Failed to write value', trace: $trace, previous: $e);
+            throw new JacksonException('Failed to write value', path: $path, previous: $e);
         }
     }
 }

@@ -10,9 +10,9 @@ use Throwable;
 class JacksonException extends Exception
 {
     /**
-     * @param list<string> $trace
+     * @param list<string> $path
      */
-    public function __construct(string $message = '', public readonly array $trace = [], ?Throwable $previous = null)
+    public function __construct(string $message = '', public readonly array $path = [], ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
     }

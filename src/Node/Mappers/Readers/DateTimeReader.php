@@ -21,10 +21,10 @@ readonly class DateTimeReader implements Reader
     /**
      * @template T of DateTimeInterface
      * @param class-string<T> $type
-     * @param list<string> $trace
+     * @param list<string> $path
      */
     #[Override]
-    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $trace): ?DateTimeInterface
+    public function __invoke(mixed $data, string $type, ObjectMapper $mapper, array $path): ?DateTimeInterface
     {
         $type = $this->type ?? $type;
 
