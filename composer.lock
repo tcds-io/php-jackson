@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tcds-io/php-better-generics.git",
-                "reference": "38ddfafc9e3655494683e72fdba9cefe15dfb162"
+                "reference": "582d653d4aaabf70697b556051690b7c419c02c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/38ddfafc9e3655494683e72fdba9cefe15dfb162",
-                "reference": "38ddfafc9e3655494683e72fdba9cefe15dfb162",
+                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/582d653d4aaabf70697b556051690b7c419c02c0",
+                "reference": "582d653d4aaabf70697b556051690b7c419c02c0",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
                 "source": "https://github.com/tcds-io/php-better-generics/tree/main"
             },
-            "time": "2025-12-31T14:34:05+00:00"
+            "time": "2026-01-13T13:33:25+00:00"
         }
     ],
     "packages-dev": [
@@ -470,16 +470,16 @@
         },
         {
             "name": "php-cs-fixer/shim",
-            "version": "v3.92.0",
+            "version": "v3.92.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/shim.git",
-                "reference": "79e39b0d57adfd84c402d7b171b925d1e638597f"
+                "reference": "b13b4ad0a1daa80cf036c70488e86516928a5af0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/79e39b0d57adfd84c402d7b171b925d1e638597f",
-                "reference": "79e39b0d57adfd84c402d7b171b925d1e638597f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/shim/zipball/b13b4ad0a1daa80cf036c70488e86516928a5af0",
+                "reference": "b13b4ad0a1daa80cf036c70488e86516928a5af0",
                 "shasum": ""
             },
             "require": {
@@ -516,9 +516,9 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/shim/issues",
-                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.92.0"
+                "source": "https://github.com/PHP-CS-Fixer/shim/tree/v3.92.5"
             },
-            "time": "2025-12-12T10:29:50+00:00"
+            "time": "2026-01-08T21:58:02+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -575,16 +575,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.5.1",
+            "version": "12.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "c467c59a4f6e04b942be422844e7a6352fa01b57"
+                "reference": "4a9739b51cbcb355f6e95659612f92e282a7077b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c467c59a4f6e04b942be422844e7a6352fa01b57",
-                "reference": "c467c59a4f6e04b942be422844e7a6352fa01b57",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/4a9739b51cbcb355f6e95659612f92e282a7077b",
+                "reference": "4a9739b51cbcb355f6e95659612f92e282a7077b",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +599,7 @@
                 "sebastian/environment": "^8.0.3",
                 "sebastian/lines-of-code": "^4.0",
                 "sebastian/version": "^6.0",
-                "theseer/tokenizer": "^2.0"
+                "theseer/tokenizer": "^2.0.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^12.5.1"
@@ -640,7 +640,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.1"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.2"
             },
             "funding": [
                 {
@@ -660,7 +660,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-08T07:17:58+00:00"
+            "time": "2025-12-24T07:03:04+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2240,16 +2240,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v8.0.1",
+            "version": "v8.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "770e3b8b0ba8360958abedcabacd4203467333ca"
+                "reference": "60a8f11f0e15c48f2cc47c4da53873bb5b62135d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/770e3b8b0ba8360958abedcabacd4203467333ca",
-                "reference": "770e3b8b0ba8360958abedcabacd4203467333ca",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/60a8f11f0e15c48f2cc47c4da53873bb5b62135d",
+                "reference": "60a8f11f0e15c48f2cc47c4da53873bb5b62135d",
                 "shasum": ""
             },
             "require": {
@@ -2309,7 +2309,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v8.0.1"
+                "source": "https://github.com/symfony/translation/tree/v8.0.3"
             },
             "funding": [
                 {
@@ -2329,7 +2329,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-01T09:13:36+00:00"
+            "time": "2025-12-21T10:59:45+00:00"
         },
         {
             "name": "symfony/translation-contracts",

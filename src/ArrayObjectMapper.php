@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Override;
+use Tcds\Io\Generic\Reflection\ReflectionFunction;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
@@ -65,7 +66,12 @@ readonly class ArrayObjectMapper implements ObjectMapper
         $reader = $this->typeMappers[$main]['reader'] ?? $this->defaultTypeReader;
 
         try {
-            return $reader($value, $type, $this, $path);
+            return ReflectionFunction::call($reader(...), [
+                'data' => $value,
+                'type' => $type,
+                'mapper' => $this,
+                'path' => $path,
+            ]);
         } catch (JacksonException $e) {
             throw $e;
         } catch (Throwable $e) {
@@ -81,7 +87,12 @@ readonly class ArrayObjectMapper implements ObjectMapper
         $writer = $this->typeMappers[$main]['writer'] ?? $this->defaultTypeWriter;
 
         try {
-            return $writer($value, $type, $this, $path);
+            return ReflectionFunction::call($writer(...), [
+                'data' => $value,
+                'type' => $type,
+                'mapper' => $this,
+                'path' => $path,
+            ]);
         } catch (JacksonException $e) {
             throw $e;
         } catch (Throwable $e) {

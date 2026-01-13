@@ -69,7 +69,7 @@ class ArrayObjectMapperTest extends SerializerTestCase
         $mapper = new ArrayObjectMapper(
             typeMappers: [
                 LatLng::class => [
-                    'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
+                    'reader' => fn (string $data) => new LatLng(...explode(',', $data)),
                 ],
             ],
         );

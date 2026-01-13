@@ -2,13 +2,27 @@
 
 namespace Tcds\Io\Jackson;
 
+use Closure;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
 use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\Node\Writer;
 
 /**
- * @phpstan-type TypeMappers array<string, array{ reader: Reader<mixed>, writer: Writer<mixed> }>
+ * @phpstan-type TypeMappers array<string, array{
+ *     reader?: Reader<mixed>|Closure(
+ *         mixed $data,
+ *         string $type,
+ *         ObjectMapper $mapper,
+ *         list<string> $path
+ *     ): mixed,
+ *     writer?: Writer<mixed>|Closure(
+ *         mixed $data,
+ *         string $type,
+ *         ObjectMapper $mapper,
+ *         list<string> $path
+ *     ): mixed,
+ * }>
  */
 interface ObjectMapper
 {
