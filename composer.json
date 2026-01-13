@@ -6,7 +6,7 @@
   "require": {
     "php": ">=8.4",
     "ext-json": "*",
-    "tcds-io/php-better-generics": "dev-main"
+    "tcds-io/php-better-generics": "^0.1.0"
   },
   "require-dev": {
     "symfony/var-dumper": "^6.0",

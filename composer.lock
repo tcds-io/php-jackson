@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a45030268b5903cced83ef0d4911691",
+    "content-hash": "baf026ad1c2ffde8360066e43a112023",
     "packages": [
         {
             "name": "tcds-io/php-better-generics",
-            "version": "dev-main",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tcds-io/php-better-generics.git",
@@ -29,7 +29,6 @@
                 "slevomat/coding-standard": "^8.15",
                 "symfony/var-dumper": "^7.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -52,7 +51,7 @@
             "description": "PHP library to better work with generics",
             "support": {
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
-                "source": "https://github.com/tcds-io/php-better-generics/tree/main"
+                "source": "https://github.com/tcds-io/php-better-generics/tree/0.1.0"
             },
             "time": "2026-01-13T13:33:25+00:00"
         }
@@ -2554,9 +2553,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tcds-io/php-better-generics": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
