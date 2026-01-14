@@ -14,6 +14,8 @@ use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
 use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Jackson\Node\StaticReader;
+use Tcds\Io\Jackson\Node\StaticWriter;
 use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\Writer;
 use Throwable;
@@ -64,9 +66,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         [$main] = TypeParser::getGenericTypes($type);
         $reader = $this->typeMappers[$main]['reader'] ?? $this->defaultTypeReader;
+        $callable = $reader instanceof StaticReader ? $reader::read(...) : $reader;
 
         try {
-            return ReflectionFunction::call($reader(...), [
+            return ReflectionFunction::call($callable(...), [
                 'data' => $value,
                 'type' => $type,
                 'mapper' => $this,
@@ -85,9 +88,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
         $type ??= TypeNode::of($value);
         [$main] = TypeParser::getGenericTypes($type);
         $writer = $this->typeMappers[$main]['writer'] ?? $this->defaultTypeWriter;
+        $callable = $writer instanceof StaticWriter ? $writer::write(...) : $writer;
 
         try {
-            return ReflectionFunction::call($writer(...), [
+            return ReflectionFunction::call($callable(...), [
                 'data' => $value,
                 'type' => $type,
                 'mapper' => $this,
