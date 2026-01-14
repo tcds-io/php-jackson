@@ -7,21 +7,13 @@ use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
 use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\Node\Writer;
+use Tcds\Io\Jackson\Node\StaticReader;
+use Tcds\Io\Jackson\Node\StaticWriter;
 
 /**
  * @phpstan-type TypeMappers array<string, array{
- *     reader?: Reader<mixed>|Closure(
- *         mixed $data,
- *         string $type,
- *         ObjectMapper $mapper,
- *         list<string> $path
- *     ): mixed,
- *     writer?: Writer<mixed>|Closure(
- *         mixed $data,
- *         string $type,
- *         ObjectMapper $mapper,
- *         list<string> $path
- *     ): mixed,
+ *     reader?: Reader<mixed>|StaticReader<mixed>|Closure(mixed $data, string $type, ObjectMapper $mapper, list<string> $path): mixed,
+ *     writer?: Writer<mixed>|StaticWriter<mixed>|Closure(mixed $data, string $type, ObjectMapper $mapper, list<string> $path): mixed,
  * }>
  */
 interface ObjectMapper
