@@ -11,10 +11,12 @@ use Tcds\Io\Jackson\Node\StaticReader;
 use Tcds\Io\Jackson\Node\StaticWriter;
 
 /**
- * @phpstan-type TypeMappers array<string, array{
- *     reader?: Reader<mixed>|StaticReader<mixed>|Closure(mixed $data, string $type, ObjectMapper $mapper, list<string> $path): mixed,
- *     writer?: Writer<mixed>|StaticWriter<mixed>|Closure(mixed $data, string $type, ObjectMapper $mapper, list<string> $path): mixed,
- * }>
+ * @phpstan-type MapperClosure Closure(mixed $data, string $type, ObjectMapper $mapper, list<string> $path): mixed
+ * @phpstan-type TypeMapper array{
+ *      reader?: Reader<mixed>|StaticReader<mixed>|MapperClosure,
+ *      writer?: Writer<mixed>|StaticWriter<mixed>|MapperClosure,
+ *  }
+ * @phpstan-type TypeMappers array<string, TypeMapper>
  */
 interface ObjectMapper
 {
