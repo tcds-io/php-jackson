@@ -5,8 +5,8 @@ namespace Tcds\Io\Jackson;
 use Override;
 use Tcds\Io\Jackson\Node\Json;
 use Tcds\Io\Jackson\Node\Reader;
-use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
-use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeFactory;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
 use Tcds\Io\Jackson\Node\Writer;
 
 /**
@@ -17,16 +17,17 @@ readonly class JsonObjectMapper implements ObjectMapper
     private ArrayObjectMapper $mapper;
 
     /**
-     * @param Reader<mixed> $defaultTypeReader
-     * @param Writer<mixed> $defaultTypeWriter
+     * @param Reader<mixed>|null $defaultTypeReader
+     * @param Writer<mixed>|null $defaultTypeWriter
      * @param TypeMappers $typeMappers
      */
     public function __construct(
-        Reader $defaultTypeReader = new RuntimeReader(),
-        Writer $defaultTypeWriter = new RuntimeWriter(),
+        ?Reader $defaultTypeReader = null,
+        ?Writer $defaultTypeWriter = null,
         array $typeMappers = [],
+        TypeNodeFactory $typeNodeFactory = new RuntimeTypeNodeFactory(),
     ) {
-        $this->mapper = new ArrayObjectMapper($defaultTypeReader, $defaultTypeWriter, $typeMappers);
+        $this->mapper = new ArrayObjectMapper($defaultTypeReader, $defaultTypeWriter, $typeMappers, $typeNodeFactory);
     }
 
     #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
