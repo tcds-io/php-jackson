@@ -7,6 +7,7 @@ namespace Test\Tcds\Io\Jackson\Unit\Node;
 use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Jackson\ArrayObjectMapper;
 use Test\Tcds\Io\Jackson\Fixture\Money;
+use Test\Tcds\Io\Jackson\Fixture\Slug;
 use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class JsonMapperTest extends SerializerTestCase
@@ -38,5 +39,19 @@ class JsonMapperTest extends SerializerTestCase
 
         $this->assertEquals(new Money(20), $mapper->readValue(Money::class, 10));
         $this->assertSame(20, $mapper->writeValue(new Money(20)));
+    }
+
+    #[Test]
+    public function read_uses_invokable_class_from_class_attribute(): void
+    {
+        // SlugReader has __invoke but does not implement Reader — should still work
+        $this->assertEquals(new Slug('hello-world'), $this->arrayMapper->readValue(Slug::class, 'Hello World!'));
+    }
+
+    #[Test]
+    public function write_uses_invokable_class_from_class_attribute(): void
+    {
+        // SlugWriter has __invoke but does not implement Writer — should still work
+        $this->assertSame('hello-world', $this->arrayMapper->writeValue(new Slug('hello-world')));
     }
 }
