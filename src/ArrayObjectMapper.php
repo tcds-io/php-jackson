@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Override;
 use Tcds\Io\Generic\Reflection\ReflectionFunction;
-use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
+use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
@@ -78,7 +78,7 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
     #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
-        [$main] = TypeParser::getGenericTypes($type);
+        [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
         $reader = $this->typeMappers[$main]['reader'] ?? $this->defaultTypeReader;
         $callable = $reader instanceof StaticReader ? $reader::read(...) : $reader;
 
@@ -100,7 +100,7 @@ readonly class ArrayObjectMapper implements ObjectMapper
     public function writeValue(mixed $value, ?string $type = null, array $path = []): mixed
     {
         $type ??= TypeNode::of($value);
-        [$main] = TypeParser::getGenericTypes($type);
+        [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
         $writer = $this->typeMappers[$main]['writer'] ?? $this->defaultTypeWriter;
         $callable = $writer instanceof StaticWriter ? $writer::write(...) : $writer;
 

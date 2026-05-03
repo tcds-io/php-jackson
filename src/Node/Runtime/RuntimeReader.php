@@ -4,7 +4,7 @@ namespace Tcds\Io\Jackson\Node\Runtime;
 
 use BackedEnum;
 use Override;
-use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
+use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Jackson\Exception\JacksonException;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
@@ -98,7 +98,7 @@ readonly class RuntimeReader implements Reader
     private function readClass(ObjectMapper $mapper, TypeNode $node, mixed $data, array $path): mixed
     {
         $values = $this->readValues($mapper, $node, $data, $path);
-        [$class] = TypeParser::getGenericTypes($node->type);
+        [$class] = DocBlockTypeResolver::instance()->genericTypeParts($node->type);
 
         try {
             return new $class(...$values);
