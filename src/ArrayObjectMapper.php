@@ -9,6 +9,8 @@ use Override;
 use Tcds\Io\Generic\Reflection\ReflectionFunction;
 use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
 use Tcds\Io\Jackson\Exception\JacksonException;
+use ReflectionClass;
+use Tcds\Io\Jackson\Node\JsonMapper;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
 use Tcds\Io\Jackson\Node\Reader;
@@ -79,7 +81,7 @@ readonly class ArrayObjectMapper implements ObjectMapper
     #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
         [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
-        $reader = $this->typeMappers[$main]['reader'] ?? $this->defaultTypeReader;
+        $reader = $this->typeMappers[$main]['reader'] ?? $this->classReader($main) ?? $this->defaultTypeReader;
         $callable = $reader instanceof StaticReader ? $reader::read(...) : $reader;
 
         try {
@@ -101,7 +103,7 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         $type ??= TypeNode::of($value);
         [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
-        $writer = $this->typeMappers[$main]['writer'] ?? $this->defaultTypeWriter;
+        $writer = $this->typeMappers[$main]['writer'] ?? $this->classWriter($main) ?? $this->defaultTypeWriter;
         $callable = $writer instanceof StaticWriter ? $writer::write(...) : $writer;
 
         try {
@@ -116,5 +118,44 @@ readonly class ArrayObjectMapper implements ObjectMapper
         } catch (Throwable $e) {
             throw new JacksonException('Failed to write value', path: $path, previous: $e);
         }
+    }
+
+    /**
+     * @return Reader<mixed>|StaticReader<mixed>|null
+     */
+    private function classReader(string $type): Reader|StaticReader|null
+    {
+        $attribute = $this->classAttribute($type);
+
+        if ($attribute === null || $attribute->reader === null) {
+            return null;
+        }
+
+        return new ($attribute->reader)();
+    }
+
+    /**
+     * @return Writer<mixed>|StaticWriter<mixed>|null
+     */
+    private function classWriter(string $type): Writer|StaticWriter|null
+    {
+        $attribute = $this->classAttribute($type);
+
+        if ($attribute === null || $attribute->writer === null) {
+            return null;
+        }
+
+        return new ($attribute->writer)();
+    }
+
+    private function classAttribute(string $type): ?JsonMapper
+    {
+        if (!class_exists($type)) {
+            return null;
+        }
+
+        $attributes = new ReflectionClass($type)->getAttributes(JsonMapper::class);
+
+        return $attributes === [] ? null : $attributes[0]->newInstance();
     }
 }
