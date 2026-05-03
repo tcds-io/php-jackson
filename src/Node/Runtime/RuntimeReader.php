@@ -35,7 +35,7 @@ readonly class RuntimeReader implements Reader
 
         return match (true) {
             is_null($data) => null,
-            $node->type === 'bool' || $node->type === 'boolean' => filter_var($data, FILTER_VALIDATE_BOOL),
+            $node->type === 'bool' || $node->type === 'boolean' => $this->readBool($data, $path),
             ReflectionType::isPrimitive($node->type) => $data,
             ReflectionType::isList($node->type) => $this->readList($mapper, $node, $data, $path),
             ReflectionType::isEnum($node->type) => $this->readEnum($node->type, $data, $path),
@@ -53,16 +53,28 @@ readonly class RuntimeReader implements Reader
      */
     private function readList(ObjectMapper $mapper, TypeNode $node, mixed $data, array $path): array
     {
-        return array_map(
-            callback: function (mixed $item) use ($mapper, $node, $path) {
-                return $mapper->readValue(
-                    type: asClassString($node->inputs[0]->type),
-                    value: $item,
-                    path: $path,
-                );
-            },
-            array: asArray($data),
-        );
+        $type = asClassString($node->inputs[0]->type);
+        $values = [];
+
+        foreach (asArray($data) as $index => $item) {
+            $values[$index] = $mapper->readValue(
+                type: $type,
+                value: $item,
+                path: [...$path, sprintf('[%s]', $index)],
+            );
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param list<string> $path
+     */
+    private function readBool(mixed $data, array $path): bool
+    {
+        $result = filter_var($data, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+
+        return $result ?? throw new UnableToParseValue($path, 'bool', $data);
     }
 
     /**
@@ -101,14 +113,18 @@ readonly class RuntimeReader implements Reader
      */
     private function readArrayMap(ObjectMapper $mapper, TypeNode $node, mixed $data, array $path): array
     {
-        return array_map(
-            callback: fn ($item) => $mapper->readValue(
-                type: asClassString($node->inputs[1]->type),
+        $type = asClassString($node->inputs[1]->type);
+        $values = [];
+
+        foreach (asArray($data) as $key => $item) {
+            $values[$key] = $mapper->readValue(
+                type: $type,
                 value: $item,
-                path: $path,
-            ),
-            array: asArray($data),
-        );
+                path: [...$path, (string) $key],
+            );
+        }
+
+        return $values;
     }
 
     /**
