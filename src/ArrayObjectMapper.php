@@ -28,7 +28,9 @@ use Throwable;
  */
 readonly class ArrayObjectMapper implements ObjectMapper
 {
+    /** @var Reader<mixed> */
     private Reader $defaultTypeReader;
+    /** @var Writer<mixed> */
     private Writer $defaultTypeWriter;
     /** @var TypeMappers */
     private array $typeMappers;
