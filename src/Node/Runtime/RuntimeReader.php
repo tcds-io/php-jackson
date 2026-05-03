@@ -160,9 +160,9 @@ readonly class RuntimeReader implements Reader
             try {
                 $values[$input->name] = $mapper->readValue(asClassString($input->type), $value, $innerpath);
             } catch (TypeError) {
-                $node = $this->node->create($input->type);
+                $inputNode = $this->node->create($input->type);
 
-                throw new UnableToParseValue($innerpath, $this->specification->create($node->type), $value);
+                throw new UnableToParseValue($innerpath, $this->specification->create($inputNode->type), $value);
             }
         }
 

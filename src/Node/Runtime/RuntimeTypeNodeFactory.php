@@ -16,7 +16,7 @@ use Tcds\Io\Jackson\Node\TypeNodeFactory;
 class RuntimeTypeNodeFactory implements TypeNodeFactory
 {
     /** @var array<string, TypeNode> */
-    public static array $nodes = [];
+    private static array $nodes = [];
 
     #[Override] public function create(string $type): TypeNode
     {
