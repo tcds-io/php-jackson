@@ -136,11 +136,11 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
             $instance = new $class();
 
-            if (!$instance instanceof Reader) {
-                throw new JacksonException(sprintf('%s must implement Reader or StaticReader', $class));
+            if (!is_callable($instance)) {
+                throw new JacksonException(sprintf('%s must implement Reader, StaticReader, or be invokable', $class));
             }
 
-            return $instance->__invoke(...);
+            return Closure::fromCallable($instance);
         }
 
         $reader = $this->defaultTypeReader;
@@ -165,11 +165,11 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
             $instance = new $class();
 
-            if (!$instance instanceof Writer) {
-                throw new JacksonException(sprintf('%s must implement Writer or StaticWriter', $class));
+            if (!is_callable($instance)) {
+                throw new JacksonException(sprintf('%s must implement Writer, StaticWriter, or be invokable', $class));
             }
 
-            return $instance->__invoke(...);
+            return Closure::fromCallable($instance);
         }
 
         $writer = $this->defaultTypeWriter;
