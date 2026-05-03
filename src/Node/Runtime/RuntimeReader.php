@@ -146,8 +146,9 @@ readonly class RuntimeReader implements Reader
      */
     private function readValueObject(ObjectMapper $mapper, InputNode $param, mixed $data, array $path): array
     {
-        $data = is_array($data) && array_key_exists($param->name, $data)
-            ? $data[$param->name]
+        $key = $param->key();
+        $data = is_array($data) && array_key_exists($key, $data)
+            ? $data[$key]
             : $data;
 
         return [
@@ -170,8 +171,9 @@ readonly class RuntimeReader implements Reader
         }
 
         foreach ($node->inputs as $input) {
-            $value = $data[$input->name] ?? $input->default;
-            $innerpath = [...$path, $input->name];
+            $key = $input->key();
+            $value = $data[$key] ?? $input->default;
+            $innerpath = [...$path, $key];
 
             try {
                 $values[$input->name] = $mapper->readValue(asClassString($input->type), $value, $innerpath);

@@ -9,6 +9,7 @@ use Tcds\Io\Generic\Reflection\ReflectionProperty;
 use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Jackson\Node\InputNode;
+use Tcds\Io\Jackson\Node\JsonProperty;
 use Tcds\Io\Jackson\Node\OutputNode;
 use Tcds\Io\Jackson\Node\TypeNode;
 use Tcds\Io\Jackson\Node\TypeNodeFactory;
@@ -93,36 +94,43 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                     name: $param->name,
                     type: $param->getType()->getName(),
                     default: $param->getDefaultValue(),
+                    key: self::jsonKey($param),
                 ))
                 ->items(),
             outputs: listOf(...self::getAllProperties($reflection))
                 ->map(function (ReflectionProperty $property) {
                     $nameOnMethods = ucfirst($property->name);
+                    $key = self::jsonKey($property);
 
                     return match (true) {
                         $property->isPublic() => OutputNode::property(
                             name: $property->name,
                             type: $property->getType()->getName(),
+                            key: $key,
                         ),
                         $property->reflection->hasMethod($property->name) => OutputNode::method(
                             name: $property->name,
                             accessor: $property->name,
                             type: $property->getType()->getName(),
+                            key: $key,
                         ),
                         $property->reflection->hasMethod("get$nameOnMethods") => OutputNode::method(
                             name: $property->name,
                             accessor: "get$nameOnMethods",
                             type: $property->getType()->getName(),
+                            key: $key,
                         ),
                         $property->reflection->hasMethod("is$nameOnMethods") => OutputNode::method(
                             name: $property->name,
                             accessor: "is$nameOnMethods",
                             type: $property->getType()->getName(),
+                            key: $key,
                         ),
                         $property->reflection->hasMethod("has$nameOnMethods") => OutputNode::method(
                             name: $property->name,
                             accessor: "has$nameOnMethods",
                             type: $property->getType()->getName(),
+                            key: $key,
                         ),
                         default => null,
                     };
@@ -130,6 +138,13 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
                 ->filter(fn (?OutputNode $output) => $output !== null)
                 ->items(),
         );
+    }
+
+    private static function jsonKey(\ReflectionParameter|\ReflectionProperty $reflection): ?string
+    {
+        $attributes = $reflection->getAttributes(JsonProperty::class);
+
+        return $attributes === [] ? null : $attributes[0]->newInstance()->name;
     }
 
     /**
