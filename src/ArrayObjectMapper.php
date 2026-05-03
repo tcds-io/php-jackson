@@ -127,17 +127,21 @@ readonly class ArrayObjectMapper implements ObjectMapper
             return $reader instanceof StaticReader ? $reader::read(...) : $reader->__invoke(...);
         }
 
-        $class = $this->classAttribute($main)?->reader;
+        $value = $this->classAttribute($main)?->reader;
 
-        if ($class !== null) {
-            if (is_subclass_of($class, StaticReader::class)) {
-                return $class::read(...);
+        if ($value instanceof Closure) {
+            return $value;
+        }
+
+        if ($value !== null) {
+            if (is_subclass_of($value, StaticReader::class)) {
+                return $value::read(...);
             }
 
-            $instance = new $class();
+            $instance = new $value();
 
             if (!is_callable($instance)) {
-                throw new JacksonException(sprintf('%s must implement Reader, StaticReader, or be invokable', $class));
+                throw new JacksonException(sprintf('%s must implement Reader, StaticReader, or be invokable', $value));
             }
 
             return Closure::fromCallable($instance);
@@ -156,17 +160,21 @@ readonly class ArrayObjectMapper implements ObjectMapper
             return $writer instanceof StaticWriter ? $writer::write(...) : $writer->__invoke(...);
         }
 
-        $class = $this->classAttribute($main)?->writer;
+        $value = $this->classAttribute($main)?->writer;
 
-        if ($class !== null) {
-            if (is_subclass_of($class, StaticWriter::class)) {
-                return $class::write(...);
+        if ($value instanceof Closure) {
+            return $value;
+        }
+
+        if ($value !== null) {
+            if (is_subclass_of($value, StaticWriter::class)) {
+                return $value::write(...);
             }
 
-            $instance = new $class();
+            $instance = new $value();
 
             if (!is_callable($instance)) {
-                throw new JacksonException(sprintf('%s must implement Writer, StaticWriter, or be invokable', $class));
+                throw new JacksonException(sprintf('%s must implement Writer, StaticWriter, or be invokable', $value));
             }
 
             return Closure::fromCallable($instance);

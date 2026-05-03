@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tcds\Io\Jackson\Node;
 
 use Attribute;
+use Closure;
 use Tcds\Io\Jackson\ObjectMapper;
 
 /**
@@ -31,12 +32,12 @@ use Tcds\Io\Jackson\ObjectMapper;
 final readonly class JsonMapper
 {
     /**
-     * @param class-string<Reader<mixed>|StaticReader<mixed>>|class-string|null $reader
-     * @param class-string<Writer<mixed>|StaticWriter<mixed>>|class-string|null $writer
+     * @param class-string<Reader<mixed>|StaticReader<mixed>>|class-string|MapperClosure|null $reader
+     * @param class-string<Writer<mixed>|StaticWriter<mixed>>|class-string|MapperClosure|null $writer
      */
     public function __construct(
-        public ?string $reader = null,
-        public ?string $writer = null,
+        public Closure|string|null $reader = null,
+        public Closure|string|null $writer = null,
     ) {
     }
 }
