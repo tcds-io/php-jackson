@@ -10,6 +10,7 @@ readonly class SnakeCaseWrapper
 {
     public function __construct(
         #[JsonProperty('snake_field')] public SnakeCaseDto $snakeField,
+        public string $label,
     ) {
     }
 }
