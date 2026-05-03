@@ -36,7 +36,7 @@ readonly class RuntimeWriter implements Writer
                 path: $path,
             ),
             is_null($data) => null,
-            default => throw new Exception(sprintf('Unable to write `%s` valur', gettype($data))),
+            default => throw new Exception(sprintf('Unable to write `%s` value', gettype($data))),
         };
     }
 
