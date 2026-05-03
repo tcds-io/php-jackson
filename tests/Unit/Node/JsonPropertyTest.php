@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tcds\Io\Jackson\Exception\UnableToParseValue;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeSpecificationFactory;
 use Test\Tcds\Io\Jackson\Fixture\ReadOnly\SnakeCaseDto;
+use Test\Tcds\Io\Jackson\Fixture\ReadOnly\SnakeCaseWrapper;
 use Test\Tcds\Io\Jackson\SerializerTestCase;
 
 class JsonPropertyTest extends SerializerTestCase
@@ -53,6 +54,21 @@ class JsonPropertyTest extends SerializerTestCase
     #[Test]
     public function error_path_uses_wire_key(): void
     {
+        // missing inner first_name → outer wrapper rethrows with the wire key in the path
+        $partial = ['snake_field' => ['last_name' => 'Dent', 'age' => 42]];
+
+        /** @var UnableToParseValue $exception */
+        $exception = $this->expectThrows(
+            fn () => $this->arrayMapper->readValue(SnakeCaseWrapper::class, $partial),
+        );
+
+        $this->assertInstanceOf(UnableToParseValue::class, $exception);
+        $this->assertEquals(['snake_field'], $exception->path);
+    }
+
+    #[Test]
+    public function exception_expected_uses_wire_keys(): void
+    {
         $partial = ['last_name' => 'Dent', 'age' => 42];
 
         /** @var UnableToParseValue $exception */
@@ -61,7 +77,10 @@ class JsonPropertyTest extends SerializerTestCase
         );
 
         $this->assertInstanceOf(UnableToParseValue::class, $exception);
-        $this->assertContains('first_name', $exception->path);
+        $this->assertEquals(
+            ['first_name' => 'string', 'last_name' => 'string', 'age' => 'int'],
+            $exception->expected,
+        );
     }
 
     #[Test]
