@@ -55,7 +55,7 @@ class JsonPropertyTest extends SerializerTestCase
     public function error_path_uses_wire_key(): void
     {
         // missing inner first_name → outer wrapper rethrows with the wire key in the path
-        $partial = ['snake_field' => ['last_name' => 'Dent', 'age' => 42]];
+        $partial = ['snake_field' => ['last_name' => 'Dent', 'age' => 42], 'label' => 'foo'];
 
         /** @var UnableToParseValue $exception */
         $exception = $this->expectThrows(
