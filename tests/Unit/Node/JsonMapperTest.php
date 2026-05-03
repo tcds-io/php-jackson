@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Test\Tcds\Io\Jackson\Unit\Node;
+
+use PHPUnit\Framework\Attributes\Test;
+use Tcds\Io\Jackson\ArrayObjectMapper;
+use Test\Tcds\Io\Jackson\Fixture\Money;
+use Test\Tcds\Io\Jackson\SerializerTestCase;
+
+class JsonMapperTest extends SerializerTestCase
+{
+    #[Test]
+    public function read_uses_reader_from_class_attribute(): void
+    {
+        $this->assertEquals(new Money(1050), $this->arrayMapper->readValue(Money::class, 1050));
+        $this->assertEquals(new Money(1050), $this->arrayMapper->readValue(Money::class, '$10.50'));
+    }
+
+    #[Test]
+    public function write_uses_writer_from_class_attribute(): void
+    {
+        $this->assertSame('$10.50', $this->arrayMapper->writeValue(new Money(1050)));
+        $this->assertSame('"$10.50"', $this->jsonMapper->writeValue(new Money(1050)));
+    }
+
+    #[Test]
+    public function explicit_type_mappers_override_class_attribute(): void
+    {
+        // explicit closure on the constructor argument wins over the #[JsonMapper] attribute
+        $mapper = new ArrayObjectMapper(typeMappers: [
+            Money::class => [
+                'reader' => fn (mixed $data) => new Money(((int) ($data ?? 0)) * 2),
+                'writer' => fn (Money $data) => $data->cents,
+            ],
+        ]);
+
+        $this->assertEquals(new Money(20), $mapper->readValue(Money::class, 10));
+        $this->assertSame(20, $mapper->writeValue(new Money(20)));
+    }
+}
