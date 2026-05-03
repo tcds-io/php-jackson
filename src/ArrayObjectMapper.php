@@ -124,6 +124,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
         if (isset($this->typeMappers[$main]['reader'])) {
             $reader = $this->typeMappers[$main]['reader'];
 
+            if ($reader instanceof Closure) {
+                return $reader;
+            }
+
             return $reader instanceof StaticReader ? $reader::read(...) : $reader->__invoke(...);
         }
 
@@ -156,6 +160,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         if (isset($this->typeMappers[$main]['writer'])) {
             $writer = $this->typeMappers[$main]['writer'];
+
+            if ($writer instanceof Closure) {
+                return $writer;
+            }
 
             return $writer instanceof StaticWriter ? $writer::write(...) : $writer->__invoke(...);
         }
