@@ -12,9 +12,9 @@ readonly class OutputNode
     ) {
     }
 
-    public static function property(string $name, string $type): self
+    public static function property(string $name, string $type, ?string $key = null): self
     {
-        return new self(name: $name, accessor: $name, type: $type, outputType: OutputType::PROPERTY);
+        return new self(name: $key ?? $name, accessor: $name, type: $type, outputType: OutputType::PROPERTY);
     }
 
     public static function param(string $name, string $type): self
@@ -22,9 +22,9 @@ readonly class OutputNode
         return new self(name: $name, accessor: $name, type: $type, outputType: OutputType::PARAM);
     }
 
-    public static function method(string $name, string $accessor, string $type): self
+    public static function method(string $name, string $accessor, string $type, ?string $key = null): self
     {
-        return new self(name: $name, accessor: $accessor, type: $type, outputType: OutputType::METHOD);
+        return new self(name: $key ?? $name, accessor: $accessor, type: $type, outputType: OutputType::METHOD);
     }
 
     public function read(mixed $data): mixed

@@ -61,7 +61,7 @@ class RuntimeTypeNodeSpecificationFactory implements TypeNodeSpecificationFactor
                 $this->defined[$node->type] = true;
 
                 return listOf(...$node->inputs)
-                    ->indexedBy(fn (InputNode $input) => $input->name)
+                    ->indexedBy(fn (InputNode $input) => $input->key())
                     ->mapValues(fn (InputNode $input) => $this->create($input->type))
                     ->entries();
             }),
