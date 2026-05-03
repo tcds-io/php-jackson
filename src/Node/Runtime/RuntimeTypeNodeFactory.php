@@ -16,7 +16,7 @@ use Tcds\Io\Jackson\Node\TypeNodeFactory;
 class RuntimeTypeNodeFactory implements TypeNodeFactory
 {
     /** @var array<string, TypeNode> */
-    private static array $nodes = [];
+    private array $nodes = [];
 
     #[Override] public function create(string $type): TypeNode
     {
@@ -24,7 +24,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
             $type = str_replace(['|null', 'null|', '?'], '', $type);
         }
 
-        return self::$nodes[$type] ??= match (true) {
+        return $this->nodes[$type] ??= match (true) {
             ReflectionType::isPrimitive($type),
             ReflectionType::isEnum($type) => new TypeNode($type),
             ReflectionType::isList($type) => self::fromGeneric($type),
