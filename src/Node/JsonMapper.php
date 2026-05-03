@@ -22,8 +22,8 @@ use Tcds\Io\Jackson\ObjectMapper;
  * `typeMappers` array on `ArrayObjectMapper` for those.
  *
  * Resolution order on every call:
- *   1. `typeMappers` constructor argument (most specific, wins)
- *   2. `#[JsonMapper]` attribute on the target class
+ *   1. `#[JsonMapper]` attribute on the target class (declaration site, wins)
+ *   2. `typeMappers` constructor argument
  *   3. default reader/writer
  *
  * @phpstan-import-type MapperClosure from ObjectMapper
@@ -32,12 +32,12 @@ use Tcds\Io\Jackson\ObjectMapper;
 final readonly class JsonMapper
 {
     /**
-     * @param class-string<Reader<mixed>|StaticReader<mixed>>|class-string|MapperClosure|null $reader
-     * @param class-string<Writer<mixed>|StaticWriter<mixed>>|class-string|MapperClosure|null $writer
+     * @param Reader<mixed>|Closure|class-string<StaticReader<mixed>>|null $reader
+     * @param Writer<mixed>|Closure|class-string<StaticWriter<mixed>>|null $writer
      */
     public function __construct(
-        public Closure|string|null $reader = null,
-        public Closure|string|null $writer = null,
+        public Reader|Closure|string|null $reader = null,
+        public Writer|Closure|string|null $writer = null,
     ) {
     }
 }

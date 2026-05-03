@@ -6,7 +6,10 @@ namespace Test\Tcds\Io\Jackson\Fixture;
 
 use Tcds\Io\Jackson\Node\JsonMapper;
 
-#[JsonMapper(reader: SlugReader::class, writer: SlugWriter::class)]
+#[JsonMapper(
+    reader: new SlugReader(),
+    writer: new SlugWriter()
+)]
 readonly class Slug
 {
     public function __construct(public string $value)
