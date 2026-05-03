@@ -4,29 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "baf026ad1c2ffde8360066e43a112023",
+    "content-hash": "bde999359cf51f09ae286082bcdc4869",
     "packages": [
         {
-            "name": "tcds-io/php-better-generics",
-            "version": "0.1.0",
+            "name": "phpstan/phpdoc-parser",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tcds-io/php-better-generics.git",
-                "reference": "582d653d4aaabf70697b556051690b7c419c02c0"
+                "url": "https://github.com/phpstan/phpdoc-parser.git",
+                "reference": "a004701b11273a26cd7955a61d67a7f1e525a45a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/582d653d4aaabf70697b556051690b7c419c02c0",
-                "reference": "582d653d4aaabf70697b556051690b7c419c02c0",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/a004701b11273a26cd7955a61d67a7f1e525a45a",
+                "reference": "a004701b11273a26cd7955a61d67a7f1e525a45a",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.4"
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^2.0",
+                "nikic/php-parser": "^5.3.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-strict-rules": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "symfony/process": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\PhpDocParser\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "support": {
+                "issues": "https://github.com/phpstan/phpdoc-parser/issues",
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.2"
+            },
+            "time": "2026-01-25T14:56:51+00:00"
+        },
+        {
+            "name": "tcds-io/php-better-generics",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tcds-io/php-better-generics.git",
+                "reference": "20dfb6284e14718ff6fe68147a5676751e0c5123"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tcds-io/php-better-generics/zipball/20dfb6284e14718ff6fe68147a5676751e0c5123",
+                "reference": "20dfb6284e14718ff6fe68147a5676751e0c5123",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4",
+                "phpstan/phpdoc-parser": "^2.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^10.5",
-                "slevomat/coding-standard": "^8.15",
+                "slevomat/coding-standard": "^8.16",
                 "symfony/var-dumper": "^7.2"
             },
             "type": "library",
@@ -51,9 +99,9 @@
             "description": "PHP library to better work with generics",
             "support": {
                 "issues": "https://github.com/tcds-io/php-better-generics/issues",
-                "source": "https://github.com/tcds-io/php-better-generics/tree/0.1.0"
+                "source": "https://github.com/tcds-io/php-better-generics/tree/1.0.0"
             },
-            "time": "2026-01-13T13:33:25+00:00"
+            "time": "2026-05-03T15:24:21+00:00"
         }
     ],
     "packages-dev": [

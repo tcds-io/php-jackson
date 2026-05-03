@@ -6,7 +6,7 @@ use Override;
 use Tcds\Io\Generic\Reflection\ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionMethodParameter;
 use Tcds\Io\Generic\Reflection\ReflectionProperty;
-use Tcds\Io\Generic\Reflection\Type\Parser\TypeParser;
+use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
 use Tcds\Io\Generic\Reflection\Type\ReflectionType;
 use Tcds\Io\Jackson\Node\InputNode;
 use Tcds\Io\Jackson\Node\JsonProperty;
@@ -37,7 +37,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
     private static function fromGeneric(string $type): TypeNode
     {
-        [, $generics] = TypeParser::getGenericTypes($type);
+        [, $generics] = DocBlockTypeResolver::instance()->genericTypeParts($type);
 
         return new TypeNode(
             type: $type,
@@ -47,7 +47,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
     private static function fromShape(string $type): TypeNode
     {
-        [$shapeType, $params] = TypeParser::getParamMapFromShape($type);
+        [$shapeType, $params] = DocBlockTypeResolver::instance()->shapeMemberStrings($type);
 
         return new TypeNode(
             type: $type,
@@ -67,7 +67,7 @@ class RuntimeTypeNodeFactory implements TypeNodeFactory
 
     private static function fromArray(string $type): TypeNode
     {
-        [, $generics] = TypeParser::getGenericTypes($type);
+        [, $generics] = DocBlockTypeResolver::instance()->genericTypeParts($type);
         $key = $generics[0] ?? 'mixed';
         $value = $generics[1] ?? 'mixed';
 
