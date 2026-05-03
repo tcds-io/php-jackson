@@ -13,10 +13,13 @@ use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
 use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeReader;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeFactory;
+use Tcds\Io\Jackson\Node\Runtime\RuntimeTypeNodeSpecificationFactory;
 use Tcds\Io\Jackson\Node\Runtime\RuntimeWriter;
 use Tcds\Io\Jackson\Node\StaticReader;
 use Tcds\Io\Jackson\Node\StaticWriter;
 use Tcds\Io\Jackson\Node\TypeNode;
+use Tcds\Io\Jackson\Node\TypeNodeFactory;
 use Tcds\Io\Jackson\Node\Writer;
 use Throwable;
 
@@ -25,19 +28,28 @@ use Throwable;
  */
 readonly class ArrayObjectMapper implements ObjectMapper
 {
+    private Reader $defaultTypeReader;
+    private Writer $defaultTypeWriter;
     /** @var TypeMappers */
     private array $typeMappers;
 
     /**
-     * @param Reader<mixed> $defaultTypeReader
-     * @param Writer<mixed> $defaultTypeWriter
+     * @param Reader<mixed>|null $defaultTypeReader
+     * @param Writer<mixed>|null $defaultTypeWriter
      * @param TypeMappers $typeMappers
      */
     public function __construct(
-        private Reader $defaultTypeReader = new RuntimeReader(),
-        private Writer $defaultTypeWriter = new RuntimeWriter(),
+        ?Reader $defaultTypeReader = null,
+        ?Writer $defaultTypeWriter = null,
         array $typeMappers = [],
+        TypeNodeFactory $typeNodeFactory = new RuntimeTypeNodeFactory(),
     ) {
+        $this->defaultTypeReader = $defaultTypeReader ?? new RuntimeReader(
+            node: $typeNodeFactory,
+            specification: new RuntimeTypeNodeSpecificationFactory(factory: $typeNodeFactory),
+        );
+        $this->defaultTypeWriter = $defaultTypeWriter ?? new RuntimeWriter(node: $typeNodeFactory);
+
         $dateTimeMapper = ['reader' => new DateTimeReader(), 'writer' => new DateTimeWriter()];
 
         $this->typeMappers = [
