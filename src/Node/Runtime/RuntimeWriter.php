@@ -28,7 +28,7 @@ readonly class RuntimeWriter implements Writer
         return match (true) {
             is_scalar($data) => $data,
             $data instanceof BackedEnum => $data->value,
-            is_array($data) => array_map(fn ($item) => $mapper->writeValue($item, path: [...$path, '[]']), $data),
+            is_array($data) => $this->writeArray($data, $mapper, $path),
             is_object($data) => $this->writeFromNode(
                 data: $data,
                 node: $this->node->create($type),
@@ -38,6 +38,22 @@ readonly class RuntimeWriter implements Writer
             is_null($data) => null,
             default => throw new Exception(sprintf('Unable to write `%s` value', gettype($data))),
         };
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @param list<string> $path
+     * @return array<mixed>
+     */
+    private function writeArray(array $data, ObjectMapper $mapper, array $path): array
+    {
+        $values = [];
+
+        foreach ($data as $key => $item) {
+            $values[$key] = $mapper->writeValue($item, path: [...$path, sprintf('[%s]', $key)]);
+        }
+
+        return $values;
     }
 
     /**
