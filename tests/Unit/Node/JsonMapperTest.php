@@ -54,4 +54,19 @@ class JsonMapperTest extends SerializerTestCase
         // SlugWriter has __invoke but does not implement Writer — should still work
         $this->assertSame('hello-world', $this->arrayMapper->writeValue(new Slug('hello-world')));
     }
+
+    #[Test]
+    public function json_mapper_accepts_closure_when_constructed_programmatically(): void
+    {
+        // PHP attributes can't carry literal closures, but JsonMapper itself
+        // accepts a MapperClosure when built directly (e.g. for tests or
+        // dynamic registration). The resolver short-circuits on Closure.
+        $jsonMapper = new \Tcds\Io\Jackson\Node\JsonMapper(
+            reader: fn (mixed $data) => new Money(((int) ($data ?? 0)) + 1),
+            writer: fn (Money $data) => $data->cents - 1,
+        );
+
+        $this->assertSame(11, ($jsonMapper->writer)(new Money(12), Money::class, $this->arrayMapper, []));
+        $this->assertEquals(new Money(13), ($jsonMapper->reader)(12, Money::class, $this->arrayMapper, []));
+    }
 }
