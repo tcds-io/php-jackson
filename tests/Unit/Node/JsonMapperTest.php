@@ -27,9 +27,11 @@ class JsonMapperTest extends SerializerTestCase
     }
 
     #[Test]
-    public function explicit_type_mappers_override_class_attribute(): void
+    public function class_attribute_wins_over_type_mappers(): void
     {
-        // explicit closure on the constructor argument wins over the #[JsonMapper] attribute
+        // The attribute lives on the class declaration — that's the canonical
+        // source of truth, so the typeMappers constructor argument cannot
+        // override it.
         $mapper = new ArrayObjectMapper(typeMappers: [
             Money::class => [
                 'reader' => fn (mixed $data) => new Money(((int) ($data ?? 0)) * 2),
@@ -37,8 +39,8 @@ class JsonMapperTest extends SerializerTestCase
             ],
         ]);
 
-        $this->assertEquals(new Money(20), $mapper->readValue(Money::class, 10));
-        $this->assertSame(20, $mapper->writeValue(new Money(20)));
+        $this->assertEquals(new Money(10), $mapper->readValue(Money::class, 10));
+        $this->assertSame('$0.20', $mapper->writeValue(new Money(20)));
     }
 
     #[Test]

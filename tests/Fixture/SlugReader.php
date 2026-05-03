@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\Tcds\Io\Jackson\Fixture;
 
+use Tcds\Io\Jackson\Node\Reader;
 use Tcds\Io\Jackson\ObjectMapper;
 
 /**
@@ -11,7 +12,7 @@ use Tcds\Io\Jackson\ObjectMapper;
  * The class-string still resolves through #[JsonMapper] because __invoke
  * matches MapperClosure shape.
  */
-final class SlugReader
+final class SlugReader implements Reader
 {
     /**
      * @param list<string> $path

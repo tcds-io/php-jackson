@@ -2,11 +2,12 @@
 
 namespace Tcds\Io\Jackson;
 
+use Closure;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Closure;
 use Override;
+use ReflectionAttribute;
 use ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionFunction;
 use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
@@ -70,7 +71,8 @@ readonly class ArrayObjectMapper implements ObjectMapper
         ];
     }
 
-    #[Override] public function readValueWith(string $type, mixed $value, array $with = [])
+    #[Override]
+    public function readValueWith(string $type, mixed $value, array $with = [])
     {
         /** @var array<mixed> $value */
         return $this->readValue($type, [
@@ -79,7 +81,8 @@ readonly class ArrayObjectMapper implements ObjectMapper
         ]);
     }
 
-    #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
+    #[Override]
+    public function readValue(string $type, mixed $value, array $path = []): mixed
     {
         [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
         $callable = $this->resolveReader($main);
@@ -121,86 +124,47 @@ readonly class ArrayObjectMapper implements ObjectMapper
 
     private function resolveReader(string $main): Closure
     {
-        if (isset($this->typeMappers[$main]['reader'])) {
-            $reader = $this->typeMappers[$main]['reader'];
+        $reader = $this->classAttribute($main)->reader
+            ?? $this->typeMappers[$main]['reader']
+            ?? $this->defaultTypeReader;
 
-            if ($reader instanceof Closure) {
-                return $reader;
-            }
+        /** @var Callable $callable */
+        $callable = ($reader instanceof StaticReader || is_subclass_of($reader, StaticReader::class))
+            ? $reader::read(...)
+            : $reader;
 
-            return $reader instanceof StaticReader ? $reader::read(...) : $reader->__invoke(...);
-        }
-
-        $value = $this->classAttribute($main)?->reader;
-
-        if ($value instanceof Closure) {
-            return $value;
-        }
-
-        if ($value !== null) {
-            if (is_subclass_of($value, StaticReader::class)) {
-                return $value::read(...);
-            }
-
-            $instance = new $value();
-
-            if (!is_callable($instance)) {
-                throw new JacksonException(sprintf('%s must implement Reader, StaticReader, or be invokable', $value));
-            }
-
-            return Closure::fromCallable($instance);
-        }
-
-        $reader = $this->defaultTypeReader;
-
-        return $reader->__invoke(...);
+        return $callable(...);
     }
 
     private function resolveWriter(string $main): Closure
     {
-        if (isset($this->typeMappers[$main]['writer'])) {
-            $writer = $this->typeMappers[$main]['writer'];
+        $writer = $this->classAttribute($main)->writer
+            ?? $this->typeMappers[$main]['writer']
+            ?? $this->defaultTypeWriter;
 
-            if ($writer instanceof Closure) {
-                return $writer;
-            }
+        /** @var Callable $callable */
+        $callable = ($writer instanceof StaticWriter || is_subclass_of($writer, StaticWriter::class))
+            ? $writer::write(...)
+            : $writer;
 
-            return $writer instanceof StaticWriter ? $writer::write(...) : $writer->__invoke(...);
-        }
-
-        $value = $this->classAttribute($main)?->writer;
-
-        if ($value instanceof Closure) {
-            return $value;
-        }
-
-        if ($value !== null) {
-            if (is_subclass_of($value, StaticWriter::class)) {
-                return $value::write(...);
-            }
-
-            $instance = new $value();
-
-            if (!is_callable($instance)) {
-                throw new JacksonException(sprintf('%s must implement Writer, StaticWriter, or be invokable', $value));
-            }
-
-            return Closure::fromCallable($instance);
-        }
-
-        $writer = $this->defaultTypeWriter;
-
-        return $writer->__invoke(...);
+        return $callable(...);
     }
 
+    /**
+     * @param string $type
+     */
     private function classAttribute(string $type): ?JsonMapper
     {
         if (!class_exists($type)) {
             return null;
         }
 
+        /** @var array{ 0?: ReflectionAttribute<JsonMapper> } $attributes */
         $attributes = new ReflectionClass($type)->getAttributes(JsonMapper::class);
 
-        return $attributes === [] ? null : $attributes[0]->newInstance();
+        /**  */
+        return $attributes === []
+            ? null
+            : $attributes[0]->newInstance();
     }
 }
