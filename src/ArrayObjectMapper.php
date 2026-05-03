@@ -5,11 +5,12 @@ namespace Tcds\Io\Jackson;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Closure;
 use Override;
+use ReflectionClass;
 use Tcds\Io\Generic\Reflection\ReflectionFunction;
 use Tcds\Io\Generic\Reflection\Type\Parser\DocBlockTypeResolver;
 use Tcds\Io\Jackson\Exception\JacksonException;
-use ReflectionClass;
 use Tcds\Io\Jackson\Node\JsonMapper;
 use Tcds\Io\Jackson\Node\Mappers\Readers\DateTimeReader;
 use Tcds\Io\Jackson\Node\Mappers\Writers\DateTimeWriter;
@@ -81,11 +82,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
     #[Override] public function readValue(string $type, mixed $value, array $path = []): mixed
     {
         [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
-        $reader = $this->typeMappers[$main]['reader'] ?? $this->classReader($main) ?? $this->defaultTypeReader;
-        $callable = $reader instanceof StaticReader ? $reader::read(...) : $reader;
+        $callable = $this->resolveReader($main);
 
         try {
-            return ReflectionFunction::call($callable(...), [
+            return ReflectionFunction::call($callable, [
                 'data' => $value,
                 'type' => $type,
                 'mapper' => $this,
@@ -103,11 +103,10 @@ readonly class ArrayObjectMapper implements ObjectMapper
     {
         $type ??= TypeNode::of($value);
         [$main] = DocBlockTypeResolver::instance()->genericTypeParts($type);
-        $writer = $this->typeMappers[$main]['writer'] ?? $this->classWriter($main) ?? $this->defaultTypeWriter;
-        $callable = $writer instanceof StaticWriter ? $writer::write(...) : $writer;
+        $callable = $this->resolveWriter($main);
 
         try {
-            return ReflectionFunction::call($callable(...), [
+            return ReflectionFunction::call($callable, [
                 'data' => $value,
                 'type' => $type,
                 'mapper' => $this,
@@ -120,32 +119,56 @@ readonly class ArrayObjectMapper implements ObjectMapper
         }
     }
 
-    /**
-     * @return Reader<mixed>|StaticReader<mixed>|null
-     */
-    private function classReader(string $type): Reader|StaticReader|null
+    private function resolveReader(string $main): Closure
     {
-        $attribute = $this->classAttribute($type);
+        if (isset($this->typeMappers[$main]['reader'])) {
+            $reader = $this->typeMappers[$main]['reader'];
 
-        if ($attribute === null || $attribute->reader === null) {
-            return null;
+            return $reader instanceof StaticReader ? $reader::read(...) : $reader->__invoke(...);
         }
 
-        return new ($attribute->reader)();
+        $class = $this->classAttribute($main)?->reader;
+
+        if ($class !== null) {
+            if (is_subclass_of($class, StaticReader::class)) {
+                return $class::read(...);
+            }
+
+            $instance = new $class();
+            assert($instance instanceof Reader);
+
+            return $instance->__invoke(...);
+        }
+
+        $reader = $this->defaultTypeReader;
+
+        return $reader->__invoke(...);
     }
 
-    /**
-     * @return Writer<mixed>|StaticWriter<mixed>|null
-     */
-    private function classWriter(string $type): Writer|StaticWriter|null
+    private function resolveWriter(string $main): Closure
     {
-        $attribute = $this->classAttribute($type);
+        if (isset($this->typeMappers[$main]['writer'])) {
+            $writer = $this->typeMappers[$main]['writer'];
 
-        if ($attribute === null || $attribute->writer === null) {
-            return null;
+            return $writer instanceof StaticWriter ? $writer::write(...) : $writer->__invoke(...);
         }
 
-        return new ($attribute->writer)();
+        $class = $this->classAttribute($main)?->writer;
+
+        if ($class !== null) {
+            if (is_subclass_of($class, StaticWriter::class)) {
+                return $class::write(...);
+            }
+
+            $instance = new $class();
+            assert($instance instanceof Writer);
+
+            return $instance->__invoke(...);
+        }
+
+        $writer = $this->defaultTypeWriter;
+
+        return $writer->__invoke(...);
     }
 
     private function classAttribute(string $type): ?JsonMapper
