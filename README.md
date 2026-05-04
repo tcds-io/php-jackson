@@ -1,5 +1,7 @@
 # PHP-Jackson
 
+[![PHP Tests](https://github.com/tcds-io/php-jackson/actions/workflows/tests.yml/badge.svg)](https://github.com/tcds-io/php-jackson/actions/workflows/tests.yml)
+
 ###### A lightweight, flexible object serializer for PHP, inspired by [Jackson](https://github.com/FasterXML/jackson).
 
 It provides strong typing, JSON ↔ object mapping, generics support, array/object shapes, custom type mappers, and detailed error tracing.
@@ -27,6 +29,7 @@ It provides strong typing, JSON ↔ object mapping, generics support, array/obje
     - [Pinning a Mapper on the Class with `#[JsonMapper]`](#pinning-a-mapper-on-the-class-with-jsonmapper)
 - [Date Handling](#-date-handling)
 - [Error Handling](#-error-handling)
+- [Development](#-development)
 - [Summary](#-summary)
 
 ---
@@ -56,9 +59,9 @@ PHP Jackson offers first-class integrations for popular PHP frameworks and tools
 Each integration extends the core mapper with framework-specific features for a smoother development experience.
 
 Official Plugins:
-- <a href="https://github.com/tcds-io/php-jackson-laravel" target="_blank" rel="noopener noreferrer">Laravel <small>↗</small></a>
-- <a href="https://github.com/tcds-io/php-jackson-symfony" target="_blank" rel="noopener noreferrer">Symfony <small>↗</small></a>
-- <a href="https://github.com/tcds-io/php-jackson-guzzle" target="_blank" rel="noopener noreferrer">Guzzle <small>↗</small></a>
+- <a href="https://github.com/tcds-io/php-jackson-laravel" target="_blank" rel="noopener noreferrer">Laravel <small>↗</small></a> — controller injection, JSON responses, request error handling, and Eloquent casts
+- <a href="https://github.com/tcds-io/php-jackson-symfony" target="_blank" rel="noopener noreferrer">Symfony <small>↗</small></a> — controller argument resolvers, JSON responses, and configurable request error handling
+- <a href="https://github.com/tcds-io/php-jackson-guzzle" target="_blank" rel="noopener noreferrer">Guzzle <small>↗</small></a> — typed HTTP client with request DTO mapping and async response parsing
 
 ## 🔧 Basic Usage
 
@@ -173,6 +176,8 @@ $json = $mapper->writeValue($object);
 
 ## 📚 Generic Types (`list<T>`, `map<K,V>`, shapes)
 
+The `generic()` and `shape()` helper functions are loaded by Composer through `php-better-generics`.
+
 ### List example
 
 ```php
@@ -282,11 +287,13 @@ PHP identifier.
 Custom mappers are useful when object construction depends on complex logic or external data:
 
 ```php
+use Tcds\Io\Jackson\ArrayObjectMapper;
+
 $mapper = new ArrayObjectMapper(
     typeMappers: [
         LatLng::class => [
-            'reader' => fn (string $value) => new LatLng(...explode(',', $value)),
-            'writer' => fn (LatLng $value) => sprintf("%s, %s", $value->lat, $value->lng),
+            'reader' => fn(string $data) => new LatLng(...explode(',', $data)),
+            'writer' => fn(LatLng $data) => sprintf("%s, %s", $data->lat, $data->lng),
         ]
     ]
 );
@@ -315,19 +322,29 @@ and serialize back into:
 ### Using Custom Mappers with External Context
 
 ```php
+use Tcds\Io\Jackson\ArrayObjectMapper;
+
 $mapper = new ArrayObjectMapper(
     typeMappers: [
         User::class => [
-            'reader' => fn () => Auth::user(),
-            'writer' => fn (User $user) => [
-                'id' => $user->id,
-                'name' => $user->name,
+            'reader' => fn() => Auth::user(),
+            'writer' => fn(User $data) => [
+                'id' => $data->id,
+                'name' => $data->name,
                 // 'email' intentionally omitted
             ],
         ]
     ]
 );
 ```
+
+Mapper closures can receive any of the named arguments used internally by PHP-Jackson:
+
+```php
+fn(mixed $data, string $type, ObjectMapper $mapper, array $path): mixed
+```
+
+Use only the parameters you need; `ReflectionFunction::call()` binds them by name.
 
 ---
 
@@ -410,6 +427,16 @@ Unable to parse value at .address.place.position
 ```
 
 This makes debugging extremely easy.
+
+---
+
+## 🔧 Development
+
+```bash
+composer install
+composer tests       # runs cs:check + phpstan + phpunit
+composer cs:fix      # auto-fix code style
+```
 
 ---
 
