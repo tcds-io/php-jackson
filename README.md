@@ -21,7 +21,10 @@ It provides strong typing, JSON ↔ object mapping, generics support, array/obje
     - [Map Example](#map-example)
     - [Array Shape Example](#array-shape-example)
     - [Object Shape Example](#object-shape-example)
+- [Renaming JSON keys with `#[JsonProperty]`](#-renaming-json-keys-with-jsonproperty)
 - [Custom Type Mappers](#-custom-type-mappers)
+    - [Using Custom Mappers with External Context](#using-custom-mappers-with-external-context)
+    - [Pinning a Mapper on the Class with `#[JsonMapper]`](#pinning-a-mapper-on-the-class-with-jsonmapper)
 - [Date Handling](#-date-handling)
 - [Error Handling](#-error-handling)
 - [Summary](#-summary)
@@ -237,6 +240,43 @@ $object->position instanceof LatLng
 
 ---
 
+## 🏷️ Renaming JSON keys with `#[JsonProperty]`
+
+PHP-Jackson maps JSON keys to PHP names 1:1 by default. When the wire format
+uses a different naming convention (snake_case, kebab-case, etc.), pin the
+JSON key on the constructor parameter (or property) with `#[JsonProperty]`:
+
+```php
+use Tcds\Io\Jackson\Node\JsonProperty;
+
+readonly class User
+{
+    public function __construct(
+        #[JsonProperty('first_name')] public string $firstName,
+        #[JsonProperty('last_name')] public string $lastName,
+        public int $age,
+    ) {}
+}
+```
+
+The attribute is honored on **both** directions:
+
+```php
+$mapper = new JsonObjectMapper();
+
+$user = $mapper->readValue(User::class, '{"first_name":"Arthur","last_name":"Dent","age":42}');
+// User { firstName: "Arthur", lastName: "Dent", age: 42 }
+
+$mapper->writeValue($user);
+// {"first_name":"Arthur","last_name":"Dent","age":42}
+```
+
+Error traces and the `expected` payload on `UnableToParseValue` use the wire
+key — the one users will recognize from the JSON they are sending — not the
+PHP identifier.
+
+---
+
 ## 🧩 Custom Type Mappers
 
 Custom mappers are useful when object construction depends on complex logic or external data:
@@ -288,6 +328,44 @@ $mapper = new ArrayObjectMapper(
     ]
 );
 ```
+
+---
+
+### Pinning a Mapper on the Class with `#[JsonMapper]`
+
+If a class always wants the same custom (de)serialization, declare it once on
+the class itself instead of registering it on every mapper instance:
+
+```php
+use Tcds\Io\Jackson\Node\JsonMapper;
+
+#[JsonMapper(reader: MoneyReader::class, writer: MoneyWriter::class)]
+readonly class Money
+{
+    public function __construct(public int $cents) {}
+}
+```
+
+The `reader` and `writer` accept any of:
+
+- a class string of an implementation of `Reader` / `Writer` (instance is
+  built with a no-arg constructor),
+- a class string of `StaticReader` / `StaticWriter` (no instance — the static
+  `read` / `write` is called),
+- a class string of any class with a matching `__invoke` (treated as a
+  `MapperClosure`),
+- an instance of `Reader` / `Writer` (PHP 8.1 `new` in attribute initializers),
+- a `Closure` matching `MapperClosure`, when constructing `JsonMapper`
+  programmatically (PHP attribute literals can't carry closures).
+
+**Resolution order on every read/write:**
+
+1. `#[JsonMapper]` attribute on the target class — declaration site, wins
+2. `typeMappers` constructor argument
+3. default reader/writer
+
+That is, an explicit class-level mapper cannot be silently overridden by
+mapper-instance config — the class itself is the canonical source.
 
 ---
 
@@ -344,5 +422,7 @@ You can:
 - Merge missing fields using `readValueWith`
 - Write objects → JSON/arrays via `writeValue`
 - Use generics (`list<T>`, `map<K,V>`, shapes)
-- Register custom mappers for any class
+- Rename wire keys per field with `#[JsonProperty('snake_case')]`
+- Register custom mappers for any class via `typeMappers` or pin them on the
+  class itself with `#[JsonMapper(reader: …, writer: …)]`
 - Rely on strong error tracing with full path information
